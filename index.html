@@ -7469,6 +7469,251 @@ body>#gcc-legend{display:none!important}
 [data-theme="dark"] .eq-proj-tab.active{background:#0d9488;border-color:#0d9488}
 .eq-proj-panel{padding:10px 0}
 .eq-mini-kpi{display:inline-flex;align-items:center;padding:4px 10px;background:var(--card);border:1px solid var(--line);border-radius:20px;font-size:12px;font-weight:700}
+
+/* ══════════════════════════════════════════════
+   Equipos · Command Center v2 — Premium Redesign
+   ══════════════════════════════════════════════ */
+.eqv2-wrap{--eq-r:14px;--eq-r-sm:10px;--eq-sh-sm:0 1px 2px rgba(13,36,54,.04),0 1px 3px rgba(13,36,54,.03);--eq-sh:0 4px 24px -8px rgba(13,36,54,.08),0 2px 6px rgba(13,36,54,.04);--eq-sh-hi:0 12px 36px -10px rgba(13,36,54,.18),0 4px 12px rgba(13,36,54,.06);--eq-danger:#ef4444;--eq-danger-bg:#fef2f2;--eq-warn:#f59e0b;--eq-warn-bg:#fffbeb;--eq-ok:#22c55e;--eq-ok-bg:#f0fdf4;--eq-info:#6366f1;--eq-info-bg:#eef2ff;--eq-teal:#0d9488;--eq-teal-bg:#f0fdfa;--eq-ink:#0f172a;--eq-ink-2:#475569;--eq-mut:#94a3b8;--eq-line:#e2e8f0;--eq-bg:#f8fafc;padding:4px 0 32px;color:var(--eq-ink)}
+[data-theme="dark"] .eqv2-wrap{--eq-line:#1f3045;--eq-bg:#0a1521;--eq-ink:#e8eef5;--eq-ink-2:#b8c4d2;--eq-mut:#7a8699}
+
+/* Command bar */
+.eqv2-cmd{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:14px 18px;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.7) 100%);border:1px solid var(--eq-line);border-radius:var(--eq-r);margin-bottom:14px;box-shadow:var(--eq-sh-sm);backdrop-filter:blur(8px)}
+[data-theme="dark"] .eqv2-cmd{background:var(--card)}
+.eqv2-cmd-title{display:flex;align-items:center;gap:12px}
+.eqv2-cmd-emoji{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0d9488,#14b8a6);display:grid;place-items:center;font-size:18px;color:#fff;box-shadow:0 4px 12px -2px rgba(13,148,136,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+.eqv2-cmd-text h2{font-size:17px;font-weight:800;margin:0;letter-spacing:-.01em;color:var(--eq-ink)}
+.eqv2-cmd-summary{font-size:11.5px;color:var(--eq-mut);margin-top:3px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.eqv2-cmd-chip{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.eqv2-cmd-chip.dot::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor;animation:eqv2-pulse 2s ease-in-out infinite}
+.eqv2-cmd-chip.crit{color:var(--eq-danger)}
+.eqv2-cmd-chip.warn{color:var(--eq-warn)}
+.eqv2-cmd-chip.info{color:var(--eq-info)}
+.eqv2-cmd-chip.ok{color:var(--eq-ok)}
+.eqv2-cmd-actions{display:flex;align-items:center;gap:8px}
+.eqv2-search{position:relative}
+.eqv2-search input{width:240px;padding:8px 12px 8px 32px;background:rgba(255,255,255,.9);border:1px solid var(--eq-line);border-radius:10px;font-size:12.5px;color:var(--eq-ink);transition:all .15s;font-family:inherit}
+.eqv2-search input:focus{outline:none;border-color:var(--eq-teal);box-shadow:0 0 0 4px rgba(45,196,166,.12);background:#fff}
+.eqv2-search::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;opacity:.5;pointer-events:none}
+.eqv2-btn{padding:8px 14px;border-radius:10px;border:1px solid var(--eq-line);background:#fff;font-size:12.5px;font-weight:600;color:var(--eq-ink);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.eqv2-btn:hover{border-color:var(--eq-teal);color:var(--eq-teal);transform:translateY(-1px);box-shadow:var(--eq-sh-sm)}
+.eqv2-btn.primary{background:linear-gradient(135deg,var(--eq-teal),#14b8a6);border-color:var(--eq-teal);color:#fff;box-shadow:0 4px 12px -2px rgba(13,148,136,.35)}
+.eqv2-btn.primary:hover{filter:brightness(1.06);color:#fff;transform:translateY(-1px);box-shadow:0 8px 18px -2px rgba(13,148,136,.45)}
+.eqv2-btn.icon-only{padding:8px 10px}
+
+/* KPI strip */
+.eqv2-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:900px){.eqv2-kpis{grid-template-columns:repeat(3,1fr)}}
+.eqv2-kpi{background:#fff;border:1px solid var(--eq-line);border-radius:var(--eq-r);padding:14px 16px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1)}
+[data-theme="dark"] .eqv2-kpi{background:var(--card)}
+.eqv2-kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--eq-teal));opacity:0;transition:opacity .2s}
+.eqv2-kpi:hover{transform:translateY(-2px);box-shadow:var(--eq-sh);border-color:var(--c,var(--eq-teal))}
+.eqv2-kpi:hover::before{opacity:1}
+.eqv2-kpi.active{border-color:var(--c,var(--eq-teal));box-shadow:var(--eq-sh)}
+.eqv2-kpi.active::before{opacity:1}
+.eqv2-kpi-l{font-size:10.5px;color:var(--eq-mut);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.eqv2-kpi-v{font-size:28px;font-weight:800;color:var(--c,var(--eq-ink));margin-top:6px;line-height:1;letter-spacing:-.02em;font-feature-settings:'tnum'}
+.eqv2-kpi-delta{font-size:10.5px;color:var(--eq-mut);margin-top:4px}
+.eqv2-kpi-spark{position:absolute;right:8px;bottom:8px;opacity:.4;pointer-events:none}
+
+/* Insights cards */
+.eqv2-insights{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:16px}
+.eqv2-insight{background:linear-gradient(135deg,#fff 0%,#fafbff 100%);border:1px solid var(--eq-line);border-radius:var(--eq-r);padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;transition:all .2s;position:relative;overflow:hidden;animation:eqv2-in .4s cubic-bezier(.4,0,.2,1) both}
+[data-theme="dark"] .eqv2-insight{background:var(--card)}
+.eqv2-insight:hover{border-color:var(--c,var(--eq-teal));box-shadow:var(--eq-sh);transform:translateY(-1px)}
+.eqv2-insight-ico{width:32px;height:32px;border-radius:9px;background:color-mix(in srgb,var(--c,var(--eq-teal)) 12%,transparent);color:var(--c,var(--eq-teal));display:grid;place-items:center;font-size:14px}
+.eqv2-insight-tag{font-size:9.5px;color:var(--c,var(--eq-teal));text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-bottom:3px}
+.eqv2-insight-txt{font-size:12.5px;color:var(--eq-ink-2);line-height:1.4}
+.eqv2-insight-txt b{color:var(--eq-ink);font-weight:700}
+
+/* Pipeline */
+.eqv2-pipeline{background:#fff;border:1px solid var(--eq-line);border-radius:var(--eq-r);padding:18px;margin-bottom:16px;position:relative;overflow:hidden}
+[data-theme="dark"] .eqv2-pipeline{background:var(--card)}
+.eqv2-pipeline-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;gap:10px;flex-wrap:wrap}
+.eqv2-pipeline-title{font-size:13px;font-weight:800;color:var(--eq-ink);display:flex;align-items:center;gap:8px;letter-spacing:-.005em}
+.eqv2-pipeline-sub{font-size:11px;color:var(--eq-mut)}
+.eqv2-pipeline-track{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;position:relative}
+.eqv2-pipeline-track::before{content:'';position:absolute;top:22px;left:8%;right:8%;height:2px;background:linear-gradient(90deg,#e2e8f0 0%,var(--eq-teal) 50%,#e2e8f0 100%);z-index:0;opacity:.25}
+.eqv2-stage{position:relative;z-index:1;text-align:center;cursor:pointer;transition:transform .2s}
+.eqv2-stage:hover{transform:translateY(-2px)}
+.eqv2-stage-dot{width:44px;height:44px;border-radius:50%;background:#fff;border:2px solid var(--c,#cbd5e1);display:grid;place-items:center;margin:0 auto;font-size:16px;color:var(--c,var(--eq-mut));transition:all .25s cubic-bezier(.4,0,.2,1);box-shadow:0 2px 4px rgba(13,36,54,.04);position:relative}
+.eqv2-stage.has-items .eqv2-stage-dot{background:var(--c,var(--eq-teal));color:#fff;border-color:var(--c,var(--eq-teal));box-shadow:0 4px 14px -2px color-mix(in srgb,var(--c,var(--eq-teal)) 50%,transparent)}
+.eqv2-stage:hover .eqv2-stage-dot{transform:scale(1.06)}
+.eqv2-stage.has-items::after{content:'';position:absolute;left:50%;top:0;width:44px;height:44px;border-radius:50%;border:2px solid var(--c,var(--eq-teal));transform:translateX(-50%);animation:eqv2-ring 2s ease-out infinite;pointer-events:none;opacity:.4}
+.eqv2-stage.active .eqv2-stage-dot{background:var(--c,var(--eq-teal));color:#fff;border-color:var(--c,var(--eq-teal));transform:scale(1.10);box-shadow:0 6px 18px -2px color-mix(in srgb,var(--c,var(--eq-teal)) 55%,transparent),0 0 0 4px color-mix(in srgb,var(--c,var(--eq-teal)) 18%,transparent)}
+.eqv2-stage.active .eqv2-stage-lbl{color:var(--c,var(--eq-teal))}
+.eqv2-stage.active .eqv2-stage-cnt{color:var(--c,var(--eq-teal))}
+.eqv2-stage-lbl{font-size:10.5px;font-weight:700;color:var(--eq-ink-2);margin-top:8px;letter-spacing:-.005em;text-transform:uppercase}
+.eqv2-stage-cnt{font-size:17px;font-weight:800;color:var(--c,var(--eq-ink));margin-top:2px;font-feature-settings:'tnum'}
+
+/* Grid main + side */
+.eqv2-grid{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
+@media(max-width:1100px){.eqv2-grid{grid-template-columns:1fr}}
+
+/* Tabs */
+.eqv2-tabs{display:inline-flex;gap:4px;align-items:center;padding:4px;background:#f1f5f9;border-radius:11px;margin-bottom:14px}
+[data-theme="dark"] .eqv2-tabs{background:rgba(0,0,0,.2)}
+.eqv2-tab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;color:var(--eq-ink-2);cursor:pointer;background:transparent;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px;font-family:inherit}
+.eqv2-tab:hover{color:var(--eq-teal)}
+.eqv2-tab.active{background:#fff;color:var(--eq-teal);box-shadow:0 1px 3px rgba(13,36,54,.06),0 0 0 1px var(--eq-line)}
+[data-theme="dark"] .eqv2-tab.active{background:var(--card)}
+.eqv2-tab-badge{background:var(--eq-danger);color:#fff;font-size:9.5px;padding:1px 5px;border-radius:8px;font-weight:700;line-height:1.3}
+.eqv2-tab-badge.warn{background:var(--eq-warn)}
+.eqv2-tab-badge.mut{background:#cbd5e1;color:var(--eq-ink-2)}
+
+/* Filters */
+.eqv2-filters{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;font-size:11.5px}
+.eqv2-filters select,.eqv2-filters input[type=date]{padding:6px 10px;border:1px solid var(--eq-line);border-radius:8px;background:#fff;font-size:11.5px;color:var(--eq-ink);font-family:inherit;cursor:pointer}
+[data-theme="dark"] .eqv2-filters select,[data-theme="dark"] .eqv2-filters input[type=date]{background:var(--card)}
+.eqv2-filters select:focus,.eqv2-filters input:focus{outline:none;border-color:var(--eq-teal)}
+.eqv2-filter-lbl{font-size:10px;color:var(--eq-mut);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.eqv2-filter-clear{padding:5px 10px;font-size:11px;border-radius:8px;border:1px solid var(--eq-line);background:#fff;color:var(--eq-danger);cursor:pointer;font-weight:600;font-family:inherit}
+.eqv2-filter-clear:hover{border-color:var(--eq-danger);background:var(--eq-danger-bg)}
+
+/* Operational cards */
+.eqv2-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.eqv2-card{background:#fff;border:1px solid var(--eq-line);border-radius:var(--eq-r);padding:14px 14px 12px 17px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;gap:9px;animation:eqv2-in .35s cubic-bezier(.4,0,.2,1) both}
+[data-theme="dark"] .eqv2-card{background:var(--card)}
+.eqv2-card:hover{transform:translateY(-2px);box-shadow:var(--eq-sh);border-color:var(--c,var(--eq-teal))}
+.eqv2-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--eq-teal))}
+.eqv2-card.crit{--c:var(--eq-danger)}
+.eqv2-card.warn{--c:var(--eq-warn)}
+.eqv2-card.ok{--c:var(--eq-ok)}
+.eqv2-card.hist{--c:#94a3b8;opacity:.85}
+.eqv2-card.fab{--c:var(--eq-warn)}
+.eqv2-card.transit{--c:#0ea5e9}
+.eqv2-card.aduana{--c:var(--eq-info)}
+.eqv2-card.origen{--c:#8b5cf6}
+.eqv2-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.eqv2-card-title{flex:1;min-width:0}
+.eqv2-card-tipo{font-size:13.5px;font-weight:800;color:var(--eq-ink);letter-spacing:-.005em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqv2-card-doc{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;font-size:10px;color:var(--eq-mut);margin-top:2px}
+.eqv2-card-badge{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:6px;background:color-mix(in srgb,var(--c,var(--eq-teal)) 12%,transparent);color:var(--c,var(--eq-teal));text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.eqv2-card-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px}
+.eqv2-card-meta-l{font-size:9.5px;color:var(--eq-mut);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.eqv2-card-meta-v{color:var(--eq-ink);font-weight:600;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqv2-card-proj{display:inline-flex;align-items:center;font-size:10.5px;padding:2px 8px;background:rgba(99,102,241,.10);color:var(--eq-info);border-radius:6px;font-weight:700;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqv2-card-tl{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:2px}
+.eqv2-card-tl-step{height:4px;background:#e2e8f0;border-radius:2px;position:relative;overflow:hidden}
+.eqv2-card-tl-step.done{background:var(--c,var(--eq-teal))}
+.eqv2-card-tl-step.current{background:var(--c,var(--eq-teal))}
+.eqv2-card-tl-step.current::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:eqv2-shimmer 1.8s ease-in-out infinite}
+.eqv2-card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:6px;border-top:1px dashed var(--eq-line)}
+.eqv2-card-dias{font-size:14px;font-weight:800;font-feature-settings:'tnum';color:var(--c,var(--eq-ink))}
+.eqv2-card-prov{font-size:10.5px;color:var(--eq-mut);text-align:right;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqv2-card-flag{position:absolute;top:10px;right:12px;font-size:8.5px;padding:1px 6px;border-radius:5px;background:var(--eq-info);color:#fff;font-weight:800;letter-spacing:.05em;z-index:2}
+.eqv2-card-flag.chg{background:var(--eq-warn)}
+
+/* Sidebar */
+.eqv2-side{display:flex;flex-direction:column;gap:14px;position:sticky;top:16px;align-self:start}
+.eqv2-panel{background:#fff;border:1px solid var(--eq-line);border-radius:var(--eq-r);overflow:hidden;box-shadow:var(--eq-sh-sm)}
+[data-theme="dark"] .eqv2-panel{background:var(--card)}
+.eqv2-panel-head{padding:12px 14px 8px;font-size:11px;font-weight:800;color:var(--eq-ink);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:6px}
+.eqv2-panel-head .cnt{background:#f1f5f9;color:var(--eq-ink-2);padding:1px 7px;border-radius:8px;font-size:10.5px;font-weight:700;margin-left:auto;letter-spacing:0}
+[data-theme="dark"] .eqv2-panel-head .cnt{background:rgba(255,255,255,.06)}
+.eqv2-panel-body{padding:4px 8px 10px;max-height:380px;overflow-y:auto}
+.eqv2-panel-body::-webkit-scrollbar{width:6px}
+.eqv2-panel-body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+.eqv2-proj-row{padding:9px 12px;border-radius:9px;cursor:pointer;transition:all .15s;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;position:relative}
+.eqv2-proj-row:hover{background:#f8fafc}
+[data-theme="dark"] .eqv2-proj-row:hover{background:rgba(255,255,255,.04)}
+.eqv2-proj-row.active{background:rgba(13,148,136,.08)}
+.eqv2-proj-status{width:9px;height:9px;border-radius:50%;background:var(--c,var(--eq-ok));box-shadow:0 0 0 3px color-mix(in srgb,var(--c,var(--eq-ok)) 18%,transparent)}
+.eqv2-proj-info{overflow:hidden}
+.eqv2-proj-name{font-size:12px;font-weight:700;color:var(--eq-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqv2-proj-meta{font-size:10.5px;color:var(--eq-mut);margin-top:1px}
+.eqv2-proj-score{font-size:14px;font-weight:800;color:var(--c,var(--eq-ok));font-feature-settings:'tnum'}
+
+/* Timeline */
+.eqv2-tl-item{padding:9px 12px 9px 28px;position:relative;border-radius:8px}
+.eqv2-tl-item::before{content:'';position:absolute;left:16px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--c,var(--eq-teal));box-shadow:0 0 0 3px color-mix(in srgb,var(--c,var(--eq-teal)) 18%,transparent);z-index:1}
+.eqv2-tl-item::after{content:'';position:absolute;left:19.5px;top:25px;bottom:-5px;width:1px;background:var(--eq-line)}
+.eqv2-tl-item:last-child::after{display:none}
+.eqv2-tl-time{font-size:9.5px;color:var(--eq-mut);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.eqv2-tl-txt{font-size:11.5px;color:var(--eq-ink-2);margin-top:2px;line-height:1.4}
+.eqv2-tl-txt b{color:var(--eq-ink);font-weight:700}
+
+/* Compact alerts */
+.eqv2-alerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;margin-bottom:14px}
+.eqv2-alert{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--ab,var(--eq-warn-bg));border:1px solid color-mix(in srgb,var(--c,var(--eq-warn)) 25%,transparent);border-left:3px solid var(--c,var(--eq-warn));border-radius:10px;font-size:11.5px;transition:all .15s;animation:eqv2-in .35s cubic-bezier(.4,0,.2,1) both}
+.eqv2-alert:hover{transform:translateX(2px)}
+.eqv2-alert.crit{--c:var(--eq-danger);--ab:var(--eq-danger-bg)}
+.eqv2-alert.warn{--c:var(--eq-warn);--ab:var(--eq-warn-bg)}
+.eqv2-alert-ico{font-size:14px;flex-shrink:0}
+.eqv2-alert-text{color:var(--eq-ink-2);flex:1;min-width:0}
+.eqv2-alert-text b{color:var(--eq-ink)}
+
+/* Tech table toggle */
+.eqv2-tech-toggle{display:flex;align-items:center;gap:8px;padding:11px 16px;background:#fff;border:1px solid var(--eq-line);border-radius:var(--eq-r);margin-top:18px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--eq-ink-2);transition:all .15s;user-select:none}
+[data-theme="dark"] .eqv2-tech-toggle{background:var(--card)}
+.eqv2-tech-toggle:hover{border-color:var(--eq-teal);color:var(--eq-teal)}
+.eqv2-tech-toggle .chev{transition:transform .25s cubic-bezier(.4,0,.2,1);margin-left:auto;font-size:11px}
+.eqv2-tech-toggle.open .chev{transform:rotate(180deg)}
+.eqv2-tech-body{margin-top:8px;max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+.eqv2-tech-body.open{max-height:1200px}
+
+/* Diff banner */
+.eqv2-diff{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(13,148,136,.06));border:1px solid rgba(99,102,241,.25);border-radius:var(--eq-r);margin-bottom:12px;font-size:12px;animation:eqv2-in .4s ease-out}
+.eqv2-diff-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eqv2-diff-badge{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:8px}
+.eqv2-diff-badge.new{background:var(--eq-info-bg);color:var(--eq-info);border:1px solid color-mix(in srgb,var(--eq-info) 25%,transparent)}
+.eqv2-diff-badge.chg{background:var(--eq-warn-bg);color:var(--eq-warn);border:1px solid color-mix(in srgb,var(--eq-warn) 25%,transparent)}
+.eqv2-diff-close{background:none;border:none;font-size:18px;color:var(--eq-mut);cursor:pointer;padding:0 4px;line-height:1}
+
+/* Import cinematic overlay */
+.eqv2-import-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(8px) saturate(1.4);-webkit-backdrop-filter:blur(8px) saturate(1.4);z-index:9500;display:none;align-items:center;justify-content:center;animation:eqv2-fade-in .25s ease-out}
+.eqv2-import-overlay.on{display:flex}
+.eqv2-import-card{background:#fff;border-radius:20px;padding:28px 32px;width:min(440px,92vw);box-shadow:0 32px 80px -16px rgba(15,23,42,.5);position:relative;overflow:hidden;animation:eqv2-scale-in .35s cubic-bezier(.4,0,.2,1)}
+.eqv2-import-scan{position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--eq-teal),transparent);animation:eqv2-scan 1.8s ease-in-out infinite;z-index:2}
+.eqv2-import-icon{width:64px;height:64px;margin:0 auto 14px;border-radius:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);display:grid;place-items:center;font-size:30px;color:#fff;box-shadow:0 12px 24px -4px rgba(13,148,136,.4)}
+.eqv2-import-title{font-size:16px;font-weight:800;color:#0f172a;text-align:center;letter-spacing:-.01em}
+.eqv2-import-sub{font-size:12px;color:#94a3b8;text-align:center;margin-top:4px}
+.eqv2-import-steps{margin-top:18px;display:flex;flex-direction:column;gap:6px}
+.eqv2-import-step{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f8fafc;border-radius:10px;font-size:12px;color:#94a3b8;opacity:.55;transition:all .3s}
+.eqv2-import-step.active{opacity:1;background:rgba(13,148,136,.08);color:#0f172a;font-weight:600}
+.eqv2-import-step.done{opacity:1;background:rgba(34,197,94,.08);color:#22c55e;font-weight:600}
+.eqv2-import-step .ico{width:18px;height:18px;border-radius:50%;background:#e2e8f0;display:grid;place-items:center;font-size:10px;color:#fff;flex-shrink:0}
+.eqv2-import-step.active .ico{background:#0d9488;animation:eqv2-spin 1s linear infinite}
+.eqv2-import-step.done .ico{background:#22c55e}
+.eqv2-import-progress{margin-top:16px;height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden}
+.eqv2-import-progress-bar{height:100%;background:linear-gradient(90deg,#0d9488,#14b8a6);width:0%;transition:width .35s cubic-bezier(.4,0,.2,1)}
+
+/* Summary modal */
+.eqv2-summary{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);z-index:9400;display:none;align-items:center;justify-content:center;padding:20px;animation:eqv2-fade-in .2s ease-out}
+.eqv2-summary.on{display:flex}
+.eqv2-summary-card{background:#fff;border-radius:22px;width:min(560px,100%);max-height:90vh;overflow-y:auto;padding:26px 28px;box-shadow:0 36px 90px -20px rgba(15,23,42,.5);animation:eqv2-scale-in .3s cubic-bezier(.4,0,.2,1)}
+.eqv2-summary-head{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid #e2e8f0;margin-bottom:18px}
+.eqv2-summary-ico{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#0d9488,#14b8a6);display:grid;place-items:center;font-size:24px;color:#fff;box-shadow:0 10px 18px -3px rgba(13,148,136,.4)}
+.eqv2-summary-title{font-size:17px;font-weight:800;color:#0f172a;letter-spacing:-.01em}
+.eqv2-summary-subtitle{font-size:12.5px;color:#94a3b8;margin-top:3px}
+.eqv2-summary-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.eqv2-stat{padding:12px 14px;background:#f8fafc;border:1px solid color-mix(in srgb,var(--c,#e2e8f0) 30%,transparent);border-left:3px solid var(--c,#0d9488);border-radius:12px;display:flex;align-items:center;gap:10px}
+.eqv2-stat-ico{width:32px;height:32px;border-radius:9px;background:var(--c,#0d9488);color:#fff;display:grid;place-items:center;font-size:14px;flex-shrink:0}
+.eqv2-stat-v{font-size:18px;font-weight:800;color:var(--c,#0f172a);font-feature-settings:'tnum';line-height:1}
+.eqv2-stat-l{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;font-weight:700;margin-top:2px}
+.eqv2-summary-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.eqv2-summary-highlight{padding:12px 14px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0}
+.eqv2-summary-highlight-l{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;font-weight:700;margin-bottom:5px}
+.eqv2-summary-highlight-v{font-size:14px;font-weight:700;color:#0f172a}
+.eqv2-summary-risk{padding:12px 14px;background:#fef2f2;border:1px solid color-mix(in srgb,#ef4444 25%,transparent);border-radius:12px;font-size:12.5px;color:#475569;margin-bottom:18px}
+.eqv2-summary-risk b{color:#ef4444}
+.eqv2-summary-actions{display:flex;gap:8px;justify-content:flex-end}
+
+/* Empty state */
+.eqv2-empty{text-align:center;padding:60px 20px;color:var(--eq-mut);background:#fff;border:1px dashed var(--eq-line);border-radius:var(--eq-r)}
+[data-theme="dark"] .eqv2-empty{background:var(--card)}
+.eqv2-empty-ico{font-size:42px;opacity:.35;margin-bottom:12px}
+.eqv2-empty-title{font-size:14px;font-weight:700;color:var(--eq-ink-2)}
+.eqv2-empty-sub{font-size:12px;margin-top:4px}
+
+/* Animations */
+@keyframes eqv2-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes eqv2-ring{0%{transform:translateX(-50%) scale(.95);opacity:.6}80%,100%{transform:translateX(-50%) scale(1.45);opacity:0}}
+@keyframes eqv2-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes eqv2-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes eqv2-scale-in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+@keyframes eqv2-scan{0%{transform:translateX(-100%);opacity:0}5%{opacity:1}50%{transform:translateX(100%);opacity:1}50.01%{transform:translateX(-100%);opacity:0}100%{transform:translateX(-100%);opacity:0}}
+@keyframes eqv2-spin{to{transform:rotate(360deg)}}
+@keyframes eqv2-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 </style>
 
 <script>
@@ -7958,6 +8203,122 @@ function _eqBuildTable(rows,tbodyId){
   return h;
 }
 
+/* v2 helpers (Command Center) */
+let _eqv2Timeline=[];
+let _eqv2TechOpen=false;
+function _eqv2StageOf(r){
+  if(r._entregado)return'entregado';
+  if(r._historico)return'historico';
+  const sd=(r.status_dest||'').toUpperCase();
+  if(sd.includes('ADUANA'))return'aduana';
+  if(sd.includes('TRANSPORT'))return'transporte';
+  if(sd.includes('TRANSITO')||sd.includes('TRÁNSITO')||sd.includes('EMBARQ'))return'transito';
+  if(sd.includes('ORIGEN'))return'origen';
+  if(sd.includes('FABRICA')||sd.includes('FABRIC'))return'fabricacion';
+  if(r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=2)return'obra';
+  return'fabricacion';
+}
+function _eqv2CardClass(r){
+  if(r._historico)return'hist';
+  if(r._vencido)return'crit';
+  if(r._entregado)return'ok';
+  if(r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=7)return'warn';
+  const st=_eqv2StageOf(r);
+  if(st==='aduana')return'aduana';
+  if(st==='transito')return'transit';
+  if(st==='origen')return'origen';
+  if(st==='fabricacion')return'fab';
+  return'';
+}
+function _eqv2StageIdx(r){
+  const order=['fabricacion','origen','transito','aduana','transporte','obra','entregado'];
+  const st=_eqv2StageOf(r);
+  const idx=order.indexOf(st);
+  return idx<0?0:idx;
+}
+function _eqv2RelTime(d){
+  const diff=Math.floor((Date.now()-d)/1000);
+  if(diff<60)return'hace '+diff+'s';
+  if(diff<3600)return'hace '+Math.floor(diff/60)+' min';
+  if(diff<86400)return'hace '+Math.floor(diff/3600)+' h';
+  return'hace '+Math.floor(diff/86400)+'d';
+}
+function _eqv2HealthScore(p){
+  const items=p.items.filter(r=>!r._historico);
+  const total=items.length||1;
+  const venc=items.filter(r=>r._vencido).length;
+  const prox=items.filter(r=>!r._entregado&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=7).length;
+  const ent=items.filter(r=>r._entregado).length;
+  let s=100-Math.round((venc/total)*55+(prox/total)*15-(ent/total)*5);
+  return Math.max(0,Math.min(100,s));
+}
+function _eqv2HealthColor(s){
+  if(s<60)return'#ef4444';
+  if(s<80)return'#f59e0b';
+  return'#22c55e';
+}
+function _eqv2EmptyState(){
+  return`<div class="eqv2-empty">
+    <div class="eqv2-empty-ico">📭</div>
+    <div class="eqv2-empty-title">Sin equipos para los filtros actuales</div>
+    <div class="eqv2-empty-sub">Ajusta filtros o importa un Excel/CSV NISIRA FP</div>
+  </div>`;
+}
+function _eqv2BadgeLabel(r){
+  if(r._historico)return'Histórico';
+  if(r._vencido)return'Vencido';
+  if(r._entregado)return'Entregado';
+  const sd=(r.status_dest||'').toUpperCase();
+  if(sd.includes('ADUANA'))return'En Aduana';
+  if(sd.includes('FABRICA'))return'Fabricación';
+  if(sd.includes('TRANSITO')||sd.includes('TRÁNSITO')||sd.includes('EMBARQ'))return'En Tránsito';
+  if(sd.includes('ORIGEN'))return'En Origen';
+  if(r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=7)return'Inminente';
+  return'En curso';
+}
+function _eqv2RenderCards(rows){
+  if(!rows.length)return _eqv2EmptyState();
+  return rows.map(r=>{
+    const cls=_eqv2CardClass(r);
+    const badge=_eqv2BadgeLabel(r);
+    const stageIdx=_eqv2StageIdx(r);
+    const diasStr=r._diasObra!==null?(r._diasObra===0?'HOY':r._diasObra>0?'+'+r._diasObra+'d':r._diasObra+'d'):'—';
+    const obraStr=r._fechaObra?_eqFmtDate(r._fechaObra):'—';
+    const etaStr=r.eta||'—';
+    const ou=(r.origen||'').toUpperCase();
+    const origenIco=r.origen?(ou.includes('CHINA')?'🇨🇳':ou.includes('ARGENT')?'🇦🇷':ou.includes('BRAS')?'🇧🇷':ou.includes('ESTADOS')||ou.includes('USA')?'🇺🇸':ou.includes('ITAL')?'🇮🇹':ou.includes('ALEMAN')||ou.includes('GERM')?'🇩🇪':ou.includes('ESPA')?'🇪🇸':'🌐'):'';
+    const flag=r._nuevo?'<span class="eqv2-card-flag">NUEVO</span>':r._changed?'<span class="eqv2-card-flag chg">CAMBIO</span>':'';
+    const searchKey=((r.doc||'')+' '+(r.proyecto||'')+' '+(r.tipo||'')+' '+(r.proveedor||'')+' '+(r.origen||'')+' '+(r.status_dest||'')).toLowerCase();
+    let tl='';
+    for(let i=0;i<6;i++){
+      const k=i<stageIdx?'done':i===stageIdx?'current':'';
+      tl+=`<div class="eqv2-card-tl-step ${k}"></div>`;
+    }
+    return`<div class="eqv2-card ${cls}" data-doc="${r.doc||''}" data-search="${searchKey}">
+      ${flag}
+      <div class="eqv2-card-head">
+        <div class="eqv2-card-title">
+          <div class="eqv2-card-tipo">${r.tipo||'Equipo'}</div>
+          <div class="eqv2-card-doc">${r.doc||'—'}</div>
+        </div>
+        <div class="eqv2-card-badge">${badge}</div>
+      </div>
+      <div><span class="eqv2-card-proj">${r.proyecto||'—'}</span></div>
+      <div class="eqv2-card-meta">
+        <div><div class="eqv2-card-meta-l">F. Obra</div><div class="eqv2-card-meta-v">${obraStr}</div></div>
+        <div><div class="eqv2-card-meta-l">ETA</div><div class="eqv2-card-meta-v">${etaStr}</div></div>
+        <div><div class="eqv2-card-meta-l">Origen</div><div class="eqv2-card-meta-v">${origenIco} ${r.origen||'—'}</div></div>
+        <div><div class="eqv2-card-meta-l">Modalidad</div><div class="eqv2-card-meta-v">${r.modalidad||'—'}</div></div>
+      </div>
+      <div class="eqv2-card-tl">${tl}</div>
+      <div class="eqv2-card-foot">
+        <div class="eqv2-card-dias">${r._entregado?'✓ ENTREGADO':diasStr}</div>
+        <div class="eqv2-card-prov" title="${r.proveedor||''}">${r.proveedor||'—'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderEquiposPremium(){
   const el=document.getElementById('v-equipos');if(!el)return;
   const imp=W.IMPORTACIONES_DATA||[];
@@ -8032,89 +8393,8 @@ function renderEquiposPremium(){
   if(_eqActiveProj&&!projMap[_eqActiveProj])_eqActiveProj='';
   if(!_eqActiveProj&&activeProjList.length)_eqActiveProj=activeProjList[0].name;
 
-  let h=`<div class="imp-wrap">`;
-
-  // Diff banner
-  if(_eqDiff&&(_eqDiff.nuevos.length||_eqDiff.cambios.length)){
-    h+=`<div class="eq-diff-banner">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <span style="font-weight:700">Importación detectó cambios</span>
-        ${_eqDiff.nuevos.length?`<span class="eq-diff-badge eq-diff-new">${_eqDiff.nuevos.length} nuevos</span>`:''}
-        ${_eqDiff.cambios.length?`<span class="eq-diff-badge eq-diff-chg">${_eqDiff.cambios.length} cambios</span>`:''}
-      </div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <button class="btn primary" onclick="W._eqShowDiff&&W._eqShowDiff()" style="font-size:11px">Ver cambios</button>
-        <button onclick="_eqDiff=null;W.renderEquipos&&W.renderEquipos()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;line-height:1">×</button>
-      </div>
-    </div>`;
-  }
-
-  // Alertas dinámicas
-  if(alertItems.length){
-    h+=`<div class="eq-alerts-bar">`;
-    alertItems.slice(0,4).forEach(a=>h+=`<div class="eq-alert-item eq-alert-${a.t}">${a.t==='danger'?'⚠':'📅'} ${a.m}</div>`);
-    if(alertItems.length>4)h+=`<div class="eq-alert-more">+ ${alertItems.length-4} alertas más</div>`;
-    h+=`</div>`;
-  }
-
-  // Header + controles
-  h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;flex-wrap:wrap;gap:10px">
-    <div>
-      <h2 style="font-size:18px;font-weight:800;margin:0">📦 Equipos · Pipeline de Importación</h2>
-      <p style="font-size:12px;color:var(--muted);margin:4px 0 0">${total} equipos${vencidos>0?` · <span style="color:#ef4444;font-weight:700">${vencidos} vencidos</span>`:''}${proximos>0?` · <span style="color:#d97706;font-weight:700">${proximos} próximos 14d</span>`:''} · ${entregados} entregados</p>
-    </div>
-    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-      <input class="imp-search" id="imp-search" placeholder="🔍 Proyecto, equipo, doc…" oninput="W._eqSearch&&W._eqSearch(this.value)" value="${(el.querySelector('#imp-search')||{}).value||''}">
-      <input type="file" id="eq-import-input" accept=".csv,.xlsx,.xls,.pdf" style="display:none" onchange="W.onEquiposImport&&W.onEquiposImport(event)">
-      <button class="btn primary" onclick="document.getElementById('eq-import-input').click()">📂 Importar</button>
-      <button class="btn" onclick="W.renderEquipos&&W.renderEquipos()" style="font-size:11px">🔄</button>
-    </div>
-  </div>`;
-
-  // Filtros de proyecto + rango de fechas
+  // ════ Build visible row sets ════
   const projOpts=Object.keys(projMap).sort();
-  h+=`<div class="eq-filter-row" id="eq-filter-row">
-    <select class="eq-filter-sel" id="eq-proj-sel" onchange="W._eqSetProj&&W._eqSetProj(this.value)">
-      <option value="">Todos los proyectos</option>
-      ${projOpts.map(p=>`<option value="${p}"${_eqFilterProj===p?' selected':''}>${p}</option>`).join('')}
-    </select>
-    <div style="display:flex;align-items:center;gap:5px">
-      <label style="font-size:11px;color:var(--muted);font-weight:600">ETA desde</label>
-      <input type="date" class="eq-filter-date" id="eq-date-from" value="${_eqDateFrom}" onchange="W._eqSetDate&&W._eqSetDate('from',this.value)">
-    </div>
-    <div style="display:flex;align-items:center;gap:5px">
-      <label style="font-size:11px;color:var(--muted);font-weight:600">hasta</label>
-      <input type="date" class="eq-filter-date" id="eq-date-to" value="${_eqDateTo}" onchange="W._eqSetDate&&W._eqSetDate('to',this.value)">
-    </div>
-    ${_eqFilterProj||_eqDateFrom||_eqDateTo?`<button class="eq-clear-btn" onclick="W._eqClearFilters&&W._eqClearFilters()">✕ Limpiar filtros</button>`:''}
-  </div>`;
-
-  // KPIs
-  h+=`<div class="imp-kpi-row">
-    <div class="imp-kpi"><div class="imp-kpi-v" style="color:#0d9488">${total}</div><div class="imp-kpi-l">Total</div></div>
-    <div class="imp-kpi"><div class="imp-kpi-v" style="color:#22c55e">${entregados}</div><div class="imp-kpi-l">Entregados</div></div>
-    <div class="imp-kpi"><div class="imp-kpi-v" style="color:#f59e0b">${enFab}</div><div class="imp-kpi-l">Fabricación</div></div>
-    <div class="imp-kpi"><div class="imp-kpi-v" style="color:#6366f1">${pendientes}</div><div class="imp-kpi-l">Pendientes</div></div>
-    <div class="imp-kpi"><div class="imp-kpi-v" style="color:#ef4444">${vencidos}</div><div class="imp-kpi-l">Vencidos</div></div>
-    <div class="imp-kpi"><div class="imp-kpi-v" style="color:#d97706">${proximos}</div><div class="imp-kpi-l">Próx. 14d</div></div>
-  </div>`;
-
-  // Sub-tabs principales
-  const tabDefs=[
-    {id:'activos',label:`🏗 Proyectos Activos (${activeProjList.length})`},
-    {id:'todos',label:`Todos (${total})`},
-    {id:'tipo',label:'Por Tipo'},
-    {id:'vencido',label:`⚠ Vencidos (${vencidos})`,red:vencidos>0},
-    {id:'proximo',label:`📅 Próximos (${proximos})`},
-  ];
-  h+=`<div class="eq-subtab-bar">`;
-  tabDefs.forEach(t=>{
-    const redStyle=t.red&&_eqSubTab!==t.id?'border-color:#ef444460;color:#ef4444;':'';
-    h+=`<button class="eq-stab${_eqSubTab===t.id?' active':''}" onclick="W._eqSetTab&&W._eqSetTab('${t.id}')" style="${redStyle}">${t.label}</button>`;
-  });
-  h+=`</div>`;
-
-  // Aplicar filtros globales (proyecto + fecha)
   const _applyGlobalFilters=arr=>{
     let out=arr;
     if(_eqFilterProj)out=out.filter(r=>(r.proyecto||'')==_eqFilterProj);
@@ -8122,91 +8402,355 @@ function renderEquiposPremium(){
     if(_eqDateTo){const dt=new Date(_eqDateTo);out=out.filter(r=>!r._fechaObra||r._fechaObra<=dt);}
     return out;
   };
+  let visible=_applyGlobalFilters(rows);
+  if(_eqSubTab==='vencido')visible=visible.filter(r=>r._vencido);
+  else if(_eqSubTab==='proximo')visible=visible.filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=14);
+  else if(_eqSubTab==='activos')visible=visible.filter(r=>!r._entregado&&!r._historico);
+  visible=_eqSortRows(visible);
 
-  h+=`<div id="eq-content-area">`;
+  // ════ Pipeline stage counts ════
+  const stageDef=[
+    {k:'fabricacion',l:'Fabricación',ico:'🔧',c:'#f59e0b'},
+    {k:'origen',l:'Origen',ico:'📍',c:'#8b5cf6'},
+    {k:'transito',l:'Tránsito',ico:'🚢',c:'#0ea5e9'},
+    {k:'aduana',l:'Aduana',ico:'🛃',c:'#6366f1'},
+    {k:'obra',l:'En Obra',ico:'🏗',c:'#0d9488'},
+    {k:'entregado',l:'Entregado',ico:'✓',c:'#22c55e'},
+  ];
+  const stageCount={};stageDef.forEach(s=>stageCount[s.k]=0);
+  rows.forEach(r=>{const s=_eqv2StageOf(r);if(stageCount[s]!==undefined)stageCount[s]++;else stageCount.fabricacion++;});
 
-  if(_eqSubTab==='activos'){
-    // Proyectos activos como TABS horizontales
-    h+=`<div class="eq-proj-tabbar" id="eq-proj-tabbar">`;
-    activeProjList.forEach(p=>{
-      const badge=p.venc>0?`<span style="background:#ef4444;color:#fff;border-radius:8px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:5px">${p.venc}</span>`:
-                  p.prox>0?`<span style="background:#d97706;color:#fff;border-radius:8px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:5px">${p.prox}</span>`:'';
-      h+=`<button class="eq-proj-tab${_eqActiveProj===p.name?' active':''}" onclick="W._eqSetProj2&&W._eqSetProj2('${p.name.replace(/'/g,"\\'")}')">
-        ${p.name}${badge}
-      </button>`;
+  // ════ Health scores per project ════
+  const projHealth=Object.values(projMap).map(p=>({...p,score:_eqv2HealthScore(p)}))
+    .filter(p=>p.items.some(r=>!r._historico))
+    .sort((a,b)=>a.score-b.score);
+
+  // ════ Insights IA ════
+  const insights=[];
+  if(projHealth.length&&projHealth[0].venc>0){
+    insights.push({ico:'🔴',c:'#ef4444',tag:'Proyecto crítico',txt:`<b>${projHealth[0].name}</b> concentra ${projHealth[0].venc} vencido${projHealth[0].venc!==1?'s':''} · health ${projHealth[0].score}/100`});
+  }
+  const provCount={};
+  activos.filter(r=>r._vencido).forEach(r=>{if(r.proveedor)provCount[r.proveedor]=(provCount[r.proveedor]||0)+1;});
+  const topProv=Object.entries(provCount).sort(([,a],[,b])=>b-a)[0];
+  if(topProv&&topProv[1]>=2){
+    insights.push({ico:'⚠️',c:'#f59e0b',tag:'Proveedor en alerta',txt:`<b>${topProv[0]}</b> acumula ${topProv[1]} incidencias en equipos vencidos`});
+  }
+  const prox7=activos.filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=7).length;
+  if(prox7>0){
+    insights.push({ico:'📅',c:'#d97706',tag:'Próximos 7 días',txt:`<b>${prox7} equipo${prox7!==1?'s':''}</b> llegan a obra esta semana`});
+  }
+  const enFabActivos=activos.filter(r=>_eqv2StageOf(r)==='fabricacion').length;
+  if(enFabActivos>0&&insights.length<4){
+    insights.push({ico:'🔧',c:'#0d9488',tag:'En fabricación',txt:`<b>${enFabActivos} equipo${enFabActivos!==1?'s':''}</b> en planta del proveedor — monitorear ETD`});
+  }
+  if(_eqDiff&&(_eqDiff.nuevos.length||_eqDiff.cambios.length)&&insights.length<4){
+    insights.push({ico:'✨',c:'#6366f1',tag:'Último update',txt:`<b>${_eqDiff.nuevos.length}</b> nuevos · <b>${_eqDiff.cambios.length}</b> cambios detectados — revisar`});
+  }
+
+  // ════ Compact alerts (top 4) ════
+  const compactAlerts=alertItems.slice(0,4);
+
+  // ════ Begin HTML ════
+  let h=`<div class="eqv2-wrap">`;
+
+  // Diff banner
+  if(_eqDiff&&(_eqDiff.nuevos.length||_eqDiff.cambios.length)){
+    h+=`<div class="eqv2-diff">
+      <div class="eqv2-diff-badges">
+        <span style="font-weight:800;font-size:12.5px;color:var(--eq-ink)">✨ Importación detectó cambios</span>
+        ${_eqDiff.nuevos.length?`<span class="eqv2-diff-badge new">+${_eqDiff.nuevos.length} nuevos</span>`:''}
+        ${_eqDiff.cambios.length?`<span class="eqv2-diff-badge chg">${_eqDiff.cambios.length} cambios</span>`:''}
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="eqv2-btn primary" onclick="W._eqShowDiff&&W._eqShowDiff()" style="padding:5px 12px;font-size:11.5px">Ver cambios</button>
+        <button class="eqv2-diff-close" onclick="_eqDiff=null;W.renderEquipos&&W.renderEquipos()">×</button>
+      </div>
+    </div>`;
+  }
+
+  // ════ Command Bar (smart header) ════
+  const valorImpacto=vencidos*3.5; // proxy: cada vencido ≈ S/3.5K impacto valorización
+  h+=`<div class="eqv2-cmd">
+    <div class="eqv2-cmd-title">
+      <div class="eqv2-cmd-emoji">📦</div>
+      <div class="eqv2-cmd-text">
+        <h2>Centro de Control · Equipos</h2>
+        <div class="eqv2-cmd-summary">
+          ${vencidos>0?`<span class="eqv2-cmd-chip dot crit">${vencidos} crítico${vencidos!==1?'s':''}</span>`:''}
+          ${proximos>0?`<span class="eqv2-cmd-chip dot warn">${proximos} ETA en riesgo</span>`:''}
+          ${enFabActivos>0?`<span class="eqv2-cmd-chip info">🔧 ${enFabActivos} en fabricación</span>`:''}
+          <span class="eqv2-cmd-chip ok">✓ ${entregados} entregados</span>
+          ${valorImpacto>0?`<span class="eqv2-cmd-chip">💰 ~S/${valorImpacto.toFixed(0)}K impactados</span>`:''}
+          <span class="eqv2-cmd-chip">🏗 ${activeProjList.length} proyectos activos</span>
+        </div>
+      </div>
+    </div>
+    <div class="eqv2-cmd-actions">
+      <div class="eqv2-search">
+        <input id="imp-search" placeholder="Proyecto, equipo, doc…" oninput="W._eqSearch&&W._eqSearch(this.value)" value="${(el.querySelector('#imp-search')||{}).value||''}">
+      </div>
+      <input type="file" id="eq-import-input" accept=".csv,.xlsx,.xls" style="display:none" onchange="W.onEquiposImport&&W.onEquiposImport(event)">
+      <button class="eqv2-btn primary" onclick="document.getElementById('eq-import-input').click()">📂 Importar</button>
+      <button class="eqv2-btn icon-only" onclick="W.renderEquipos&&W.renderEquipos()" title="Refrescar">🔄</button>
+    </div>
+  </div>`;
+
+  // ════ KPI strip (interactive) ════
+  const kpis=[
+    {k:'total',l:'Total',v:total,c:'#0d9488',sub:`${activos.length} activos`},
+    {k:'entregado',l:'Entregados',v:entregados,c:'#22c55e',sub:total?Math.round(entregados/total*100)+'%':'0%'},
+    {k:'fab',l:'Fabricación',v:stageCount.fabricacion,c:'#f59e0b',sub:'en planta'},
+    {k:'transito',l:'Tránsito',v:stageCount.transito+stageCount.aduana,c:'#0ea5e9',sub:'+ aduana'},
+    {k:'proximo',l:'Próx. 14d',v:proximos,c:'#d97706',sub:prox7?prox7+' en 7d':'a obra'},
+    {k:'vencido',l:'Vencidos',v:vencidos,c:'#ef4444',sub:vencidos?'requieren acción':'sin críticos'},
+  ];
+  h+=`<div class="eqv2-kpis">`;
+  kpis.forEach(k=>{
+    const active=(_eqSubTab===k.k||(k.k==='total'&&_eqSubTab==='todos'));
+    h+=`<div class="eqv2-kpi ${active?'active':''}" style="--c:${k.c}" onclick="W._eqSetTab&&W._eqSetTab('${k.k==='total'?'todos':k.k}')">
+      <div class="eqv2-kpi-l">${k.l}</div>
+      <div class="eqv2-kpi-v" data-count="${k.v}">${k.v}</div>
+      <div class="eqv2-kpi-delta">${k.sub}</div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  // ════ Compact alerts ════
+  if(compactAlerts.length){
+    h+=`<div class="eqv2-alerts">`;
+    compactAlerts.forEach(a=>{
+      const cls=a.t==='danger'?'crit':'warn';
+      const ico=a.t==='danger'?'⚠':'📅';
+      h+=`<div class="eqv2-alert ${cls}"><div class="eqv2-alert-ico">${ico}</div><div class="eqv2-alert-text">${a.m}</div></div>`;
     });
     h+=`</div>`;
-    // Panel del proyecto seleccionado
-    const selProj=projMap[_eqActiveProj];
-    if(selProj){
-      const pItems=_applyGlobalFilters(selProj.items);
-      const pVenc=pItems.filter(r=>r._vencido).length;
-      const pProx=pItems.filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=14).length;
-      const pEntg=pItems.filter(r=>r._entregado).length;
-      const pHist=pItems.filter(r=>r._historico).length;
-      h+=`<div class="eq-proj-panel">`;
-      // Mini alertas del proyecto
-      const pAlerts=[
-        ...pItems.filter(r=>r._vencido).map(r=>({t:'danger',m:`<b>${r.tipo||'—'}</b> · F.Obra ${r._fechaObra?_eqFmtDate(r._fechaObra):'?'} · ${Math.abs(r._diasObra)}d vencido`})),
-        ...pItems.filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=7).map(r=>({t:'warning',m:`<b>${r.tipo||'—'}</b> · llega a obra en <b>${r._diasObra===0?'HOY':r._diasObra+'d'}</b>`})),
-      ];
-      if(pAlerts.length){
-        h+=`<div class="eq-alerts-bar" style="margin-bottom:10px">`;
-        pAlerts.forEach(a=>h+=`<div class="eq-alert-item eq-alert-${a.t}" style="font-size:11px">${a.t==='danger'?'⚠':'📅'} ${a.m}</div>`);
-        h+=`</div>`;
-      }
-      // Mini KPIs del proyecto
-      h+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-        <span class="eq-mini-kpi" style="color:#0d9488">${pItems.length} equipos</span>
-        ${pVenc?`<span class="eq-mini-kpi" style="color:#ef4444;font-weight:800">⚠ ${pVenc} vencido${pVenc!==1?'s':''}</span>`:''}
-        ${pProx?`<span class="eq-mini-kpi" style="color:#d97706">📅 ${pProx} próximo${pProx!==1?'s':''}</span>`:''}
-        ${pEntg?`<span class="eq-mini-kpi" style="color:#22c55e">✓ ${pEntg} entregado${pEntg!==1?'s':''}</span>`:''}
-        ${pHist?`<span class="eq-mini-kpi" style="color:#64748b">📦 ${pHist} histórico${pHist!==1?'s':''}</span>`:''}
-      </div>`;
-      h+=`<div class="imp-table-wrap">${_eqBuildTable(_eqSortRows(pItems),'imp-tbody-proj')}</div>`;
-      h+=`</div>`;
-    }else{
-      h+=`<div style="text-align:center;padding:40px;color:var(--muted)">No hay proyectos activos</div>`;
-    }
-  } else {
-    // Vistas planas / agrupadas
-    let visible=_applyGlobalFilters(rows);
-    if(_eqSubTab==='vencido')visible=visible.filter(r=>r._vencido);
-    else if(_eqSubTab==='proximo')visible=visible.filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=14);
+  }
 
-    if(_eqSubTab==='tipo'){
-      const groups={};
-      visible.forEach(r=>{const g=r.tipo||'Sin tipo';if(!groups[g])groups[g]=[];groups[g].push(r);});
-      Object.entries(groups).sort(([a],[b])=>a.localeCompare(b)).forEach(([grp,items],idx)=>{
+  // ════ Pipeline visual ════
+  h+=`<div class="eqv2-pipeline">
+    <div class="eqv2-pipeline-head">
+      <div class="eqv2-pipeline-title">⚡ Pipeline operacional <span style="color:var(--eq-mut);font-weight:600;font-size:11px">en tiempo real</span></div>
+      <div class="eqv2-pipeline-sub">${rows.length} equipos · flujo Fabricación → Entrega</div>
+    </div>
+    <div class="eqv2-pipeline-track">`;
+  stageDef.forEach(s=>{
+    const n=stageCount[s.k]||0;
+    const stActive=_eqSubTab===s.k;
+    h+=`<div class="eqv2-stage ${n>0?'has-items':''} ${stActive?'active':''}" style="--c:${s.c}" onclick="W._eqSetTab&&W._eqSetTab('${s.k}')" title="Filtrar por ${s.l}">
+      <div class="eqv2-stage-dot">${s.ico}</div>
+      <div class="eqv2-stage-lbl">${s.l}</div>
+      <div class="eqv2-stage-cnt">${n}</div>
+    </div>`;
+  });
+  h+=`</div></div>`;
+
+  // ════ Main grid: cards + sidebar ════
+  h+=`<div class="eqv2-grid"><div class="eqv2-main">`;
+
+  // Insights IA
+  if(insights.length){
+    h+=`<div class="eqv2-insights">`;
+    insights.forEach(i=>{
+      h+=`<div class="eqv2-insight" style="--c:${i.c}">
+        <div class="eqv2-insight-ico">${i.ico}</div>
+        <div>
+          <div class="eqv2-insight-tag">${i.tag}</div>
+          <div class="eqv2-insight-txt">${i.txt}</div>
+        </div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+  // Tabs
+  const tabDefs=[
+    {id:'todos',label:'Todos',cnt:total},
+    {id:'activos',label:'🏗 Activos',cnt:activos.length},
+    {id:'vencido',label:'⚠ Vencidos',cnt:vencidos,badge:vencidos>0?'crit':null},
+    {id:'proximo',label:'📅 Próximos',cnt:proximos,badge:proximos>0?'warn':null},
+    {id:'tipo',label:'Por tipo',cnt:null},
+    {id:'entregado',label:'✓ Entregados',cnt:entregados,badge:'mut'},
+  ];
+  h+=`<div class="eqv2-tabs">`;
+  tabDefs.forEach(t=>{
+    h+=`<button class="eqv2-tab ${_eqSubTab===t.id?'active':''}" onclick="W._eqSetTab&&W._eqSetTab('${t.id}')">${t.label}${t.cnt!==null?` <span class="eqv2-tab-badge ${t.badge||'mut'}">${t.cnt}</span>`:''}</button>`;
+  });
+  h+=`</div>`;
+
+  // Filters
+  h+=`<div class="eqv2-filters">
+    <span class="eqv2-filter-lbl">Filtros:</span>
+    <select onchange="W._eqSetProj&&W._eqSetProj(this.value)">
+      <option value="">Todos los proyectos</option>
+      ${projOpts.map(p=>`<option value="${p}"${_eqFilterProj===p?' selected':''}>${p}</option>`).join('')}
+    </select>
+    <span class="eqv2-filter-lbl">ETA</span>
+    <input type="date" value="${_eqDateFrom}" onchange="W._eqSetDate&&W._eqSetDate('from',this.value)">
+    <span class="eqv2-filter-lbl">hasta</span>
+    <input type="date" value="${_eqDateTo}" onchange="W._eqSetDate&&W._eqSetDate('to',this.value)">
+    ${(_eqFilterProj||_eqDateFrom||_eqDateTo)?`<button class="eqv2-filter-clear" onclick="W._eqClearFilters&&W._eqClearFilters()">✕ Limpiar</button>`:''}
+  </div>`;
+
+  // Stage-banner placeholder (lo rellena el bloque de filtros del pipeline más abajo)
+  h+=`<!--STAGE-BANNER-->`;
+
+  // ════ Operational cards ════
+  const pipelineStages=['fabricacion','origen','transito','aduana','transporte','obra','entregado'];
+  if(_eqSubTab==='entregado'){
+    visible=_applyGlobalFilters(rows).filter(r=>r._entregado);
+    visible=_eqSortRows(visible);
+  } else if(_eqSubTab==='obra'){
+    visible=_applyGlobalFilters(rows).filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=2);
+    visible=_eqSortRows(visible);
+  } else if(pipelineStages.includes(_eqSubTab)){
+    visible=_applyGlobalFilters(rows).filter(r=>_eqv2StageOf(r)===_eqSubTab);
+    visible=_eqSortRows(visible);
+  }
+  // legacy aliases (KPI cards)
+  if(_eqSubTab==='fab'){
+    visible=_applyGlobalFilters(rows).filter(r=>_eqv2StageOf(r)==='fabricacion');
+    visible=_eqSortRows(visible);
+  }
+  if(_eqSubTab==='transito'&&!pipelineStages.includes('transito')){
+    visible=_applyGlobalFilters(rows).filter(r=>{const s=_eqv2StageOf(r);return s==='transito'||s==='aduana';});
+    visible=_eqSortRows(visible);
+  }
+
+  // Banner de filtro activo (cuando viene del pipeline)
+  const stageLabels={fabricacion:'🔧 Fabricación',origen:'📍 Origen',transito:'🚢 Tránsito',aduana:'🛃 Aduana',transporte:'🚚 Transporte',obra:'🏗 En Obra',entregado:'✓ Entregado'};
+  if(stageLabels[_eqSubTab]){
+    h=h.replace('<!--STAGE-BANNER-->',`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(135deg,rgba(13,148,136,.06),rgba(99,102,241,.04));border:1px solid rgba(13,148,136,.2);border-radius:10px;margin-bottom:12px;font-size:12.5px">
+      <span style="font-weight:800;color:var(--eq-ink)">Filtrando por etapa:</span>
+      <span style="padding:3px 10px;background:#fff;border:1px solid var(--eq-line);border-radius:20px;font-weight:700;color:var(--eq-teal)">${stageLabels[_eqSubTab]}</span>
+      <span style="color:var(--eq-mut);font-size:11.5px">${visible.length} equipo${visible.length!==1?'s':''} en esta etapa</span>
+      <button class="eqv2-filter-clear" style="margin-left:auto" onclick="W._eqSetTab&&W._eqSetTab('todos')">✕ Quitar filtro</button>
+    </div>`);
+  }
+  if(_eqSubTab==='tipo'){
+    const groups={};
+    visible.forEach(r=>{const g=r.tipo||'Sin tipo';if(!groups[g])groups[g]=[];groups[g].push(r);});
+    const grpEntries=Object.entries(groups).sort(([a],[b])=>a.localeCompare(b));
+    if(grpEntries.length){
+      grpEntries.forEach(([grp,items])=>{
         const gV=items.filter(r=>r._vencido).length;
-        const gP=items.filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=14).length;
-        const gE=items.filter(r=>r._entregado).length;
-        h+=`<div class="eq-group" id="eq-grp-${idx}" ${gV?'style="border-color:#ef444440"':''}>
-          <div class="eq-group-hdr" onclick="document.getElementById('eq-grp-${idx}').classList.toggle('collapsed')">
-            <span class="eq-group-name">${grp}</span>
-            <span class="eq-group-meta">${items.length} equipo${items.length!==1?'s':''}${gV?` · <span style="color:#ef4444;font-weight:700">${gV} vencido${gV!==1?'s':''}</span>`:''}${gP&&!gV?` · <span style="color:#d97706">${gP} próximo${gP!==1?'s':''}</span>`:''}${gE===items.length?' · <span style="color:#22c55e">todos entregados</span>':''}</span>
-            <span class="eq-group-chevron">▾</span>
+        h+=`<div style="margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 12px;background:#f8fafc;border-radius:10px;border:1px solid var(--eq-line)">
+            <span style="font-size:13px;font-weight:800;color:var(--eq-ink)">${grp}</span>
+            <span style="font-size:11px;color:var(--eq-mut)">${items.length} equipo${items.length!==1?'s':''}${gV?` · <b style="color:#ef4444">${gV} vencido${gV!==1?'s':''}</b>`:''}</span>
           </div>
-          <div class="eq-group-body">${_eqBuildTable(_eqSortRows(items),'imp-tbody-t'+idx)}</div>
+          <div class="eqv2-cards">${_eqv2RenderCards(_eqSortRows(items))}</div>
         </div>`;
       });
-      if(!Object.keys(groups).length)h+=`<div style="text-align:center;padding:40px;color:var(--muted)">Sin datos</div>`;
     } else {
-      h+=`<div class="imp-table-wrap">${_eqBuildTable(_eqSortRows(visible),'imp-tbody')}</div>`;
+      h+=_eqv2EmptyState();
     }
+  } else if(visible.length){
+    h+=`<div class="eqv2-cards">${_eqv2RenderCards(visible)}</div>`;
+  } else {
+    h+=_eqv2EmptyState();
+  }
+
+  h+=`</div>`; // .eqv2-main
+
+  // ════ Sidebar ════
+  h+=`<div class="eqv2-side">`;
+
+  // Projects panel
+  h+=`<div class="eqv2-panel">
+    <div class="eqv2-panel-head">🎯 Proyectos · Health<span class="cnt">${projHealth.length}</span></div>
+    <div class="eqv2-panel-body">`;
+  if(projHealth.length){
+    projHealth.slice(0,10).forEach(p=>{
+      const c=_eqv2HealthColor(p.score);
+      const meta=[p.venc?`<span style="color:#ef4444;font-weight:700">${p.venc} venc</span>`:'',p.prox?`<span style="color:#d97706">${p.prox} próx</span>`:'',`${p.items.length} eq`].filter(Boolean).join(' · ');
+      h+=`<div class="eqv2-proj-row ${_eqActiveProj===p.name?'active':''}" onclick="W._eqSetProjFromPanel&&W._eqSetProjFromPanel('${p.name.replace(/'/g,"\\'")}')">
+        <div class="eqv2-proj-status" style="--c:${c}"></div>
+        <div class="eqv2-proj-info">
+          <div class="eqv2-proj-name">${p.name}</div>
+          <div class="eqv2-proj-meta">${meta}</div>
+        </div>
+        <div class="eqv2-proj-score" style="--c:${c}">${p.score}</div>
+      </div>`;
+    });
+  } else {
+    h+=`<div style="padding:18px;text-align:center;color:var(--eq-mut);font-size:12px">Sin proyectos activos</div>`;
   }
   h+=`</div></div>`;
+
+  // Timeline panel
+  h+=`<div class="eqv2-panel">
+    <div class="eqv2-panel-head">📡 Activity feed<span class="cnt">${_eqv2Timeline.length}</span></div>
+    <div class="eqv2-panel-body">`;
+  if(_eqv2Timeline.length){
+    _eqv2Timeline.slice(0,12).forEach(t=>{
+      h+=`<div class="eqv2-tl-item" style="--c:${t.c}">
+        <div class="eqv2-tl-time">${_eqv2RelTime(t.at)}</div>
+        <div class="eqv2-tl-txt">${t.html}</div>
+      </div>`;
+    });
+  } else {
+    h+=`<div style="padding:18px;text-align:center;color:var(--eq-mut);font-size:12px">Sin cambios recientes.<br>Importa un Excel para ver actualizaciones.</div>`;
+  }
+  h+=`</div></div>`;
+
+  h+=`</div>`; // .eqv2-side
+  h+=`</div>`; // .eqv2-grid
+
+  // ════ Tech table (collapsible) ════
+  h+=`<div class="eqv2-tech-toggle ${_eqv2TechOpen?'open':''}" onclick="W._eqv2ToggleTech&&W._eqv2ToggleTech()">
+    <span>📊</span><span>Ver detalle técnico (tabla completa)</span>
+    <span style="font-size:11px;color:var(--eq-mut);font-weight:500">${visible.length} fila${visible.length!==1?'s':''}</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="eqv2-tech-body ${_eqv2TechOpen?'open':''}">
+    <div class="imp-table-wrap" style="margin-top:0">${_eqBuildTable(visible,'imp-tbody')}</div>
+  </div>`;
+
+  // ════ Cinematic overlays ════
+  h+=`<div class="eqv2-import-overlay" id="eqv2-import-overlay">
+    <div class="eqv2-import-card">
+      <div class="eqv2-import-scan"></div>
+      <div class="eqv2-import-icon">📦</div>
+      <div class="eqv2-import-title" id="eqv2-import-title">Analizando importación…</div>
+      <div class="eqv2-import-sub" id="eqv2-import-sub">Procesando datos NISIRA FP</div>
+      <div class="eqv2-import-steps" id="eqv2-import-steps">
+        <div class="eqv2-import-step" data-step="read"><div class="ico">·</div><div>Leyendo archivo</div></div>
+        <div class="eqv2-import-step" data-step="parse"><div class="ico">·</div><div>📦 Analizando ETAs y estados</div></div>
+        <div class="eqv2-import-step" data-step="diff"><div class="ico">·</div><div>🔍 Detectando cambios vs versión previa</div></div>
+        <div class="eqv2-import-step" data-step="risk"><div class="ico">·</div><div>⚠️ Calculando riesgos y vencimientos</div></div>
+        <div class="eqv2-import-step" data-step="impact"><div class="ico">·</div><div>💰 Evaluando impacto en valorización</div></div>
+      </div>
+      <div class="eqv2-import-progress"><div class="eqv2-import-progress-bar" id="eqv2-import-progress-bar"></div></div>
+    </div>
+  </div>`;
+
+  h+=`<div class="eqv2-summary" id="eqv2-summary">
+    <div class="eqv2-summary-card" id="eqv2-summary-card"></div>
+  </div>`;
+
+  h+=`</div>`; // .eqv2-wrap
   el.innerHTML=h;
 
-  // ── Funciones interactivas ──
+  // ── Handlers interactivos v2 ──
   W._eqSetTab=tab=>{_eqSubTab=tab;renderEquiposPremium();};
   W._eqSetProj=v=>{_eqFilterProj=v;renderEquiposPremium();};
   W._eqSetProj2=v=>{_eqActiveProj=v;renderEquiposPremium();};
+  W._eqSetProjFromPanel=v=>{_eqFilterProj=(_eqFilterProj===v?'':v);_eqActiveProj=v;renderEquiposPremium();};
   W._eqSetDate=(which,v)=>{if(which==='from')_eqDateFrom=v;else _eqDateTo=v;renderEquiposPremium();};
   W._eqClearFilters=()=>{_eqFilterProj='';_eqDateFrom='';_eqDateTo='';renderEquiposPremium();};
+  W._eqv2ToggleTech=()=>{
+    _eqv2TechOpen=!_eqv2TechOpen;
+    const t=el.querySelector('.eqv2-tech-toggle');
+    const b=el.querySelector('.eqv2-tech-body');
+    if(t&&b){t.classList.toggle('open',_eqv2TechOpen);b.classList.toggle('open',_eqv2TechOpen);}
+  };
 
   W._eqSearch=q=>{
-    const low=q.toLowerCase();
+    const low=(q||'').toLowerCase();
+    el.querySelectorAll('.eqv2-card[data-search]').forEach(c=>{
+      c.style.display=(!low||c.dataset.search.includes(low))?'':'none';
+    });
     el.querySelectorAll('tr[data-search]').forEach(row=>{
       row.style.display=(!low||row.dataset.search.includes(low))?'':'none';
     });
@@ -8219,19 +8763,44 @@ function renderEquiposPremium(){
     renderEquiposPremium();
     setTimeout(()=>{
       let first=null;
-      el.querySelectorAll('tr[data-doc]').forEach(row=>{
-        if(diffDocs.has(row.dataset.doc)){if(!first)first=row;}
-        else row.style.display='none';
+      el.querySelectorAll('.eqv2-card[data-doc]').forEach(c=>{
+        if(diffDocs.has(c.dataset.doc)){if(!first)first=c;}
+        else c.style.display='none';
       });
-      first?.scrollIntoView({behavior:'smooth',block:'nearest'});
-    },80);
+      el.querySelectorAll('tr[data-doc]').forEach(row=>{
+        if(!diffDocs.has(row.dataset.doc))row.style.display='none';
+      });
+      first?.scrollIntoView({behavior:'smooth',block:'center'});
+    },100);
   };
 
+  // ── Import cinematográfico ──
   W.onEquiposImport=async event=>{
     const file=event.target.files[0];if(!file)return;
     event.target.value='';
+
+    // Show cinematic overlay
+    const ov=document.getElementById('eqv2-import-overlay');
+    const subEl=document.getElementById('eqv2-import-sub');
+    const bar=document.getElementById('eqv2-import-progress-bar');
+    if(ov){
+      ov.classList.add('on');
+      if(subEl)subEl.textContent=file.name;
+    }
+    const setStep=(name,state)=>{
+      const stp=document.querySelector(`.eqv2-import-step[data-step="${name}"]`);
+      if(!stp)return;
+      stp.classList.remove('active','done');
+      if(state)stp.classList.add(state);
+    };
+    const setProgress=p=>{if(bar)bar.style.width=p+'%';};
+    const delay=ms=>new Promise(r=>setTimeout(r,ms));
+
     const prevSnap={};(W.IMPORTACIONES_DATA||[]).forEach(r=>{if(r.doc)prevSnap[r.doc]={...r};});
     let parsed=null;
+
+    setStep('read','active');setProgress(15);
+    await delay(250);
     try{
       if(file.name.match(/\.xlsx?$/i)){
         const ab=await file.arrayBuffer();
@@ -8241,27 +8810,123 @@ function renderEquiposPremium(){
         parsed=_eqParseRows(raw);
       } else if(file.name.match(/\.csv$/i)){
         const text=await file.text();
-        const raw=text.split('\n').map(l=>l.split(';'));
+        // Auto-detect separator
+        const firstLine=text.split('\n')[0]||'';
+        const sep=firstLine.includes(';')?';':firstLine.includes('\t')?'\t':',';
+        const raw=text.split('\n').map(l=>l.split(sep));
         parsed=_eqParseRows(raw);
       }
     }catch(e){console.error('Import error',e);}
+    setStep('read','done');setProgress(35);
+    await delay(220);
+
     if(!parsed||!parsed.length){
+      setStep('parse','active');
+      await delay(400);
+      if(ov)ov.classList.remove('on');
       if(typeof showToast==='function')showToast('No se pudo parsear el archivo. Verifica formato NISIRA FP.','warn',5000);
       return;
     }
+    setStep('parse','active');setProgress(55);
+    await delay(360);
+    setStep('parse','done');
+
     const nuevos=parsed.filter(r=>r.doc&&!prevSnap[r.doc]);
     const cambios=parsed.filter(r=>r.doc&&prevSnap[r.doc]&&(
       prevSnap[r.doc].estado!==r.estado||prevSnap[r.doc].eta!==r.eta||prevSnap[r.doc].etd!==r.etd||prevSnap[r.doc].f_real!==r.f_real
     ));
+    const eliminados=Object.keys(prevSnap).filter(doc=>!parsed.some(r=>r.doc===doc));
+
+    setStep('diff','active');setProgress(70);
+    await delay(320);
+    setStep('diff','done');
+
+    setStep('risk','active');setProgress(85);
+    await delay(280);
+    setStep('risk','done');
+
+    setStep('impact','active');setProgress(95);
+    await delay(260);
+
+    // Push timeline events
+    const now=Date.now();
+    cambios.slice(0,8).forEach(r=>{
+      const prev=prevSnap[r.doc];
+      let what='';let c='#f59e0b';
+      if(prev.eta!==r.eta&&r.eta){what=`ETA cambió a ${r.eta}`;c='#f59e0b';}
+      else if(prev.f_real!==r.f_real&&r.f_real){what=`marcado entregado · ${r.f_real}`;c='#22c55e';}
+      else if(prev.estado!==r.estado){what=`estado: ${r.estado||'—'}`;c='#6366f1';}
+      else what='actualización';
+      _eqv2Timeline.unshift({at:now,c,html:`🔺 <b>${r.tipo||r.doc}</b> · ${r.proyecto||'—'} · ${what}`});
+    });
+    nuevos.slice(0,5).forEach(r=>{
+      _eqv2Timeline.unshift({at:now,c:'#6366f1',html:`✨ Nuevo: <b>${r.tipo||r.doc}</b> · ${r.proyecto||'—'}`});
+    });
+    if(_eqv2Timeline.length>30)_eqv2Timeline.length=30;
+
     W.IMPORTACIONES_DATA=parsed;
     _impSnapshot={};
     _eqDiff={nuevos,cambios};
+
+    setStep('impact','done');setProgress(100);
+    await delay(350);
+
+    // Compute summary stats
+    const today=new Date();
+    const enrichedNew=parsed.map(r=>{
+      const eta=_eqParseDate(r.eta);
+      const fechaObra=eta?new Date(eta.getTime()+5*864e5):null;
+      const sd=(r.status_dest||'').toUpperCase();
+      const entregado=sd==='CULMINADO'||sd.includes('CULMINAD')||!!_eqParseDate(r.f_real);
+      const vencido=!entregado&&fechaObra&&fechaObra<today;
+      return{...r,_vencido:vencido,_entregado:entregado,_fechaObra:fechaObra};
+    });
+    const nuevosVenc=enrichedNew.filter(r=>r._vencido&&nuevos.some(n=>n.doc===r.doc)).length;
+    const ahoraVencidos=enrichedNew.filter(r=>r._vencido).length;
+    const entregadosNuevos=enrichedNew.filter(r=>r._entregado&&cambios.some(c=>c.doc===r.doc)).length;
+    const projChange={};cambios.forEach(c=>{const p=c.proyecto||'—';projChange[p]=(projChange[p]||0)+1;});
+    const provIssue={};enrichedNew.filter(r=>r._vencido).forEach(r=>{if(r.proveedor)provIssue[r.proveedor]=(provIssue[r.proveedor]||0)+1;});
+    const topProjChange=Object.entries(projChange).sort(([,a],[,b])=>b-a)[0];
+    const topProvIssue=Object.entries(provIssue).sort(([,a],[,b])=>b-a)[0];
+
+    // Close cinematic, open summary
+    if(ov)ov.classList.remove('on');
     renderEquiposPremium();
-    if(nuevos.length||cambios.length){
-      setTimeout(()=>{W._eqShowDiff&&W._eqShowDiff();},150);
-      if(typeof showToast==='function')showToast(`Importación · <b>${nuevos.length}</b> nuevos · <b>${cambios.length}</b> cambios detectados`,'ok',6000);
-    } else {
-      if(typeof showToast==='function')showToast(`Importación completada · ${parsed.length} registros · sin cambios`,'ok',4000);
+    setTimeout(()=>{
+      const sm=document.getElementById('eqv2-summary');
+      const card=document.getElementById('eqv2-summary-card');
+      if(!sm||!card)return;
+      card.innerHTML=`
+        <div class="eqv2-summary-head">
+          <div class="eqv2-summary-ico">📦</div>
+          <div>
+            <div class="eqv2-summary-title">Importación completada</div>
+            <div class="eqv2-summary-subtitle">Se analizaron ${parsed.length} equipos · ${file.name}</div>
+          </div>
+        </div>
+        <div class="eqv2-summary-stats">
+          <div class="eqv2-stat" style="--c:#6366f1"><div class="eqv2-stat-ico">✨</div><div><div class="eqv2-stat-v">${nuevos.length}</div><div class="eqv2-stat-l">Equipos nuevos</div></div></div>
+          <div class="eqv2-stat" style="--c:#f59e0b"><div class="eqv2-stat-ico">🔺</div><div><div class="eqv2-stat-v">${cambios.length}</div><div class="eqv2-stat-l">Cambios detectados</div></div></div>
+          <div class="eqv2-stat" style="--c:#ef4444"><div class="eqv2-stat-ico">⚠</div><div><div class="eqv2-stat-v">${ahoraVencidos}</div><div class="eqv2-stat-l">Vencidos ahora${nuevosVenc>0?` (+${nuevosVenc})`:''}</div></div></div>
+          <div class="eqv2-stat" style="--c:#22c55e"><div class="eqv2-stat-ico">✓</div><div><div class="eqv2-stat-v">${entregadosNuevos}</div><div class="eqv2-stat-l">Recién entregados</div></div></div>
+        </div>
+        ${(topProjChange||topProvIssue)?`<div class="eqv2-summary-row">
+          ${topProjChange?`<div class="eqv2-summary-highlight"><div class="eqv2-summary-highlight-l">🏗 Proyecto más afectado</div><div class="eqv2-summary-highlight-v">🔴 ${topProjChange[0]} <span style="color:var(--eq-mut);font-weight:500">· ${topProjChange[1]} cambio${topProjChange[1]!==1?'s':''}</span></div></div>`:''}
+          ${topProvIssue?`<div class="eqv2-summary-highlight"><div class="eqv2-summary-highlight-l">⚠️ Proveedor con incidencias</div><div class="eqv2-summary-highlight-v">${topProvIssue[0]} <span style="color:var(--eq-mut);font-weight:500">· ${topProvIssue[1]} vencido${topProvIssue[1]!==1?'s':''}</span></div></div>`:''}
+        </div>`:''}
+        ${ahoraVencidos>0?`<div class="eqv2-summary-risk"><b>Riesgo principal:</b> ${ahoraVencidos} equipo${ahoraVencidos!==1?'s':''} con fecha proyectada de obra ya superada — requiere reasignación o expedite.</div>`:`<div class="eqv2-summary-risk" style="background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3);color:#15803d"><b>Sin riesgos críticos.</b> Pipeline saludable en esta importación.</div>`}
+        <div class="eqv2-summary-actions">
+          <button class="eqv2-btn" onclick="document.getElementById('eqv2-summary').classList.remove('on')">Cerrar</button>
+          ${(nuevos.length||cambios.length)?`<button class="eqv2-btn primary" onclick="document.getElementById('eqv2-summary').classList.remove('on');W._eqShowDiff&&W._eqShowDiff()">Ver cambios →</button>`:''}
+        </div>
+      `;
+      sm.classList.add('on');
+      sm.onclick=e=>{if(e.target===sm)sm.classList.remove('on');};
+    },200);
+
+    if(typeof showToast==='function'){
+      if(nuevos.length||cambios.length)showToast(`Import · <b>${nuevos.length}</b> nuevos · <b>${cambios.length}</b> cambios`,'ok',5000);
+      else showToast(`Import completado · ${parsed.length} registros · sin cambios`,'ok',4000);
     }
   };
   W._eqParseRows=_eqParseRows;

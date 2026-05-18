@@ -6563,6 +6563,42 @@ function _spiArc(spi,sz=52){
 /* ══════════════════════════════════════════════════════════════
    1. SUPERVISORES — Command cards with SPI arc + project dots
    ══════════════════════════════════════════════════════════════ */
+/* Supervisor Command Center — state & helpers */
+let _supxSort='health';
+let _supxTimeline=[];
+function _supxHealthScore(s){
+  // SPI (40%) + Avance (15%) + Facturación pct (15%) - Alerts (penalty) - sin reporte (penalty) - crits ratio (penalty)
+  const spiNorm=Math.max(0,Math.min(1,s.avgSpi/1.05));
+  const avNorm=Math.max(0,Math.min(1,s.avgValp/100));
+  const factNorm=s.venta>0?Math.max(0,Math.min(1,s.fact/s.venta)):0;
+  const alertPen=Math.min(.25,s.alerts*0.04);
+  const sinRepPen=Math.min(.15,s.sinRep*0.05);
+  const critRatio=s.projs.length?s.crits/s.projs.length:0;
+  const critPen=critRatio*.20;
+  const raw=spiNorm*.50+avNorm*.20+factNorm*.20-alertPen-sinRepPen-critPen+.10;
+  return Math.max(0,Math.min(100,Math.round(raw*100)));
+}
+function _supxHealthColor(h){
+  if(h<55)return'#ef4444';
+  if(h<75)return'#f59e0b';
+  if(h<88)return'#0d9488';
+  return'#22c55e';
+}
+function _supxHealthLabel(h){
+  if(h<55)return'Crítico';
+  if(h<75)return'Riesgo';
+  if(h<88)return'Estable';
+  return'Excelente';
+}
+function _supxRing(value,max,size,color){
+  size=size||74;
+  const r=(size-12)/2;
+  const c=2*Math.PI*r;
+  const pct=Math.max(0,Math.min(1,value/max));
+  const off=c*(1-pct);
+  return`<svg viewBox="0 0 ${size} ${size}"><circle class="supx-ring-bg" cx="${size/2}" cy="${size/2}" r="${r}"></circle><circle class="supx-ring-fg" cx="${size/2}" cy="${size/2}" r="${r}" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}" style="--c:${color}"></circle></svg>`;
+}
+
 function renderSupervisoresPremium(){
   const el=_$('v-supervisores');if(!el)return;
   const ps=_ps();
@@ -6573,63 +6609,283 @@ function renderSupervisoresPremium(){
     if(!sm[s])sm[s]={name:s,projs:[],venta:0,fact:0};
     sm[s].projs.push(p);sm[s].venta+=p.venta;sm[s].fact+=p.fact;
   });
-  const sups=Object.values(sm).map(s=>{
+  let sups=Object.values(sm).map(s=>{
     const avgSpi=s.projs.reduce((a,p)=>a+p.spi,0)/s.projs.length;
     const avgValp=s.projs.reduce((a,p)=>a+p.valp,0)/s.projs.length;
     const crits=s.projs.filter(p=>p.spi<0.85).length;
     const alerts=ano.filter(a=>a.sup===s.name).length;
     const sinRep=s.projs.filter(p=>p._fromDB&&!p._reportedToday).length;
-    return{...s,avgSpi,avgValp,crits,alerts,sinRep};
-  }).sort((a,b)=>a.avgSpi-b.avgSpi);
+    const obj={...s,avgSpi,avgValp,crits,alerts,sinRep};
+    obj.health=_supxHealthScore(obj);
+    obj.healthColor=_supxHealthColor(obj.health);
+    obj.healthLabel=_supxHealthLabel(obj.health);
+    return obj;
+  });
 
+  // Sorting
+  const sortFns={
+    health:(a,b)=>a.health-b.health,
+    spi:(a,b)=>a.avgSpi-b.avgSpi,
+    cartera:(a,b)=>b.venta-a.venta,
+    alerts:(a,b)=>b.alerts-a.alerts,
+  };
+  sups=sups.slice().sort(sortFns[_supxSort]||sortFns.health);
+
+  // Aggregates
   const totV=ps.reduce((a,p)=>a+p.venta,0);
   const totF=ps.reduce((a,p)=>a+p.fact,0);
-  const ok=sups.filter(s=>s.avgSpi>=0.95).length;
-  const warn=sups.filter(s=>s.avgSpi>=0.85&&s.avgSpi<0.95).length;
-  const crit=sups.filter(s=>s.avgSpi<0.85).length;
+  const avgSpiGlobal=ps.length?ps.reduce((a,p)=>a+p.spi,0)/ps.length:0;
+  const optimo=sups.filter(s=>s.health>=88).length;
+  const estable=sups.filter(s=>s.health>=75&&s.health<88).length;
+  const riesgo=sups.filter(s=>s.health>=55&&s.health<75).length;
+  const critico=sups.filter(s=>s.health<55).length;
+  const totalAlerts=sups.reduce((a,s)=>a+s.alerts,0);
+  const totalSinRep=sups.reduce((a,s)=>a+s.sinRep,0);
 
-  let h=`<div class="pmx-hdr"><div><div class="pmx-hdr-title">👷 Supervisores PMO</div><div class="pmx-hdr-sub">${sups.length} supervisores · ${ps.length} proyectos activos</div></div></div>`;
-  h+=`<div class="pmx-kpi-row">
-    <div class="pmx-kpi"><div class="pmx-kpi-v" style="color:#2dc4a6">${ok}</div><div class="pmx-kpi-l">En plan SPI≥0.95</div></div>
-    <div class="pmx-kpi"><div class="pmx-kpi-v" style="color:#f39c12">${warn}</div><div class="pmx-kpi-l">En riesgo</div></div>
-    <div class="pmx-kpi"><div class="pmx-kpi-v" style="color:#ff6b6b">${crit}</div><div class="pmx-kpi-l">SPI crítico</div></div>
-    <div class="pmx-kpi"><div class="pmx-kpi-v" style="color:#818cf8">${_U(totV)}</div><div class="pmx-kpi-l">Cartera total</div></div>
-    <div class="pmx-kpi"><div class="pmx-kpi-v" style="color:#2dc4a6">${totV>0?(totF/totV*100).toFixed(0)+'%':'—'}</div><div class="pmx-kpi-l">Facturado</div></div>
-  </div>`;
-  h+=`<div class="sup-grid">`;
-  sups.forEach(s=>{
-    const col=_spiC(s.avgSpi);
-    const factPct=s.venta>0?(s.fact/s.venta*100).toFixed(0):0;
-    const waTxt=`Hola ${s.name},\n\n📊 *Estado de tu cartera PMO*\n\n${s.projs.length} proyectos · SPI promedio ${s.avgSpi.toFixed(2)}\nCartera: ${_U(s.venta)} · Facturado: ${_U(s.fact)}\n${s.sinRep>0?`\n⚠️ ${s.sinRep} proyecto${s.sinRep>1?'s':''} sin reporte hoy.\n`:''}\n_Grupo Friopacking · PMO_`;
-    h+=`<div class="sup-card">
-      ${s.alerts>0?`<div class="sup-alert-badge">⚠ ${s.alerts}</div>`:''}
-      <div class="sup-card-top">
-        <div class="sup-avatar" style="background:${_aC(s.name)}">${_initials(s.name)}</div>
-        <div style="flex:1">
-          <div class="sup-card-name">${s.name}</div>
-          <div class="sup-card-meta">${s.projs.length} proyecto${s.projs.length>1?'s':''} · ${_U(s.venta)}</div>
-          ${s.sinRep>0?`<div style="font-size:10px;color:#f39c12;margin-top:2px;font-weight:700">📵 ${s.sinRep} sin reporte</div>`:''}
+  // Spotlights
+  const critSup=sups.slice().sort((a,b)=>a.health-b.health)[0];
+  const topSup=sups.slice().sort((a,b)=>b.health-a.health)[0];
+
+  // IA Insights
+  const insights=[];
+  if(critSup&&critSup.health<70){
+    insights.push({ico:'🧠',c:'#ef4444',tag:'Riesgo financiero',txt:`<b>${critSup.name}</b> concentra el mayor riesgo · ${critSup.crits} proyecto${critSup.crits!==1?'s':''} con SPI<0.85 sobre cartera ${_U(critSup.venta)}`});
+  }
+  if(topSup&&topSup.health>=85&&topSup!==critSup){
+    insights.push({ico:'🏆',c:'#22c55e',tag:'Top performer',txt:`<b>${topSup.name}</b> lidera con health ${topSup.health}/100 · SPI prom ${topSup.avgSpi.toFixed(2)}`});
+  }
+  // Supervisor with most alerts
+  const mostAlert=sups.slice().sort((a,b)=>b.alerts-a.alerts)[0];
+  if(mostAlert&&mostAlert.alerts>=3&&mostAlert!==critSup){
+    insights.push({ico:'🚨',c:'#f59e0b',tag:'Alertas operacionales',txt:`<b>${mostAlert.name}</b> acumula ${mostAlert.alerts} alertas activas — requiere atención`});
+  }
+  // Sin reporte
+  if(totalSinRep>0){
+    insights.push({ico:'📵',c:'#6366f1',tag:'Reportería pendiente',txt:`<b>${totalSinRep} proyecto${totalSinRep!==1?'s':''}</b> sin reporte hoy · ${sups.filter(s=>s.sinRep>0).length} supervisor${sups.filter(s=>s.sinRep>0).length!==1?'es':''} afectado${sups.filter(s=>s.sinRep>0).length!==1?'s':''}`});
+  }
+  // Facturación
+  const factPctGlobal=totV>0?totF/totV*100:0;
+  if(factPctGlobal<40&&totV>0){
+    insights.push({ico:'💰',c:'#8b5cf6',tag:'Facturación',txt:`Facturación global en <b>${factPctGlobal.toFixed(0)}%</b> · oportunidad de cierre por <b>${_U(totV-totF)}</b>`});
+  }
+  // Limit to 4
+  insights.length=Math.min(insights.length,4);
+
+  // ════ Begin HTML ════
+  let h=`<div class="supx-wrap">`;
+
+  // ════ HERO ════
+  h+=`<div class="supx-hero">
+    <div class="supx-hero-head">
+      <div class="supx-hero-title">
+        <div class="supx-hero-icon">👷</div>
+        <div>
+          <h2>Supervisor Intelligence Center</h2>
+          <p>${sups.length} supervisores · ${ps.length} proyectos en cartera · live monitoring</p>
         </div>
-        <div class="sup-spi-wrap">${_spiArc(s.avgSpi)}</div>
       </div>
-      <div class="sup-metrics">
-        <div class="sup-metric"><div class="sup-metric-v" style="color:${col}">${s.avgSpi.toFixed(2)}</div><div class="sup-metric-l">SPI prom.</div></div>
-        <div class="sup-metric"><div class="sup-metric-v" style="color:#e2e8f0">${s.avgValp.toFixed(0)}%</div><div class="sup-metric-l">Avance</div></div>
-        <div class="sup-metric"><div class="sup-metric-v" style="color:#818cf8">${factPct}%</div><div class="sup-metric-l">Facturado</div></div>
+      <div class="supx-hero-actions">
+        <button class="supx-btn" onclick="initFromSupabase&&initFromSupabase()">🔄 Sync</button>
       </div>
-      <div class="sup-proj-dots">
-        ${s.projs.map(p=>`<div class="sup-dot" style="background:${_spiC(p.spi)}" title="${p.name} · SPI ${p.spi.toFixed(2)}" onclick="W.openProject&&W.openProject('${p.name}')"></div>`).join('')}
-      </div>
-      <div class="pmx-kpi-bar"><div class="pmx-kpi-bar-fill" style="width:${Math.min(100,(s.avgSpi/1.2)*100)}%;background:${col}"></div></div>
-      <div style="margin-top:8px"></div>
-      <div class="sup-card-foot">
-        <button class="sup-btn sup-btn-wa" onclick="window.open('${_waURL(waTxt)}','_blank')">📱 WhatsApp</button>
-        <button class="sup-btn sup-btn-view" onclick="document.querySelector('.tab[data-v=datos]')?.click()">📊 Proyectos</button>
-      </div>
-    </div>`;
+    </div>
+    <div class="supx-hero-stats">
+      <div class="supx-stat" style="--c:#0d9488"><div class="supx-stat-l"><span class="dot"></span>Activos</div><div class="supx-stat-v">${sups.length}</div><div class="supx-stat-d">${ps.length} proyectos</div></div>
+      <div class="supx-stat" style="--c:#22c55e"><div class="supx-stat-l"><span class="dot"></span>Óptimos</div><div class="supx-stat-v">${optimo}</div><div class="supx-stat-d">health ≥ 88</div></div>
+      <div class="supx-stat" style="--c:#f59e0b"><div class="supx-stat-l"><span class="dot"></span>En riesgo</div><div class="supx-stat-v">${riesgo}</div><div class="supx-stat-d">55-75</div></div>
+      <div class="supx-stat" style="--c:#ef4444"><div class="supx-stat-l"><span class="dot"></span>Críticos</div><div class="supx-stat-v">${critico}</div><div class="supx-stat-d">health < 55</div></div>
+      <div class="supx-stat" style="--c:#8b5cf6"><div class="supx-stat-l"><span class="dot"></span>Cartera</div><div class="supx-stat-v">${_U(totV)}</div><div class="supx-stat-d">${factPctGlobal.toFixed(0)}% facturado</div></div>
+      <div class="supx-stat" style="--c:${_supxHealthColor(avgSpiGlobal*100)}"><div class="supx-stat-l"><span class="dot"></span>SPI global</div><div class="supx-stat-v">${avgSpiGlobal.toFixed(2)}</div><div class="supx-stat-d">${totalAlerts} alertas activas</div></div>
+    </div>
+  </div>`;
+
+  // ════ SPOTLIGHT ════
+  if(critSup||topSup){
+    h+=`<div class="supx-spotlight">`;
+    if(critSup){
+      const reasonBits=[];
+      if(critSup.crits>0)reasonBits.push(`${critSup.crits} proyecto${critSup.crits!==1?'s':''} con SPI<0.85`);
+      if(critSup.alerts>0)reasonBits.push(`${critSup.alerts} alertas`);
+      if(critSup.sinRep>0)reasonBits.push(`${critSup.sinRep} sin reporte`);
+      const reason=reasonBits.length?reasonBits.join(' · '):`SPI prom ${critSup.avgSpi.toFixed(2)}`;
+      h+=`<div class="supx-spot crit" onclick="W._openSupPanel&&W._openSupPanel('${critSup.name.replace(/'/g,"\\'")}')">
+        <div class="supx-spot-tag">⚠ Supervisor más crítico</div>
+        <div class="supx-spot-body">
+          <div class="supx-spot-avatar" style="--ab:${_aC(critSup.name)}">${_initials(critSup.name)}</div>
+          <div class="supx-spot-info">
+            <h3>${critSup.name}</h3>
+            <p>${critSup.projs.length} proyecto${critSup.projs.length!==1?'s':''} · ${_U(critSup.venta)}</p>
+            <div class="reason">${reason}</div>
+          </div>
+          <div class="supx-spot-ring" style="--c:${critSup.healthColor}">
+            ${_supxRing(critSup.health,100,72,critSup.healthColor)}
+            <div class="supx-spot-ring-label" style="--c:${critSup.healthColor}"><div><div class="v">${critSup.health}</div><div class="l">${critSup.healthLabel}</div></div></div>
+          </div>
+        </div>
+      </div>`;
+    }
+    if(topSup&&topSup!==critSup){
+      const reason=`SPI ${topSup.avgSpi.toFixed(2)} · avance ${topSup.avgValp.toFixed(0)}% · ${topSup.alerts?topSup.alerts+' alertas':'sin alertas'}`;
+      h+=`<div class="supx-spot top" onclick="W._openSupPanel&&W._openSupPanel('${topSup.name.replace(/'/g,"\\'")}')">
+        <div class="supx-spot-tag">🏆 Top performer</div>
+        <div class="supx-spot-body">
+          <div class="supx-spot-avatar" style="--ab:${_aC(topSup.name)}">${_initials(topSup.name)}</div>
+          <div class="supx-spot-info">
+            <h3>${topSup.name}</h3>
+            <p>${topSup.projs.length} proyecto${topSup.projs.length!==1?'s':''} · ${_U(topSup.venta)}</p>
+            <div class="reason">${reason}</div>
+          </div>
+          <div class="supx-spot-ring" style="--c:${topSup.healthColor}">
+            ${_supxRing(topSup.health,100,72,topSup.healthColor)}
+            <div class="supx-spot-ring-label" style="--c:${topSup.healthColor}"><div><div class="v">${topSup.health}</div><div class="l">${topSup.healthLabel}</div></div></div>
+          </div>
+        </div>
+      </div>`;
+    }
+    h+=`</div>`;
+  }
+
+  // ════ INSIGHTS + MATRIX ════
+  h+=`<div class="supx-row">`;
+
+  // Insights panel
+  h+=`<div class="supx-panel">
+    <div class="supx-panel-head"><span class="ico">🧠</span>AI Insights<span class="cnt">${insights.length}</span></div>
+    <div class="supx-insights-body">`;
+  if(insights.length){
+    insights.forEach(i=>{
+      h+=`<div class="supx-insight" style="--c:${i.c}">
+        <div class="supx-insight-ico">${i.ico}</div>
+        <div>
+          <div class="supx-insight-tag">${i.tag}</div>
+          <div class="supx-insight-txt">${i.txt}</div>
+        </div>
+      </div>`;
+    });
+  } else {
+    h+=`<div style="padding:24px;text-align:center;color:var(--sx-mut);font-size:12px">Sin insights críticos · operación estable</div>`;
+  }
+  h+=`</div></div>`;
+
+  // Matrix panel
+  h+=`<div class="supx-panel">
+    <div class="supx-panel-head"><span class="ico">🎯</span>Performance Matrix<span class="cnt">${sups.length}</span></div>
+    <div class="supx-matrix-body">
+      <div class="supx-matrix">
+        <div class="supx-matrix-grid"></div>
+        <div class="supx-matrix-zone top-left">⚠ Riesgo financiero</div>
+        <div class="supx-matrix-zone top-right">🏆 Top zone</div>
+        <div class="supx-matrix-zone bottom-left">🔴 Crítico</div>
+        <div class="supx-matrix-zone bottom-right">📊 Recuperando</div>`;
+  sups.forEach((s,i)=>{
+    // X: avgValp (avance) 0-100 → 6-94% left
+    // Y: avgSpi 0.5-1.1 → 94% to 6% top (inverted)
+    const x=6+Math.max(0,Math.min(1,s.avgValp/100))*88;
+    const yNorm=Math.max(0,Math.min(1,(s.avgSpi-0.5)/0.6));
+    const y=94-yNorm*88;
+    const size=Math.max(22,Math.min(40,18+s.venta/Math.max(1,totV)*sups.length*8));
+    h+=`<div class="supx-matrix-dot" style="left:${x}%;top:${y}%;--c:${s.healthColor};animation-delay:${i*0.04}s;width:${size}px;height:${size}px;font-size:${size>30?11:9}px" title="${s.name} · SPI ${s.avgSpi.toFixed(2)} · Avance ${s.avgValp.toFixed(0)}%" onclick="W._openSupPanel&&W._openSupPanel('${s.name.replace(/'/g,"\\'")}')">${_initials(s.name).slice(0,1)}</div>`;
   });
-  h+=`</div>`;
+  h+=`<div class="supx-matrix-axes"><span>Avance bajo</span><span>Avance alto →</span></div>
+        <div class="supx-matrix-yaxis"><span>SPI alto ↑</span><span>SPI bajo</span></div>
+      </div>
+      <div class="supx-matrix-legend">
+        <span><span class="dot" style="background:#22c55e"></span>Óptimo (≥88)</span>
+        <span><span class="dot" style="background:#0d9488"></span>Estable (75-87)</span>
+        <span><span class="dot" style="background:#f59e0b"></span>Riesgo (55-74)</span>
+        <span><span class="dot" style="background:#ef4444"></span>Crítico (<55)</span>
+      </div>
+    </div>
+  </div>`;
+
+  h+=`</div>`; // .supx-row
+
+  // ════ Sort bar ════
+  h+=`<div class="supx-list-head">
+    <div class="supx-list-title">⚡ Supervisores · <span class="supx-list-sub">${sups.length} en cartera</span></div>
+    <div class="supx-sort">
+      <button class="supx-sort-btn ${_supxSort==='health'?'active':''}" onclick="W._supxSetSort&&W._supxSetSort('health')">Health</button>
+      <button class="supx-sort-btn ${_supxSort==='spi'?'active':''}" onclick="W._supxSetSort&&W._supxSetSort('spi')">SPI</button>
+      <button class="supx-sort-btn ${_supxSort==='cartera'?'active':''}" onclick="W._supxSetSort&&W._supxSetSort('cartera')">Cartera</button>
+      <button class="supx-sort-btn ${_supxSort==='alerts'?'active':''}" onclick="W._supxSetSort&&W._supxSetSort('alerts')">Alertas</button>
+    </div>
+  </div>`;
+
+  // ════ Supervisor cards (premium rings) ════
+  if(sups.length){
+    h+=`<div class="supx-list">`;
+    sups.forEach((s,idx)=>{
+      const c=s.healthColor;
+      const factPct=s.venta>0?(s.fact/s.venta*100).toFixed(0):'0';
+      const isLive=s.sinRep===0&&s.projs.length>0;
+      const waTxt=`Hola ${s.name},\n\n📊 *Estado de tu cartera PMO*\n\n${s.projs.length} proyectos · SPI promedio ${s.avgSpi.toFixed(2)}\nHealth score: ${s.health}/100 (${s.healthLabel})\nCartera: ${_U(s.venta)} · Facturado: ${_U(s.fact)}${s.sinRep>0?`\n\n⚠️ ${s.sinRep} proyecto${s.sinRep>1?'s':''} sin reporte hoy.`:''}\n\n_Grupo Friopacking · PMO_`;
+      const metaBits=[];
+      if(s.crits>0)metaBits.push(`<span class="crit">${s.crits} SPI<0.85</span>`);
+      if(s.alerts>0)metaBits.push(`<span class="alert">${s.alerts} alertas</span>`);
+      if(s.sinRep>0)metaBits.push(`<span class="alert">${s.sinRep} sin reporte</span>`);
+      if(!metaBits.length)metaBits.push(`<span class="ok">operación estable</span>`);
+      h+=`<div class="supx-card" style="--c:${c};animation-delay:${idx*.03}s" onclick="W._openSupPanel&&W._openSupPanel('${s.name.replace(/'/g,"\\'")}')">
+        <div class="supx-card-head">
+          <div class="supx-avatar ${isLive?'live':''}" style="--ab:${_aC(s.name)}">${_initials(s.name)}</div>
+          <div style="min-width:0">
+            <div class="supx-card-name">${s.name}</div>
+            <div class="supx-card-meta">${s.projs.length} proyecto${s.projs.length!==1?'s':''} <span class="sep">·</span> ${_U(s.venta)} <span class="sep">·</span> ${metaBits.join(' <span class="sep">·</span> ')}</div>
+          </div>
+          <div class="supx-ring" style="--c:${c}">
+            ${_supxRing(s.health,100,74,c)}
+            <div class="supx-ring-mid" style="--c:${c}"><div><div class="v">${s.health}</div><div class="l">${s.healthLabel}</div></div></div>
+          </div>
+        </div>
+        <div class="supx-card-metrics">
+          <div class="supx-mini" style="--c:${_spiC(s.avgSpi)}"><div class="supx-mini-l">SPI</div><div class="supx-mini-v">${s.avgSpi.toFixed(2)}</div><div class="supx-mini-d">prom. cartera</div></div>
+          <div class="supx-mini" style="--c:#6366f1"><div class="supx-mini-l">Avance</div><div class="supx-mini-v">${s.avgValp.toFixed(0)}%</div><div class="supx-mini-d">obra prom.</div></div>
+          <div class="supx-mini" style="--c:#0d9488"><div class="supx-mini-l">Facturado</div><div class="supx-mini-v">${factPct}%</div><div class="supx-mini-d">${_U(s.fact)}</div></div>
+        </div>
+        <div class="supx-health">
+          <div class="supx-health-head"><span>Health score</span><span class="v" style="--c:${c}">${s.health}/100</span></div>
+          <div class="supx-health-bar"><div class="supx-health-fill" style="width:${s.health}%;--c:${c}"></div></div>
+        </div>
+        <div class="supx-dots">
+          ${s.projs.slice(0,18).map(p=>`<div class="supx-dot" style="--c:${_spiC(p.spi)}" title="${p.name} · SPI ${p.spi.toFixed(2)}" onclick="event.stopPropagation();W.openProject&&W.openProject('${(p.name||'').replace(/'/g,"\\'")}')"></div>`).join('')}
+          ${s.projs.length>18?`<span style="font-size:9.5px;color:var(--sx-mut);align-self:center;margin-left:4px;font-weight:700">+${s.projs.length-18}</span>`:''}
+        </div>
+        <div class="supx-actions">
+          <button class="supx-act" style="--c:#25d366" onclick="event.stopPropagation();window.open('${_waURL(waTxt)}','_blank')">💬 WhatsApp</button>
+          <button class="supx-act" style="--c:#0d9488" onclick="event.stopPropagation();W._openSupPanel&&W._openSupPanel('${s.name.replace(/'/g,"\\'")}')">📋 Detalle</button>
+          <button class="supx-act" style="--c:#6366f1" onclick="event.stopPropagation();document.querySelector('.tab[data-v=datos]')?.click()">📊 Cartera</button>
+        </div>
+      </div>`;
+    });
+    h+=`</div>`;
+  } else {
+    h+=`<div class="supx-empty"><div class="supx-empty-ico">👷</div><div style="font-weight:700;color:var(--sx-ink-2);font-size:14px">Sin supervisores asignados</div><div style="font-size:12px;margin-top:4px">Asigna supervisores a proyectos para activar el monitoring</div></div>`;
+  }
+
+  // ════ Activity timeline ════
+  if(_supxTimeline.length===0&&sups.length){
+    // Seed from current state
+    const now=Date.now();
+    if(critSup&&critSup.health<70){_supxTimeline.push({at:now-1200000,c:'#ef4444',html:`⚠️ <b>${critSup.name}</b> entró en zona crítica · health ${critSup.health}/100`});}
+    if(totalAlerts>0){_supxTimeline.push({at:now-900000,c:'#f59e0b',html:`📊 <b>${totalAlerts}</b> alertas activas detectadas en cartera`});}
+    if(topSup&&topSup.health>=85){_supxTimeline.push({at:now-300000,c:'#22c55e',html:`🏆 <b>${topSup.name}</b> mantiene performance superior · SPI ${topSup.avgSpi.toFixed(2)}`});}
+    if(totalSinRep>0){_supxTimeline.push({at:now-180000,c:'#6366f1',html:`📵 <b>${totalSinRep}</b> proyecto${totalSinRep!==1?'s':''} sin reporte hoy`});}
+  }
+  if(_supxTimeline.length){
+    h+=`<div class="supx-panel" style="margin-top:16px">
+      <div class="supx-panel-head"><span class="ico">📡</span>Live activity feed<span class="cnt">${_supxTimeline.length}</span></div>
+      <div class="supx-timeline-body">`;
+    _supxTimeline.slice(0,10).forEach(t=>{
+      const diff=Math.floor((Date.now()-t.at)/1000);
+      const rel=diff<60?'hace '+diff+'s':diff<3600?'hace '+Math.floor(diff/60)+' min':diff<86400?'hace '+Math.floor(diff/3600)+' h':'hace '+Math.floor(diff/86400)+'d';
+      h+=`<div class="supx-tl" style="--c:${t.c}"><div class="supx-tl-time">${rel}</div><div class="supx-tl-txt">${t.html}</div></div>`;
+    });
+    h+=`</div></div>`;
+  }
+
+  h+=`</div>`; // .supx-wrap
   el.innerHTML=h;
+
+  // Handlers
+  W._supxSetSort=k=>{_supxSort=k;renderSupervisoresPremium();};
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -15359,62 +15615,79 @@ function _getShareId(url){
   return 'u!'+b.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 
-async function _listFolder(token){
-  /* 1. Try sharedWithMe — works when folder was shared directly with user */
-  var r1=await fetch('https://graph.microsoft.com/v1.0/me/drive/sharedWithMe?$select=id,name,folder,file,lastModifiedDateTime,parentReference,remoteItem',{
-    headers:{Authorization:'Bearer '+token,Accept:'application/json'}
-  });
-  if(r1.ok){
-    var d1=await r1.json();
-    var shared=d1.value||[];
-    /* Collect Excel files directly shared */
-    var xlDirect=shared.filter(function(f){return f.file&&/\.xlsx?$/i.test(f.name);});
-    if(xlDirect.length)return xlDirect.map(function(f){
-      var ri=f.remoteItem||{};
-      return {id:ri.id||f.id,name:f.name,lastModifiedDateTime:ri.lastModifiedDateTime||f.lastModifiedDateTime,
-        parentReference:{driveId:(ri.parentReference&&ri.parentReference.driveId)||''}, _downloadUrl:ri['@microsoft.graph.downloadUrl']};
-    });
-    /* Look inside shared folders for Excel files */
-    var folders=shared.filter(function(f){return f.folder||f.remoteItem;});
-    var allXl=[];
-    for(var i=0;i<folders.length;i++){
-      var fo=folders[i];
-      var ri=fo.remoteItem||{};
-      var dId=(ri.parentReference&&ri.parentReference.driveId)||'';
-      var iId=ri.id||fo.id;
-      if(!dId||!iId)continue;
-      var r2=await fetch('https://graph.microsoft.com/v1.0/drives/'+dId+'/items/'+iId+'/children?$select=id,name,file,lastModifiedDateTime,parentReference',{
-        headers:{Authorization:'Bearer '+token,Accept:'application/json'}
-      });
-      if(!r2.ok)continue;
-      var d2=await r2.json();
-      var xl=(d2.value||[]).filter(function(f){return f.file&&/\.xlsx?$/i.test(f.name);});
-      allXl=allXl.concat(xl.map(function(f){return Object.assign({},f,{parentReference:{driveId:dId}});}));
-    }
-    if(allXl.length)return allXl;
-  }
-  /* 2. Fallback: sharing link approach */
+/* ── Resolve share URL → {driveId, itemId, lastModified} ── */
+async function _resolveShareItem(token){
+  if(_itemCache)return _itemCache;
   var sid=_getShareId(_SP.shareUrl);
-  var resp=await fetch('https://graph.microsoft.com/v1.0/shares/'+sid+'/driveItem/children',{
+  var r=await fetch('https://graph.microsoft.com/v1.0/shares/'+sid+'/driveItem?$select=id,parentReference,lastModifiedDateTime',{
     headers:{Authorization:'Bearer '+token,Accept:'application/json'}
   });
-  if(!resp.ok){
-    var err=await resp.text();
-    throw new Error('Sin permiso (403). Anthony debe compartir la carpeta directamente con kmedina@friopacking.pe en SharePoint (no solo el link).');
+  if(!r.ok){
+    var t=await r.text();
+    if(r.status===403||r.status===404)throw new Error('Sin acceso al Excel. Verifica que sistemas@friopacking.pe haya compartido el archivo contigo.');
+    throw new Error('Error resolviendo archivo ('+r.status+'): '+t.slice(0,150));
   }
-  var data=await resp.json();
-  return data.value||[];
+  var d=await r.json();
+  _itemCache={driveId:d.parentReference.driveId,itemId:d.id,lastModified:d.lastModifiedDateTime};
+  return _itemCache;
 }
 
-async function _downloadItem(token,item){
-  if(item._downloadUrl){
-    var r=await fetch(item._downloadUrl);
-    if(r.ok)return r.blob();
+/* ── Detectar si cambió desde última sync (ahorra ancho de banda) ── */
+async function _hasChanged(token){
+  if(!_lastSync)return true;
+  try{
+    var sid=_getShareId(_SP.shareUrl);
+    var r=await fetch('https://graph.microsoft.com/v1.0/shares/'+sid+'/driveItem?$select=lastModifiedDateTime',{headers:{Authorization:'Bearer '+token}});
+    if(!r.ok)return true;
+    var d=await r.json();
+    return new Date(d.lastModifiedDateTime).getTime()>_lastSync;
+  }catch(e){return true;}
+}
+
+/* ── Leer filas de la tabla vía Graph Excel API ── */
+async function _readTable(token){
+  var it=await _resolveShareItem(token);
+  var tbl=encodeURIComponent(_SP.tableName);
+  var url='https://graph.microsoft.com/v1.0/drives/'+it.driveId+'/items/'+it.itemId
+    +"/workbook/tables('"+tbl+"')/rows?$select=values&$top=5000";
+  var r=await fetch(url,{headers:{Authorization:'Bearer '+token,Accept:'application/json'}});
+  if(!r.ok){
+    var t=await r.text();
+    throw new Error('No se pudo leer la tabla "'+_SP.tableName+'" ('+r.status+'). Verifica que la tabla exista con ese nombre exacto en la hoja "'+_SP.sheetName+'". '+t.slice(0,200));
   }
-  var url='https://graph.microsoft.com/v1.0/drives/'+item.parentReference.driveId+'/items/'+item.id+'/content';
-  var resp=await fetch(url,{headers:{Authorization:'Bearer '+token}});
-  if(!resp.ok)throw new Error('Error descargando archivo ('+resp.status+')');
-  return resp.blob();
+  var d=await r.json();
+  return (d.value||[]).map(function(row){return row.values[0];});
+}
+
+/* ── Conversor de fecha Excel (serial number o string) ── */
+function _excelDate(v){
+  if(v==null||v==='')return null;
+  if(typeof v==='string'){
+    var d=new Date(v);
+    if(!isNaN(d.getTime()))return d.toISOString().slice(0,10);
+    var m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+    if(m){var y=m[3].length===2?('20'+m[3]):m[3];return y+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);}
+    return v;
+  }
+  if(typeof v==='number'){
+    var ms=(v-25569)*86400*1000;
+    return new Date(ms).toISOString().slice(0,10);
+  }
+  return null;
+}
+
+/* ── Mapeo de columnas E,F,G,H,L,M,N,R ── */
+function _mapRow(values){
+  return {
+    proveedor: values[4]||'',
+    proyecto: values[5]||'',
+    tipoProducto: values[6]||'',
+    origen: values[7]||'',
+    etd: _excelDate(values[11]),
+    eta: _excelDate(values[12]),
+    statusDestino: values[13]||'',
+    refOrden: values[17]||''
+  };
 }
 
 function _btn(){return document.getElementById('sp-sync-btn');}

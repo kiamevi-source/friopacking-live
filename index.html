@@ -15196,10 +15196,22 @@ console.log('%c PMO v15.0 · Executive Visual Redesign','background:#0d2436;colo
 </script>
 
 <!-- ================================================================
-     SharePoint Sync — OAuth 2.0 PKCE nativo (sin librerías externas)
-     Client: 99f2cfe1-d9fa-4f5b-86be-c41d56dc8ae5
-     Tenant: d6809178-53cc-4387-b31d-a13f1637b52a
+     SharePoint Auto-Sync v2 — Graph Excel API (lee tabla directamente)
+     Archivo: IMPORTACION-XI-MLUJAN-2026.xlsx (sistemas@friopacking.pe)
+     Tabla:   IMPORTACION-XI-MLUJAN-2026   Hoja: NISIRA FP
+     Cols:    E=Proveedor F=Proyecto G=Tipo H=Origen
+              L=ETD M=ETA N=Status R=RefOrden
+     Modo:    Automático con polling 5min + visibility-aware
      ================================================================ -->
+<style>
+#sp-sync-btn{display:none !important}
+@keyframes spPulse{0%,100%{opacity:1}50%{opacity:.35}}
+#sp-sync-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.08);color:#9fb3c8;font-size:11px;font-weight:600;font-family:Inter,system-ui,sans-serif;cursor:default;user-select:none}
+#sp-sync-badge .dot{width:7px;height:7px;border-radius:50%;background:#7a8699;flex-shrink:0}
+#sp-sync-badge.loading .dot{animation:spPulse 1.2s infinite;background:#0ea5e9}
+#sp-sync-badge.ok .dot{background:#22c55e}
+#sp-sync-badge.error .dot{background:#ef4444}
+</style>
 <script>
 (function(W){'use strict';
 
@@ -15207,10 +15219,15 @@ var _SP={
   clientId:'99f2cfe1-d9fa-4f5b-86be-c41d56dc8ae5',
   tenantId:'d6809178-53cc-4387-b31d-a13f1637b52a',
   scopes:'Files.Read User.Read offline_access',
-  shareUrl:'https://friopacking-my.sharepoint.com/:f:/g/personal/aaycho_friopacking_pe/IgC5IxUpEIuCR6x4GSTHt6miAUUH_wBx5Hd4_wggcJ1n7Nk?e=lf9Rye',
-  redirectUri:(window.location.protocol==='http:'||window.location.protocol==='https:')?window.location.origin+'/':(  'http://localhost:8080/'),
-  storageKey:'sp_auth_v1'
+  shareUrl:'https://friopacking-my.sharepoint.com/:x:/g/personal/sistemas_friopacking_pe/IQDIkeRQwjRUTYxuBMxWf__jAcdyJISsYiiugw_3IHkiMb0?e=OkgJt7',
+  tableName:'IMPORTACION-XI-MLUJAN-2026',
+  sheetName:'NISIRA FP',
+  redirectUri:(window.location.protocol==='http:'||window.location.protocol==='https:')?window.location.origin+'/':('http://localhost:8080/'),
+  storageKey:'sp_auth_v1',
+  pollMs:5*60*1000
 };
+
+var _itemCache=null, _lastSync=null, _polling=false, _pollTimer=null;
 
 /* ── PKCE helpers ── */
 function _randomStr(len){

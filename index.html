@@ -15690,70 +15690,102 @@ function _mapRow(values){
   };
 }
 
-function _btn(){return document.getElementById('sp-sync-btn');}
-function _setBtnState(txt,bg,disabled){
-  var b=_btn();if(!b)return;
-  b.textContent=txt;
-  b.style.background=bg||'linear-gradient(135deg,#0ea5e9,#2563EB)';
-  b.style.opacity=disabled?'0.7':'1';
-  b.disabled=!!disabled;
+/* ── UI: Badge en header ── */
+function _ensureBadge(){
+  var b=document.getElementById('sp-sync-badge');
+  if(b)return b;
+  var host=document.querySelector('.head-actions')||document.querySelector('header.app');
+  if(!host)return null;
+  b=document.createElement('div');
+  b.id='sp-sync-badge';
+  b.innerHTML='<span class="dot"></span><span class="txt">Iniciando…</span>';
+  host.insertBefore(b,host.firstChild);
+  return b;
 }
-function _resetBtn(){_setBtnState('☁️ Sync SharePoint','linear-gradient(135deg,#0ea5e9,#2563EB)',false);}
+function _setBadge(state,text){
+  var b=_ensureBadge();
+  if(!b)return;
+  b.className='';b.classList.add(state);
+  var t=b.querySelector('.txt');
+  if(t)t.textContent=text;
+}
+function _relTime(ts){
+  if(!ts)return 'nunca';
+  var s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return 'hace '+s+'s';
+  if(s<3600)return 'hace '+Math.floor(s/60)+' min';
+  if(s<86400)return 'hace '+Math.floor(s/3600)+' h';
+  return 'hace '+Math.floor(s/86400)+' días';
+}
 
-W._spSync=async function(){
-  /* server.py usa Safari (sesión Microsoft activa) para descargar → sin OAuth */
-  var PROXY=window.location.origin+'/sp-download';
-  if(window.location.protocol==='file:'){
-    alert('Abre la app desde:\nhttp://localhost:8080/friopacking_master_v6_2.html\n\n(Ejecuta primero: python3 ~/Desktop/server.py)');
-    return;
-  }
-  _setBtnState('⬇️ Descargando...','#2563EB',true);
+/* ── Sync principal ── */
+async function _doSync(force){
+  if(_polling)return;
+  _polling=true;
   try{
-    var resp=await fetch(PROXY,{signal:AbortSignal.timeout?AbortSignal.timeout(50000):undefined});
-    if(!resp.ok){var t=await resp.text();throw new Error(t||'HTTP '+resp.status);}
-    var blob=await resp.blob();
-    if(blob.size<5000)throw new Error('Archivo inválido ('+blob.size+' bytes). Revisa que Safari tenga acceso a SharePoint.');
-    var file=new File([blob],'valorizacion.xlsx',{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-    _setBtnState('📊 Importando...','#2563EB',true);
-    W._v5parse(file,function(){
-      W.renderValorizacionPremium();
-      _setBtnState('✓ Sincronizado','#059669',false);
-      setTimeout(_resetBtn,4000);
-    });
+    _setBadge('loading','Sincronizando…');
+    var token=await _getToken();
+    if(!force){
+      var changed=await _hasChanged(token);
+      if(!changed){
+        _setBadge('ok','Al día · '+_relTime(_lastSync));
+        return;
+      }
+    }
+    var raw=await _readTable(token);
+    var rows=raw.map(_mapRow);
+    W.embarques=rows;
+    _lastSync=Date.now();
+    _setBadge('ok','Actualizado · '+_relTime(_lastSync));
+    window.dispatchEvent(new CustomEvent('embarques:updated',{detail:{rows:rows,ts:_lastSync}}));
+    console.log('[SP] '+rows.length+' embarques sincronizados');
   }catch(err){
-    _resetBtn();
-    alert('SharePoint Sync\n\n'+(err.message||'Error desconocido'));
+    console.error('[SP]',err);
+    _setBadge('error',(err.message||'Error').slice(0,50));
+  }finally{
+    _polling=false;
   }
-};
-
-function _showSetupModal(){
-  var existing=document.getElementById('sp-setup-modal');
-  if(existing){document.body.removeChild(existing);return;}
-  var m=document.createElement('div');
-  m.id='sp-setup-modal';
-  m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:Inter,system-ui,sans-serif';
-  m.innerHTML='<div style="background:#fff;border-radius:14px;padding:28px;max-width:520px;width:94%;box-shadow:0 24px 70px rgba(0,0,0,.3)">'
-    +'<div style="font-size:16px;font-weight:800;color:#0F172A;margin-bottom:4px">☁️ Conectar con SharePoint</div>'
-    +'<div style="font-size:12px;color:#64748B;margin-bottom:20px">Se necesita un mini servidor local para la autenticación de Microsoft (una sola vez)</div>'
-    +'<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px;margin-bottom:12px">'
-    +'<div style="font-size:11px;font-weight:700;color:#0F172A;margin-bottom:8px">1 · Abre Terminal en tu Mac y ejecuta:</div>'
-    +'<div onclick="(navigator.clipboard&&navigator.clipboard.writeText(\'cd ~/Desktop && python3 -m http.server 8080\'))||true" style="background:#0F172A;color:#7dd3fc;padding:11px 14px;border-radius:7px;font-family:monospace;font-size:12.5px;cursor:pointer;user-select:all" title="Clic para copiar">cd ~/Desktop && python3 -m http.server 8080</div>'
-    +'<div style="font-size:11px;color:#94A3B8;margin-top:6px">💡 Déjalo corriendo en segundo plano (no cierres Terminal)</div>'
-    +'</div>'
-    +'<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px;margin-bottom:20px">'
-    +'<div style="font-size:11px;font-weight:700;color:#0F172A;margin-bottom:8px">2 · Abre esta URL en Safari:</div>'
-    +'<div onclick="navigator.clipboard&&navigator.clipboard.writeText(\'http://localhost:8080/friopacking_master_v6_2.html\')" style="background:#0F172A;color:#7dd3fc;padding:11px 14px;border-radius:7px;font-family:monospace;font-size:12px;cursor:pointer;user-select:all" title="Clic para copiar">http://localhost:8080/friopacking_master_v6_2.html</div>'
-    +'<div style="font-size:11px;color:#94A3B8;margin-top:6px">Luego haz clic en "☁️ Sync SharePoint" y se abrirá el login de Microsoft</div>'
-    +'</div>'
-    +'<div style="display:flex;gap:10px">'
-    +'<button onclick="document.body.removeChild(document.getElementById(\'sp-setup-modal\'))" style="flex:1;padding:10px;border-radius:8px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:13px;font-weight:600;color:#64748B;cursor:pointer">Cerrar</button>'
-    +'<button onclick="window.open(\'http://localhost:8080/friopacking_master_v6_2.html\',\'_blank\')" style="flex:2;padding:10px;border-radius:8px;border:none;background:linear-gradient(135deg,#0ea5e9,#2563EB);font-size:13px;font-weight:700;color:#fff;cursor:pointer">Abrir en localhost →</button>'
-    +'</div>'
-    +'</div>';
-  document.body.appendChild(m);
 }
 
-console.log('%c SP Sync v1.0 — MSAL + Graph API listo','background:#0ea5e9;color:#fff;padding:3px 10px;border-radius:5px;font-size:11px');
+/* ── Polling visibility-aware ── */
+function _startPolling(){
+  if(_pollTimer)clearInterval(_pollTimer);
+  _pollTimer=setInterval(function(){
+    if(document.visibilityState==='visible')_doSync(false);
+  },_SP.pollMs);
+}
+
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'){
+    if(_lastSync)_setBadge('ok','Al día · '+_relTime(_lastSync));
+    _doSync(false);
+  }
+});
+
+setInterval(function(){
+  if(_lastSync&&!_polling){
+    var b=document.getElementById('sp-sync-badge');
+    if(b&&b.classList.contains('ok')){
+      var t=b.querySelector('.txt');
+      if(t)t.textContent='Al día · '+_relTime(_lastSync);
+    }
+  }
+},30000);
+
+function _boot(){
+  _ensureBadge();
+  _setBadge('loading','Conectando…');
+  _doSync(true);
+  _startPolling();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',_boot);
+else setTimeout(_boot,500);
+
+/* Expuesto para uso manual desde consola si hace falta */
+W._spSync=function(){return _doSync(true);};
+W._spState=function(){return {lastSync:_lastSync,rows:(W.embarques||[]).length};};
+
+console.log('%c SP Auto-Sync v2 — Graph Excel API · cada '+(_SP.pollMs/60000)+' min','background:#0ea5e9;color:#fff;padding:3px 10px;border-radius:5px;font-size:11px');
 })(window);
 </script>
 

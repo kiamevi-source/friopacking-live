@@ -15451,11 +15451,281 @@ console.log('%c PMO v15.0 · Executive Visual Redesign','background:#0d2436;colo
 </script>
 
 <!-- ================================================================
-     SharePoint Integration — MIGRADO A POWER AUTOMATE (2026-05-18)
-     El antiguo Auto-Sync vía Graph Excel API se removió.
-     Los datos del Excel ahora se sincronizan vía Power Automate flow
-     a una SharePoint List, que el dashboard consume directamente.
+     SharePoint List Reader v3 — Microsoft List via Graph API
+     Backend: Power Automate flow → Microsoft List EmbarquesImportacion
+     Owner: kmedina@friopacking.pe (personal site)
+     Modo: OAuth click-once, refresh silencioso, polling 5min
      ================================================================ -->
+<style>
+@keyframes spPulse{0%,100%{opacity:1}50%{opacity:.35}}
+#sp-sync-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.08);color:#9fb3c8;font-size:11px;font-weight:600;font-family:Inter,system-ui,sans-serif;user-select:none}
+#sp-sync-badge:not(.connect){cursor:default}
+#sp-sync-badge.connect{cursor:pointer;background:rgba(45,196,166,.18);color:#7be0c8;border:1px solid rgba(45,196,166,.4)}
+#sp-sync-badge.connect:hover{background:rgba(45,196,166,.28)}
+#sp-sync-badge .dot{width:7px;height:7px;border-radius:50%;background:#7a8699;flex-shrink:0}
+#sp-sync-badge.loading .dot{animation:spPulse 1.2s infinite;background:#0ea5e9}
+#sp-sync-badge.ok .dot{background:#22c55e}
+#sp-sync-badge.error .dot{background:#ef4444}
+#sp-sync-badge.connect .dot{background:#7be0c8}
+</style>
+<script>
+(function(W){'use strict';
+
+var _SP={
+  clientId:'99f2cfe1-d9fa-4f5b-86be-c41d56dc8ae5',
+  tenantId:'d6809178-53cc-4387-b31d-a13f1637b52a',
+  scopes:'Sites.Read.All User.Read offline_access',
+  siteHost:'friopacking-my.sharepoint.com',
+  sitePath:'personal/kmedina_friopacking_pe',
+  listName:'EmbarquesImportacion',
+  redirectUri:(window.location.protocol==='http:'||window.location.protocol==='https:')?window.location.origin+'/':('http://localhost:8080/'),
+  storageKey:'sp_auth_v2',
+  pollMs:5*60*1000
+};
+
+var _siteId=null, _lastSync=null, _polling=false, _pollTimer=null;
+
+/* ── PKCE ── */
+function _randomStr(len){var a=new Uint8Array(len);crypto.getRandomValues(a);return Array.from(a,function(b){return ('0'+b.toString(16)).slice(-2);}).join('');}
+async function _codeChallenge(v){var d=new TextEncoder().encode(v);var h=await crypto.subtle.digest('SHA-256',d);return btoa(String.fromCharCode.apply(null,new Uint8Array(h))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+
+/* ── Token cache ── */
+function _saveToken(d){var o={access_token:d.access_token,refresh_token:d.refresh_token||null,expires_at:Date.now()+(parseInt(d.expires_in,10)-120)*1000};localStorage.setItem(_SP.storageKey,JSON.stringify(o));return o.access_token;}
+function _getCachedToken(){try{var o=JSON.parse(localStorage.getItem(_SP.storageKey)||'null');if(o&&o.access_token&&o.expires_at>Date.now())return o.access_token;}catch(e){}return null;}
+function _getCachedRefresh(){try{var o=JSON.parse(localStorage.getItem(_SP.storageKey)||'null');return o&&o.refresh_token?o.refresh_token:null;}catch(e){return null;}}
+
+async function _exchangeToken(p){
+  var body=Object.keys(p).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(p[k]);}).join('&');
+  var r=await fetch('https://login.microsoftonline.com/'+_SP.tenantId+'/oauth2/v2.0/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body});
+  var d=await r.json();
+  if(!d.access_token)throw new Error(d.error_description||d.error||'Token error');
+  return _saveToken(d);
+}
+async function _refreshToken(){
+  var rt=_getCachedRefresh();
+  if(!rt)throw new Error('no_refresh');
+  return _exchangeToken({grant_type:'refresh_token',client_id:_SP.clientId,refresh_token:rt,scope:_SP.scopes});
+}
+async function _loginPopup(){
+  var verifier=_randomStr(64);
+  var challenge=await _codeChallenge(verifier);
+  var state=_randomStr(16);
+  sessionStorage.setItem('pkce_verifier',verifier);
+  sessionStorage.setItem('pkce_state',state);
+  var authUrl='https://login.microsoftonline.com/'+_SP.tenantId+'/oauth2/v2.0/authorize'
+    +'?client_id='+_SP.clientId+'&response_type=code'
+    +'&redirect_uri='+encodeURIComponent(_SP.redirectUri)
+    +'&scope='+encodeURIComponent(_SP.scopes)
+    +'&code_challenge='+challenge+'&code_challenge_method=S256'
+    +'&state='+state+'&prompt=select_account';
+  var popup=window.open(authUrl,'ms_login','width=500,height=660,left=200,top=100');
+  if(!popup)throw new Error('Popup bloqueado. Permite popups para este sitio.');
+  return new Promise(function(resolve,reject){
+    var iv=setInterval(function(){
+      try{
+        var url=popup.location.href;
+        if(url.indexOf(_SP.redirectUri)===0){
+          clearInterval(iv);popup.close();
+          var p=new URL(url).searchParams;
+          var code=p.get('code');var rs=p.get('state');
+          if(!code){reject(new Error(p.get('error_description')||'Sin código'));return;}
+          if(rs!==sessionStorage.getItem('pkce_state')){reject(new Error('State mismatch'));return;}
+          _exchangeToken({grant_type:'authorization_code',client_id:_SP.clientId,code:code,redirect_uri:_SP.redirectUri,code_verifier:sessionStorage.getItem('pkce_verifier'),scope:_SP.scopes}).then(resolve,reject);
+        }
+      }catch(e){if(popup.closed){clearInterval(iv);reject(new Error('Login cancelado'));}}
+    },400);
+    setTimeout(function(){clearInterval(iv);if(!popup.closed)popup.close();reject(new Error('Timeout login'));},180000);
+  });
+}
+
+/* Token getter (silent only — no popup, throws if no cached token) */
+async function _getTokenSilent(){
+  var c=_getCachedToken();
+  if(c)return c;
+  return _refreshToken();
+}
+
+/* ── Get personal site ID from path ── */
+async function _resolveSite(token){
+  if(_siteId)return _siteId;
+  var url='https://graph.microsoft.com/v1.0/sites/'+_SP.siteHost+':/'+_SP.sitePath;
+  var r=await fetch(url,{headers:{Authorization:'Bearer '+token,Accept:'application/json'}});
+  if(!r.ok){
+    var t=await r.text();
+    throw new Error('Site resolve ('+r.status+'): '+t.slice(0,150));
+  }
+  var d=await r.json();
+  _siteId=d.id;
+  return _siteId;
+}
+
+/* ── Read all List items (with pagination) ── */
+async function _readList(token){
+  var sid=await _resolveSite(token);
+  var url='https://graph.microsoft.com/v1.0/sites/'+sid+'/lists/'+encodeURIComponent(_SP.listName)+'/items?$expand=fields&$top=5000';
+  var all=[];
+  while(url){
+    var r=await fetch(url,{headers:{Authorization:'Bearer '+token,Accept:'application/json'}});
+    if(!r.ok){
+      var t=await r.text();
+      throw new Error('List read ('+r.status+'): '+t.slice(0,150));
+    }
+    var d=await r.json();
+    all=all.concat(d.value||[]);
+    url=d['@odata.nextLink']||null;
+  }
+  return all;
+}
+
+/* ── Parse date: ISO string, Excel serial number, dd/mm/yyyy, or empty ── */
+function _parseDate(v){
+  if(v==null||v==='')return null;
+  if(typeof v==='string'&&/^\d+(\.\d+)?$/.test(v)){
+    var n=parseFloat(v);
+    if(n>20000&&n<80000){
+      return new Date((n-25569)*86400*1000).toISOString().slice(0,10);
+    }
+  }
+  if(typeof v==='string'){
+    var d=new Date(v);
+    if(!isNaN(d.getTime()))return d.toISOString().slice(0,10);
+    var m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+    if(m){var y=m[3].length===2?('20'+m[3]):m[3];return y+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);}
+    return v;
+  }
+  if(typeof v==='number'&&v>20000&&v<80000){
+    return new Date((v-25569)*86400*1000).toISOString().slice(0,10);
+  }
+  return null;
+}
+
+/* ── Map List item → dashboard shape ── */
+function _mapItem(item){
+  var f=item.fields||{};
+  return {
+    id:item.id,
+    proveedor:f.proveedor||'',
+    proyecto:f.proyecto||'',
+    tipoProducto:f.tipoProducto||'',
+    origen:f.origen||'',
+    etd:_parseDate(f.etd),
+    eta:_parseDate(f.eta),
+    statusDestino:f.statusDestino||'',
+    refOrden:f.refOrden||''
+  };
+}
+
+/* ── UI: Badge ── */
+function _ensureBadge(){
+  var b=document.getElementById('sp-sync-badge');
+  if(b)return b;
+  var host=document.querySelector('.head-actions')||document.querySelector('header.app');
+  if(!host)return null;
+  b=document.createElement('div');
+  b.id='sp-sync-badge';
+  b.innerHTML='<span class="dot"></span><span class="txt">Iniciando…</span>';
+  host.insertBefore(b,host.firstChild);
+  return b;
+}
+function _setBadge(state,text,onclick){
+  var b=_ensureBadge();
+  if(!b)return;
+  b.className='';b.classList.add(state);
+  var t=b.querySelector('.txt');
+  if(t)t.textContent=text;
+  b.onclick=onclick||null;
+}
+function _relTime(ts){
+  if(!ts)return 'nunca';
+  var s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return 'hace '+s+'s';
+  if(s<3600)return 'hace '+Math.floor(s/60)+' min';
+  if(s<86400)return 'hace '+Math.floor(s/3600)+' h';
+  return 'hace '+Math.floor(s/86400)+' días';
+}
+
+/* ── Main sync (with optional pre-acquired token) ── */
+async function _doSync(token){
+  if(_polling)return;
+  _polling=true;
+  try{
+    _setBadge('loading','Sincronizando…');
+    if(!token)token=await _getTokenSilent();
+    var raw=await _readList(token);
+    var rows=raw.map(_mapItem);
+    W.embarques=rows;
+    _lastSync=Date.now();
+    _setBadge('ok','Actualizado · '+_relTime(_lastSync));
+    window.dispatchEvent(new CustomEvent('embarques:updated',{detail:{rows:rows,ts:_lastSync}}));
+    console.log('[SP] '+rows.length+' embarques sincronizados');
+  }catch(err){
+    console.error('[SP]',err);
+    _setBadge('error',(err.message||'Error').slice(0,50));
+  }finally{
+    _polling=false;
+  }
+}
+
+/* ── Connect (user-initiated popup → Safari permite) ── */
+async function _connect(){
+  try{
+    _setBadge('loading','Autenticando…');
+    var token=await _loginPopup();
+    await _doSync(token);
+    _startPolling();
+  }catch(err){
+    console.error('[SP]',err);
+    _setBadge('connect','⚡ Conectar SharePoint',_connect);
+  }
+}
+
+/* ── Polling visibility-aware ── */
+function _startPolling(){
+  if(_pollTimer)clearInterval(_pollTimer);
+  _pollTimer=setInterval(function(){
+    if(document.visibilityState==='visible')_doSync();
+  },_SP.pollMs);
+}
+
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&_lastSync){
+    _setBadge('ok','Al día · '+_relTime(_lastSync));
+    _doSync();
+  }
+});
+
+setInterval(function(){
+  if(_lastSync&&!_polling){
+    var b=document.getElementById('sp-sync-badge');
+    if(b&&b.classList.contains('ok')){
+      var t=b.querySelector('.txt');
+      if(t)t.textContent='Al día · '+_relTime(_lastSync);
+    }
+  }
+},30000);
+
+async function _boot(){
+  _ensureBadge();
+  _setBadge('loading','Verificando sesión…');
+  try{
+    var token=await _getTokenSilent();
+    await _doSync(token);
+    _startPolling();
+  }catch(e){
+    _setBadge('connect','⚡ Conectar SharePoint',_connect);
+  }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',_boot);
+else setTimeout(_boot,500);
+
+/* Expuesto para consola */
+W._spSync=function(){return _doSync();};
+W._spConnect=_connect;
+W._spState=function(){return {lastSync:_lastSync,rows:(W.embarques||[]).length,siteId:_siteId};};
+
+console.log('%c SP List Reader v3 — Microsoft List via Graph · poll '+(_SP.pollMs/60000)+'m','background:#0ea5e9;color:#fff;padding:3px 10px;border-radius:5px;font-size:11px');
+})(window);
+</script>
 
 
 <!-- ═══════════════════════════════════════════════════════════

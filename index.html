@@ -9184,6 +9184,19 @@ function renderEquiposPremium(){
   // ── Handlers interactivos v2 ──
   W._eqSetTab=tab=>{_eqSubTab=tab;renderEquiposPremium();};
   W._eqSetProj=v=>{_eqFilterProj=v;renderEquiposPremium();};
+  // Bind select project filter via addEventListener (more robust than inline onchange)
+  const _eqProjSel=el.querySelector('#eqv2-proj-select');
+  if(_eqProjSel){
+    _eqProjSel.addEventListener('change',function(ev){
+      ev.stopPropagation();
+      const val=this.value;
+      console.log('[Equipos] filtro proyecto →',JSON.stringify(val));
+      _eqFilterProj=val;
+      renderEquiposPremium();
+    });
+    _eqProjSel.addEventListener('click',e=>e.stopPropagation());
+    _eqProjSel.addEventListener('mousedown',e=>e.stopPropagation());
+  }
   W._eqSetProj2=v=>{_eqActiveProj=v;renderEquiposPremium();};
   W._eqSetProjFromPanel=v=>{_eqFilterProj=(_eqFilterProj===v?'':v);_eqActiveProj=v;renderEquiposPremium();};
   W._eqSetDate=(which,v)=>{if(which==='from')_eqDateFrom=v;else _eqDateTo=v;renderEquiposPremium();};

@@ -15615,20 +15615,59 @@ function _getShareId(url){
   return 'u!'+b.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 
-/* ── Resolve share URL → {driveId, itemId, lastModified} ── */
+/* ── Resolve share URL → {driveId, itemId, lastModified} ──
+ * Estrategia 1: /shares/{shareId}/driveItem (link compartido válido)
+ * Estrategia 2: /me/drive/sharedWithMe (compartido directo por correo)
+ */
 async function _resolveShareItem(token){
   if(_itemCache)return _itemCache;
-  var sid=_getShareId(_SP.shareUrl);
-  var r=await fetch('https://graph.microsoft.com/v1.0/shares/'+sid+'/driveItem?$select=id,parentReference,lastModifiedDateTime',{
+  /* Estrategia 1: link de compartir */
+  try{
+    var sid=_getShareId(_SP.shareUrl);
+    var r=await fetch('https://graph.microsoft.com/v1.0/shares/'+sid+'/driveItem?$select=id,parentReference,lastModifiedDateTime',{
+      headers:{Authorization:'Bearer '+token,Accept:'application/json'}
+    });
+    if(r.ok){
+      var d=await r.json();
+      _itemCache={driveId:d.parentReference.driveId,itemId:d.id,lastModified:d.lastModifiedDateTime};
+      return _itemCache;
+    }
+  }catch(e){/* fallthrough */}
+  /* Estrategia 2: sharedWithMe — busca por nombre de archivo */
+  var r2=await fetch('https://graph.microsoft.com/v1.0/me/drive/sharedWithMe?$select=id,name,file,remoteItem,lastModifiedDateTime,parentReference',{
     headers:{Authorization:'Bearer '+token,Accept:'application/json'}
   });
-  if(!r.ok){
-    var t=await r.text();
-    if(r.status===403||r.status===404)throw new Error('Sin acceso al Excel. Verifica que sistemas@friopacking.pe haya compartido el archivo contigo.');
-    throw new Error('Error resolviendo archivo ('+r.status+'): '+t.slice(0,150));
+  if(!r2.ok){
+    throw new Error('Sin acceso al Excel. Pide a sistemas@friopacking.pe que comparta el archivo IMPORTACION-XI-MLUJAN-2026 agregando tu correo directamente (no como link público).');
   }
-  var d=await r.json();
-  _itemCache={driveId:d.parentReference.driveId,itemId:d.id,lastModified:d.lastModifiedDateTime};
+  var d2=await r2.json();
+  var items=d2.value||[];
+  /* Solo archivos Excel */
+  var xl=items.filter(function(f){
+    var name=f.name||'';
+    var isXl=/\.xlsx?$/i.test(name);
+    var isShared=!!(f.file||f.remoteItem);
+    return isXl&&isShared;
+  });
+  if(xl.length===0){
+    throw new Error('No hay archivos Excel compartidos contigo. Pide a sistemas@friopacking.pe que comparta IMPORTACION-XI-MLUJAN-2026 agregando tu correo directamente.');
+  }
+  /* Prefiere match por nombre IMPORTACION/MLUJAN; sino primer xlsx */
+  var match=xl.find(function(f){return /IMPORTACION.*MLUJAN/i.test(f.name||'');})
+          ||xl.find(function(f){return /IMPORTACION/i.test(f.name||'');})
+          ||xl[0];
+  var ri=match.remoteItem||match;
+  var pref=ri.parentReference||match.parentReference||{};
+  if(!pref.driveId||!ri.id){
+    throw new Error('Archivo encontrado pero faltan datos: driveId o itemId. Nombre: '+match.name);
+  }
+  _itemCache={
+    driveId:pref.driveId,
+    itemId:ri.id,
+    lastModified:ri.lastModifiedDateTime||match.lastModifiedDateTime,
+    matchedName:match.name
+  };
+  console.log('[SP] Archivo resuelto vía sharedWithMe:',match.name);
   return _itemCache;
 }
 

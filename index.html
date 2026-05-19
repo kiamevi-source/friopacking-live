@@ -8846,7 +8846,7 @@ function renderEquiposPremium(){
   const projOpts=Object.keys(projMap).sort();
   const _applyGlobalFilters=arr=>{
     let out=arr;
-    if(_eqFilterProj)out=out.filter(r=>(r.proyecto||'')==_eqFilterProj);
+    if(_eqFilterProj)out=out.filter(r=>(r.proyecto||'').trim()===_eqFilterProj.trim());
     if(_eqDateFrom){const df=new Date(_eqDateFrom);out=out.filter(r=>!r._fechaObra||r._fechaObra>=df);}
     if(_eqDateTo){const dt=new Date(_eqDateTo);out=out.filter(r=>!r._fechaObra||r._fechaObra<=dt);}
     return out;

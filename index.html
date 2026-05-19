@@ -9030,9 +9030,9 @@ function renderEquiposPremium(){
   // Filters
   h+=`<div class="eqv2-filters">
     <span class="eqv2-filter-lbl">Filtros:</span>
-    <select onchange="W._eqSetProj&&W._eqSetProj(this.value)">
+    <select id="eqv2-proj-select">
       <option value="">Todos los proyectos</option>
-      ${projOpts.map(p=>`<option value="${p}"${_eqFilterProj===p?' selected':''}>${p}</option>`).join('')}
+      ${projOpts.map(p=>`<option value="${p.replace(/"/g,'&quot;')}"${_eqFilterProj===p?' selected':''}>${p}</option>`).join('')}
     </select>
     <span class="eqv2-filter-lbl">ETA</span>
     <input type="date" value="${_eqDateFrom}" onchange="W._eqSetDate&&W._eqSetDate('from',this.value)">

@@ -8770,6 +8770,7 @@ function _eqv2RenderCards(rows){
 
 function renderEquiposPremium(){
   const el=document.getElementById('v-equipos');if(!el)return;
+  console.log('[Equipos] renderEquiposPremium() · _eqFilterProj=',JSON.stringify(_eqFilterProj),'· _eqSubTab=',_eqSubTab,'· activeTab=',document.querySelector('.tab.active')?.dataset?.v,'· stack=',new Error().stack.split('\n').slice(2,5).join(' | '));
   const imp=W.IMPORTACIONES_DATA||[];
   const today=new Date();
   const thisYear=today.getFullYear();

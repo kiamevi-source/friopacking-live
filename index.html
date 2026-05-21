@@ -9161,14 +9161,14 @@ function renderEquiposPremium(){
   h+=`</div>`; // .eqv2-side
   h+=`</div>`; // .eqv2-grid
 
-  // ════ Tech table (collapsible) ════
+  // ════ Tech table (collapsible · LAZY — only build when open) ════
   h+=`<div class="eqv2-tech-toggle ${_eqv2TechOpen?'open':''}" onclick="W._eqv2ToggleTech&&W._eqv2ToggleTech()">
     <span>📊</span><span>Ver detalle técnico (tabla completa)</span>
     <span style="font-size:11px;color:var(--eq-mut);font-weight:500">${visible.length} fila${visible.length!==1?'s':''}</span>
     <span class="chev">▾</span>
   </div>
-  <div class="eqv2-tech-body ${_eqv2TechOpen?'open':''}">
-    <div class="imp-table-wrap" style="margin-top:0">${_eqBuildTable(visible,'imp-tbody')}</div>
+  <div class="eqv2-tech-body ${_eqv2TechOpen?'open':''}" id="eqv2-tech-body-host">
+    ${_eqv2TechOpen?`<div class="imp-table-wrap" style="margin-top:0">${_eqBuildTable(visible,'imp-tbody')}</div>`:''}
   </div>`;
 
   // ════ Cinematic overlays ════

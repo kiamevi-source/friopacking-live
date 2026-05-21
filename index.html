@@ -17434,7 +17434,7 @@ function startPolling(){
         refreshCOCIfActive();
       }
     }
-  },1800); // cada 1.8s
+  },15000); // cada 15s (antes 1.8s — demasiado agresivo, causaba presión de memoria en Safari)
 }
 
 /* ── Auto-sync Supabase cada 5 minutos ───────────────────── */

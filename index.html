@@ -8819,6 +8819,24 @@ function renderEquiposPremium(){
       _changed:changed,_nuevo:nuevo};
   });
 
+  // ════ Match con proyectos ACTIVOS del tab Datos ════
+  // Solo mostramos equipos cuyo proyecto está en la lista de activos
+  // (incluye match flexible: uppercase + trim + prefix-of)
+  let _allRows=rows;
+  try{
+    const activos=(typeof W.activeP==='function'?W.activeP():[]).map(p=>(p.name||'').toUpperCase().trim()).filter(Boolean);
+    if(activos.length){
+      const matchProj=(proj)=>{
+        const u=(proj||'').toUpperCase().trim();
+        if(!u)return false;
+        const u0=u.split('/')[0].trim();
+        return activos.some(a=>a===u||a===u0||u.startsWith(a)||a.startsWith(u0));
+      };
+      rows=rows.filter(r=>matchProj(r.proyecto));
+      console.log('[Equipos] match con activos:',rows.length,'/',_allRows.length,'(activos:',activos.length+')');
+    }
+  }catch(e){console.warn('[Equipos] match activos error:',e);rows=_allRows;}
+
   // Update snapshot
   _impSnapshot=_impSnapshot||{};
   rows.forEach(r=>{if(r.doc)_impSnapshot[r.doc]={status_dest:r.status_dest,eta:r.eta,etd:r.etd,f_real:r.f_real};});

@@ -8760,7 +8760,7 @@ function _eqv2RenderCards(rows){
         </div>
         <div class="eqv2-card-badge">${badge}</div>
       </div>
-      <div><span class="eqv2-card-proj">${r.proyecto||'—'}</span></div>
+      <div>${r.proyecto?`<span class="eqv2-card-proj eqv2-card-proj-clickable" data-proj="${(r.proyecto||'').replace(/"/g,'&quot;')}" title="Click para filtrar por este proyecto">${r.proyecto}</span>`:'<span class="eqv2-card-proj">—</span>'}</div>
       <div class="eqv2-card-meta">
         <div><div class="eqv2-card-meta-l">F. Obra</div><div class="eqv2-card-meta-v">${obraStr}</div></div>
         <div><div class="eqv2-card-meta-l">ETA</div><div class="eqv2-card-meta-v">${etaStr}</div></div>

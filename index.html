@@ -7395,13 +7395,19 @@ function _v10Init(){
       },200);
     }
 
-    // Reactive updates
+    // Reactive updates — throttled to avoid hammering renders from poll/autoSync
+    let _reactiveT=null;let _reactiveLast=0;
     W.PMOEventBus&&W.PMOEventBus.on('data:updated',()=>{
       const cur=document.querySelector('.tab.active')?.dataset?.v;
       const fnMap={supervisores:renderSupervisoresPremium,valorizacion:renderValorizacionPremium,
         contratistas:renderContratistasEvalPremium,reportes:renderReportesPremium,
         equipos:()=>(W.renderEquiposPremium||renderEquiposPremium)(),pendientes:renderPendientesPremium,briefing:renderBriefingPremium};
-      if(fnMap[cur])fnMap[cur]();
+      if(!fnMap[cur])return;
+      // Throttle: at most 1 reactive render per 800ms; trailing call ensures latest state
+      const now=Date.now();const gap=now-_reactiveLast;
+      const run=()=>{_reactiveLast=Date.now();_reactiveT=null;try{fnMap[cur]();}catch(e){console.warn('[reactive]',cur,e);}};
+      if(gap>=800){run();}
+      else{if(_reactiveT)clearTimeout(_reactiveT);_reactiveT=setTimeout(run,800-gap);}
     });
 
     console.log('%c✨ PMO Premium Tabs v10.0 · All views transformed','background:#0d9488;color:#fff;padding:4px 14px;border-radius:6px;font-weight:800;font-size:11px');

@@ -8768,9 +8768,17 @@ function _eqv2RenderCards(rows){
   }).join('');
 }
 
+let _eqRenderPending=false;
+let _eqRenderInFlight=false;
 function renderEquiposPremium(){
   const el=document.getElementById('v-equipos');if(!el)return;
-  console.log('[Equipos] renderEquiposPremium() · _eqFilterProj=',JSON.stringify(_eqFilterProj),'· _eqSubTab=',_eqSubTab,'· activeTab=',document.querySelector('.tab.active')?.dataset?.v,'· stack=',new Error().stack.split('\n').slice(2,5).join(' | '));
+  // Skip render if equipos tab is NOT the active view (prevents wasted work + memory pressure)
+  const activeTab=document.querySelector('.tab.active')?.dataset?.v;
+  if(activeTab && activeTab!=='equipos'){return;}
+  // Re-entrancy guard: if already rendering, schedule one more pass and bail
+  if(_eqRenderInFlight){_eqRenderPending=true;return;}
+  _eqRenderInFlight=true;
+  try{
   const imp=W.IMPORTACIONES_DATA||[];
   const today=new Date();
   const thisYear=today.getFullYear();

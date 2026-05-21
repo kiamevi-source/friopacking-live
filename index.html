@@ -1295,12 +1295,6 @@ const app={view:'datos',period:'30d',cmpDate:null,filters:{estado:[],tipo:[],zon
 /* ====== TABS ====== */
 $$('.tab').forEach(t=>t.addEventListener('click',()=>showView(t.dataset.v)));
 function showView(v){
-  console.log('[showView] →',v,'· prev=',app.view,'· locked=',window._viewLock,'· stack=',new Error().stack.split('\n').slice(2,6).join(' | '));
-  // Lock guard: if a sticky view lock is set, refuse non-matching navigation
-  if(window._viewLock && window._viewLock!==v){
-    console.warn('[showView] BLOCKED by lock — wanted',v,'but locked to',window._viewLock);
-    return;
-  }
   app.view=v;
   $$('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===v));
   $$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));

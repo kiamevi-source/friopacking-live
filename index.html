@@ -8881,20 +8881,15 @@ function renderEquiposPremium(){
   const projOpts=Object.keys(projMap).sort();
   const _applyGlobalFilters=arr=>{
     let out=arr;
-    const beforeProj=out.length;
     if(_eqFilterProj){
       const target=_eqFilterProj.trim();
       out=out.filter(r=>(r.proyecto||'').trim()===target);
-      // DEBUG: project filter telemetry
-      console.log('[filtro]',JSON.stringify(target),'→',out.length,'/',beforeProj,
-        '· sample proyectos en data:',[...new Set(arr.slice(0,30).map(r=>JSON.stringify(r.proyecto||'')))].slice(0,8));
     }
     if(_eqDateFrom){const df=new Date(_eqDateFrom);out=out.filter(r=>!r._fechaObra||r._fechaObra>=df);}
     if(_eqDateTo){const dt=new Date(_eqDateTo);out=out.filter(r=>!r._fechaObra||r._fechaObra<=dt);}
     return out;
   };
   let visible=_applyGlobalFilters(rows);
-  console.log('[render] _eqSubTab=',_eqSubTab,'· visible.length tras filter+subtab=',visible.length,'· _eqFilterProj=',JSON.stringify(_eqFilterProj));
   if(_eqSubTab==='vencido')visible=visible.filter(r=>r._vencido);
   else if(_eqSubTab==='proximo')visible=visible.filter(r=>!r._entregado&&!r._historico&&r._diasObra!==null&&r._diasObra>=0&&r._diasObra<=14);
   else if(_eqSubTab==='activos')visible=visible.filter(r=>!r._entregado&&!r._historico);

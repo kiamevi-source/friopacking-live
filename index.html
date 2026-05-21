@@ -9220,7 +9220,19 @@ function renderEquiposPremium(){
     _eqv2TechOpen=!_eqv2TechOpen;
     const t=el.querySelector('.eqv2-tech-toggle');
     const b=el.querySelector('.eqv2-tech-body');
-    if(t&&b){t.classList.toggle('open',_eqv2TechOpen);b.classList.toggle('open',_eqv2TechOpen);}
+    if(t&&b){
+      t.classList.toggle('open',_eqv2TechOpen);
+      b.classList.toggle('open',_eqv2TechOpen);
+      // Lazy-build the table only on first open; clear on close to free memory
+      if(_eqv2TechOpen){
+        if(!b.innerHTML.trim()){
+          try{b.innerHTML=`<div class="imp-table-wrap" style="margin-top:0">${_eqBuildTable(visible,'imp-tbody')}</div>`;}
+          catch(e){console.warn('[Equipos] build table:',e);}
+        }
+      } else {
+        b.innerHTML='';
+      }
+    }
   };
 
   W._eqSearch=q=>{

@@ -9401,6 +9401,14 @@ function renderEquiposPremium(){
     }
   };
   W._eqParseRows=_eqParseRows;
+  }finally{
+    _eqRenderInFlight=false;
+    if(_eqRenderPending){
+      _eqRenderPending=false;
+      // Coalesce: schedule next render on next tick so we don't recurse synchronously
+      setTimeout(()=>{try{renderEquiposPremium();}catch(e){console.warn('[Equipos] render error:',e);}},0);
+    }
+  }
 }
 
 function _eqParseRows(raw){

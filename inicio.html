@@ -1296,30 +1296,35 @@ const NP = {
     if(window.lucide) lucide.createIcons();
   },
   save: async function(){
+    console.log('[NP] save clicked');
     if(!sb){ showToast('Error', 'Supabase no disponible', 'err'); return; }
     const d = this.collectData();
-    if(!this.validate(d)){ this.backToForm(); return; }
-    const btn = document.getElementById('np-save');
-    btn.disabled=true; btn.innerHTML='<i data-lucide="loader-2" class="ic" style="animation:spin 1s linear infinite"></i><span>Guardando...</span>';
-    if(window.lucide) lucide.createIcons();
+    console.log('[NP] save data:', d);
+    if(!this.validate(d)){ console.warn('[NP] save validation failed'); return; }
+    // Encuentra el botón actual de save y muestra estado loading
+    const saveBtn = document.querySelector('[data-np-action="save"]');
+    if(saveBtn){
+      saveBtn.disabled=true;
+      saveBtn.innerHTML='<i data-lucide="loader-2" class="ic" style="animation:spin 1s linear infinite"></i><span>Guardando...</span>';
+      if(window.lucide) lucide.createIcons();
+    }
     try {
       const {data, error} = await sb.from('proyectos').insert([d]).select();
       if(error) throw error;
-      const created = data && data[0];
       showToast('Proyecto creado', `${d.nombre} se sincronizó con Supabase`, 'ok');
       this.close();
       // Reset form
       ['np-cod','np-nombre','np-categoria','np-asistente','np-sup-email','np-provincia','np-distrito','np-direccion','np-fini','np-ffin','np-fini-real','np-ffin-real','np-venta','np-pen-pct','np-pen-tipo','np-ambientes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
       ['np-supervisor','np-zona','np-depto'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-      document.getElementById('np-estado').value='Por Iniciar';
-      document.getElementById('np-penalidades').value='No aplica';
+      const estEl=document.getElementById('np-estado'); if(estEl) estEl.value='Por Iniciar';
+      const penEl=document.getElementById('np-penalidades'); if(penEl) penEl.value='No aplica';
       // Refresh dashboard live
-      await loadDashboard();
+      try { await loadDashboard(); } catch(de){ console.warn('refresh dashboard error',de); }
     } catch(e) {
-      console.error('save project error',e);
+      console.error('[NP] save error',e);
       showToast('Error al guardar', e.message||'No se pudo crear el proyecto', 'err');
-      btn.disabled=false;
-      this.renderPreviewBtns();
+      // Restaurar botón
+      this.renderFormBtns();
     }
   },
 };

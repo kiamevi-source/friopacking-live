@@ -521,41 +521,36 @@
         </div>
       </div>
 
-      <!-- Avanzado -->
-      <div class="form-advanced" id="np-advanced">
-        <div class="form-advanced-toggle" onclick="this.parentElement.classList.toggle('open')">
-          <span><i data-lucide="sliders-horizontal" style="width:14px;height:14px;stroke-width:2.2;display:inline-block;vertical-align:middle;margin-right:6px;color:#64748b"></i>Más opciones</span>
-          <i data-lucide="chevron-down" class="chev" style="width:16px;height:16px;stroke-width:2.2"></i>
-        </div>
-        <div class="form-advanced-body">
-          <div class="form-grid">
-            <div class="form-grp">
-              <label class="form-lbl">Inicio real</label>
-              <input type="date" class="form-inp" id="np-fini-real">
-            </div>
-            <div class="form-grp">
-              <label class="form-lbl">Fin real</label>
-              <input type="date" class="form-inp" id="np-ffin-real">
-            </div>
-            <div class="form-grp">
-              <label class="form-lbl">Penalidades</label>
-              <select class="form-sel" id="np-penalidades">
-                <option value="No aplica">No aplica</option>
-                <option value="Aplica">Aplica</option>
-              </select>
-            </div>
-            <div class="form-grp">
-              <label class="form-lbl">% Penalidad</label>
-              <input type="text" class="form-inp" id="np-pen-pct" placeholder="Ej. 0.1">
-            </div>
-            <div class="form-grp full">
-              <label class="form-lbl">Tipo de penalidad</label>
-              <input type="text" class="form-inp" id="np-pen-tipo" placeholder="Diaria, por hito, etc.">
-            </div>
-            <div class="form-grp full">
-              <label class="form-lbl">Ambientes</label>
-              <input type="text" class="form-inp" id="np-ambientes" placeholder="Túneles, antesalas, conservación...">
-            </div>
+      <!-- Sección: Adicional (todo visible, sin collapse) -->
+      <div class="form-section">
+        <div class="form-section-t"><i data-lucide="sliders-horizontal" class="ic"></i>Información adicional</div>
+        <div class="form-grid">
+          <div class="form-grp">
+            <label class="form-lbl">Inicio real</label>
+            <input type="date" class="form-inp" id="np-fini-real">
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Fin real</label>
+            <input type="date" class="form-inp" id="np-ffin-real">
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Penalidades</label>
+            <select class="form-sel" id="np-penalidades">
+              <option value="No aplica">No aplica</option>
+              <option value="Aplica">Aplica</option>
+            </select>
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">% Penalidad</label>
+            <input type="text" class="form-inp" id="np-pen-pct" placeholder="Ej. 0.1">
+          </div>
+          <div class="form-grp full">
+            <label class="form-lbl">Tipo de penalidad</label>
+            <input type="text" class="form-inp" id="np-pen-tipo" placeholder="Diaria, por hito, etc.">
+          </div>
+          <div class="form-grp full">
+            <label class="form-lbl">Ambientes</label>
+            <input type="text" class="form-inp" id="np-ambientes" placeholder="Túneles, antesalas, conservación...">
           </div>
         </div>
       </div>

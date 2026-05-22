@@ -155,16 +155,18 @@
   .panel-link:hover{gap:6px}
 
   /* Chips (Búsqueda rápida) */
-  .chip{display:flex;align-items:center;gap:9px;padding:12px 14px;background:#f7f9fc;border:1px solid #e7ebf2;border-radius:11px;font-size:13px;font-weight:600;color:#0f1e35;cursor:pointer;transition:all .2s;text-decoration:none}
+  .chip{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f7f9fc;border:1px solid #e7ebf2;border-radius:10px;font-size:12.5px;font-weight:600;color:#0f1e35;cursor:pointer;transition:all .2s;text-decoration:none;min-width:0}
   .chip:hover{background:white;border-color:#3ECBB0;color:#1f9a82;transform:translateY(-1px);box-shadow:0 8px 20px -6px rgba(62,203,176,.18)}
-  .chip .ic{width:16px;height:16px;stroke-width:1.8;color:#3ECBB0}
+  .chip .ic{width:15px;height:15px;stroke-width:1.8;color:#3ECBB0;flex-shrink:0}
+  .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
 
   /* Action cards */
-  .action-card{display:flex;align-items:center;gap:11px;padding:12px 14px;background:#f7f9fc;border:1px solid #e7ebf2;border-radius:11px;font-size:12.5px;font-weight:600;color:#0f1e35;cursor:pointer;transition:all .2s;text-decoration:none;min-height:62px;line-height:1.25}
+  .action-card{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#f7f9fc;border:1px solid #e7ebf2;border-radius:10px;font-size:12px;font-weight:600;color:#0f1e35;cursor:pointer;transition:all .2s;text-decoration:none;min-height:56px;line-height:1.25;min-width:0}
   .action-card:hover{background:white;border-color:#3ECBB0;transform:translateY(-1px);box-shadow:0 8px 20px -6px rgba(62,203,176,.14)}
-  .action-card .icon-wrap{width:34px;height:34px;background:#eef2f7;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#3ECBB0;flex-shrink:0;transition:all .2s}
-  .action-card .icon-wrap .ic{width:16px;height:16px;stroke-width:2}
+  .action-card .icon-wrap{width:30px;height:30px;background:#eef2f7;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#3ECBB0;flex-shrink:0;transition:all .2s}
+  .action-card .icon-wrap .ic{width:14px;height:14px;stroke-width:2}
   .action-card:hover .icon-wrap{background:#daf4ec;color:#1f9a82}
+  .action-card > span{min-width:0;overflow:hidden;text-overflow:ellipsis;flex:1;line-height:1.25}
 
   /* Right panel items */
   .venc-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid #f1f5f9}

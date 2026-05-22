@@ -998,23 +998,9 @@ async function loadDashboard(){
       vencEl.innerHTML='<div style="text-align:center;color:#94a3b8;font-size:12px;padding:14px 0">Sin vencimientos próximos</div>';
     }
 
-    // Alertas importantes
-    const alertEl = document.getElementById('alert-list');
-    const alerts = [];
-    if(cfVencidas>0) alerts.push({txt:`${cfVencidas} CF vencidas requieren atención`, href:'index.html#cf-vencidas'});
-    if(sinReporte>3) alerts.push({txt:`${sinReporte} proyectos sin reporte reciente`, href:'index.html#alertas'});
-    if(alerts.length){
-      alertEl.innerHTML = alerts.map(a=>`
-        <a href="${a.href}" class="alert-row" style="text-decoration:none">
-          <span class="alert-dot"></span>
-          <span class="alert-text">${escapeHtml(a.txt)}</span>
-          <i data-lucide="chevron-right" style="width:14px;height:14px;color:#cbd5e1"></i>
-        </a>
-      `).join('');
-      if(window.lucide) lucide.createIcons();
-    } else {
-      alertEl.innerHTML='<div style="text-align:center;color:#94a3b8;font-size:12px;padding:10px 0">✓ Sin alertas críticas</div>';
-    }
+    // Alertas de cumplimiento (reglas inteligentes basadas en día + estado operativo)
+    const complianceAlerts = buildComplianceAlerts(projs, reportedSet, cfVencidas, sinReporte);
+    renderComplianceAlerts(complianceAlerts);
 
     // Notif badge total
     const notifTotal = sinReporte + cfVencidas;

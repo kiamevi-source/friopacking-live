@@ -945,13 +945,13 @@ async function loadDashboard(){
     if(e1) throw e1;
     if(!projs) throw new Error('No data');
 
-    // Reports recientes (último día) para detectar quienes sí reportaron
-    const {data:reps,error:e2}=await sb.from('reportes').select('proyecto_id,fecha_reporte').gte('fecha_reporte',cutoffIso);
+    // Reports recientes — la tabla `reportes` se enlaza por `nombre_proyecto` (no proyecto_id)
+    const {data:reps,error:e2}=await sb.from('reportes').select('nombre_proyecto,fecha_reporte').gte('fecha_reporte',cutoffIso);
     if(e2) console.warn('reportes fetch error',e2);
-    const reportedSet = new Set((reps||[]).map(r=>r.proyecto_id));
+    const reportedSet = new Set((reps||[]).map(r=>(r.nombre_proyecto||'').trim().toUpperCase()).filter(Boolean));
 
     // KPI 1 — Sin reporte (proyectos activos sin reporte en último día)
-    const sinReporte = projs.filter(p=>!reportedSet.has(p.id)).length;
+    const sinReporte = projs.filter(p=>!reportedSet.has((p.nombre||'').trim().toUpperCase())).length;
     const elSin=document.getElementById('kpi-sin');
     elSin.innerHTML='0'; animateNumber(elSin, sinReporte);
 

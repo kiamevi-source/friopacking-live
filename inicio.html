@@ -570,6 +570,22 @@ if(window.lucide) lucide.createIcons();
   document.getElementById('hdr-date').textContent=txt;
 })();
 
+// ── Mobile sidebar toggle ──
+(function setupSidebar(){
+  const sb = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sb-backdrop');
+  const toggle = document.getElementById('sidebar-toggle');
+  if(!sb || !backdrop || !toggle) return;
+  function open(){ sb.classList.add('open'); backdrop.classList.add('on'); }
+  function close(){ sb.classList.remove('open'); backdrop.classList.remove('on'); }
+  toggle.addEventListener('click', open);
+  backdrop.addEventListener('click', close);
+  // Cerrar al navegar
+  sb.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ if(window.innerWidth<=767) close(); }));
+  // ESC cierra
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+})();
+
 // ── ⌘K shortcut ──
 document.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){

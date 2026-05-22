@@ -7,7 +7,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
 <script>/* Global alias — all onclick="W.xxx()" handlers need W in global scope */window.W=window;
 /* showToast stub: real implementation is wired later; this prevents ReferenceError if early code (e.g. Supabase boot) fires before UI scripts load */
-if(typeof window.showToast!=='function'){window.showToast=function(msg,kind,ms){try{console.log('[toast·early]',kind||'info',String(msg).replace(/<[^>]+>/g,''));}catch(e){}};}</script>
+if(typeof window.showToast!=='function'){window.showToast=function(msg,kind,ms){try{console.log('[toast·early]',kind||'info',String(msg).replace(/<[^>]+>/g,''));}catch(e){}};}
+/* onEquiposFile bridge: the static <input id="eq-pdf-input"> calls this. Forward to W.onEquiposImport, which is wired by renderEquiposPremium.
+   If the premium render hasn't run yet, run it first so the overlay DOM exists. */
+window.onEquiposFile=function(event){
+  try{
+    // Stash the file so it survives a re-render
+    const file=event&&event.target&&event.target.files&&event.target.files[0];
+    if(!file){console.warn('[onEquiposFile] no file selected');return;}
+    const forward=()=>{
+      if(typeof W.onEquiposImport==='function'){
+        // Build a synthetic event with .target.files for the premium handler
+        const fakeInput=document.createElement('input');
+        const dt=new DataTransfer();dt.items.add(file);fakeInput.files=dt.files;
+        try{W.onEquiposImport({target:{files:[file],value:''}});}
+        catch(e){console.warn('[onEquiposFile] premium import error:',e);showToast&&showToast('Error al importar: '+(e.message||e),'alert',5000);}
+      } else {
+        console.warn('[onEquiposFile] W.onEquiposImport not available; rendering equipos first');
+        if(typeof renderEquiposPremium==='function')renderEquiposPremium();
+        setTimeout(()=>{if(typeof W.onEquiposImport==='function')W.onEquiposImport({target:{files:[file],value:''}});else showToast&&showToast('No se puede procesar el archivo · recargá la página','alert',5000);},250);
+      }
+    };
+    forward();
+  }catch(e){console.warn('[onEquiposFile] outer error:',e);}
+};</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>

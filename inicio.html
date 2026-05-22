@@ -410,7 +410,8 @@
           </div>
           <div class="form-grp full">
             <label class="form-lbl">Nombre del proyecto <span class="req">*</span></label>
-            <input type="text" class="form-inp" id="np-nombre" placeholder="Cliente · Tipo · Año" autocomplete="off">
+            <input type="text" class="form-inp" id="np-nombre" placeholder="Ej. FRUSAN / HUARMEY" autocomplete="off" name="np_titulo_${Math.random()}" data-1p-ignore data-lpignore="true">
+            <div class="form-hint">Generalmente el nombre del cliente (en mayúsculas). Puedes incluir ubicación o variante después de una barra.</div>
             <div class="form-err" id="np-nombre-err" style="display:none"></div>
           </div>
           <div class="form-grp">

@@ -1263,7 +1263,7 @@ function toggleTV(){
   store.preferences.tv=document.body.classList.contains('tv');saveStore();
 }
 window.toggleTV=toggleTV;
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('tv');closeModal();closeOCR();$('#cmp-dialog').classList.remove('on');$('#report-dialog').classList.remove('on');$('#bulk-dlg').classList.remove('on');$('#search-results').classList.remove('on');}if(e.key==='k'&&(e.metaKey||e.ctrlKey)){e.preventDefault();$('#global-search').focus();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('tv');closeModal();$('#cmp-dialog').classList.remove('on');$('#search-results').classList.remove('on');}if(e.key==='k'&&(e.metaKey||e.ctrlKey)){e.preventDefault();$('#global-search').focus();}});
 
 /* ====== DATE PILLS ====== */
 $$('.pill').forEach(p=>p.addEventListener('click',()=>{

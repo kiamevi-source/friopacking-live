@@ -12,23 +12,25 @@ if(typeof window.showToast!=='function'){window.showToast=function(msg,kind,ms){
    If the premium render hasn't run yet, run it first so the overlay DOM exists. */
 window.onEquiposFile=function(event){
   try{
-    // Stash the file so it survives a re-render
     const file=event&&event.target&&event.target.files&&event.target.files[0];
     if(!file){console.warn('[onEquiposFile] no file selected');return;}
-    const forward=()=>{
+    // Synthetic event for the premium handler — uses a fresh writable object (avoids readonly DOM props)
+    const syntheticEvent={target:{files:[file]}};
+    Object.defineProperty(syntheticEvent.target,'value',{value:'',writable:true,configurable:true});
+    const invoke=()=>{
       if(typeof W.onEquiposImport==='function'){
-        // Build a synthetic event with .target.files for the premium handler
-        const fakeInput=document.createElement('input');
-        const dt=new DataTransfer();dt.items.add(file);fakeInput.files=dt.files;
-        try{W.onEquiposImport({target:{files:[file],value:''}});}
-        catch(e){console.warn('[onEquiposFile] premium import error:',e);showToast&&showToast('Error al importar: '+(e.message||e),'alert',5000);}
+        try{W.onEquiposImport(syntheticEvent);}
+        catch(e){console.warn('[onEquiposFile] premium import error:',e);if(typeof showToast==='function')showToast('Error al importar: '+(e.message||e),'alert',5000);}
       } else {
-        console.warn('[onEquiposFile] W.onEquiposImport not available; rendering equipos first');
+        console.warn('[onEquiposFile] W.onEquiposImport not ready; forcing render and retrying');
         if(typeof renderEquiposPremium==='function')renderEquiposPremium();
-        setTimeout(()=>{if(typeof W.onEquiposImport==='function')W.onEquiposImport({target:{files:[file],value:''}});else showToast&&showToast('No se puede procesar el archivo · recargá la página','alert',5000);},250);
+        setTimeout(()=>{
+          if(typeof W.onEquiposImport==='function'){try{W.onEquiposImport(syntheticEvent);}catch(e){console.warn('[onEquiposFile] retry error:',e);}}
+          else if(typeof showToast==='function')showToast('No se puede procesar el archivo · recargá la página','alert',5000);
+        },300);
       }
     };
-    forward();
+    invoke();
   }catch(e){console.warn('[onEquiposFile] outer error:',e);}
 };</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>

@@ -1345,26 +1345,37 @@ function showToast(t, s, type){
   document.head.appendChild(s);
 })();
 
-// Wire up CTA + event delegation (a prueba de re-renders)
+// Expose NP globally so inline onclick can reach it
+window.NP = NP;
+
+// Wire up CTA
 document.getElementById('btn-new-project').addEventListener('click', ()=>NP.open());
 document.getElementById('drawer-bg').addEventListener('click', ()=>NP.close());
+document.getElementById('drawer-close-btn').addEventListener('click', ()=>NP.close());
+document.getElementById('np-cod-auto').addEventListener('click', ()=>NP.suggestCode());
 
-/* Event delegation: cualquier click DENTRO del drawer se enruta aquí.
-   Los botones usan data-np-action="..." (close/preview/back/save/suggest) */
-document.getElementById('drawer-np').addEventListener('click', function(e){
-  const closeX = e.target.closest('#drawer-close-btn');
-  if(closeX){ NP.close(); return; }
-  const codBtn = e.target.closest('#np-cod-auto');
-  if(codBtn){ NP.suggestCode(); return; }
-  const btn = e.target.closest('[data-np-action]');
-  if(!btn) return;
-  const action = btn.getAttribute('data-np-action');
-  console.log('[NP] button action:', action);
-  if(action==='close') NP.close();
-  else if(action==='preview') NP.goToPreview();
-  else if(action==='back') NP.backToForm();
-  else if(action==='save') NP.save();
+/* Global error handler — atrapa cualquier excepción y la muestra como toast */
+window.addEventListener('error', e=>{
+  console.error('[GlobalError]', e.error||e.message);
+  if(typeof showToast==='function') showToast('Error JS', String(e.error||e.message).slice(0,120), 'err');
 });
+window.addEventListener('unhandledrejection', e=>{
+  console.error('[UnhandledRejection]', e.reason);
+  if(typeof showToast==='function') showToast('Error async', String(e.reason).slice(0,120), 'err');
+});
+
+/* ⚡ FUNCIÓN BULLETPROOF DEL BOTÓN GUARDAR — onclick inline llama acá directo */
+window.__doSaveProject = async function(ev){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  console.log('[__doSaveProject] click registrado');
+  showToast('Guardando...','Procesando proyecto','ok');
+  try {
+    await NP.save();
+  } catch(e) {
+    console.error('[__doSaveProject] exception:', e);
+    showToast('Error', String(e.message||e), 'err');
+  }
+};
 
 // ESC closes drawer
 document.addEventListener('keydown', e=>{

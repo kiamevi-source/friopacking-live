@@ -1450,8 +1450,19 @@ function openProject(name,mv){
   renderModalView();
 }
 function closeModal(){$('#modal').classList.remove('on');curProject=null;}
+function generateProjectPDF(){
+  if(!curProject){return;}
+  const p=curProject;
+  const origTitle=document.title;
+  const safeName=p.name.replace(/[\\/:*?"<>|]/g,'_');
+  document.title='Reporte – '+safeName;
+  document.body.classList.add('printing-modal');
+  const cleanup=()=>{document.body.classList.remove('printing-modal');document.title=origTitle;window.removeEventListener('afterprint',cleanup);};
+  window.addEventListener('afterprint',cleanup);
+  setTimeout(()=>window.print(),50);
+}
 $$('.modal-tab').forEach(t=>t.addEventListener('click',()=>{curMV=t.dataset.mv;$$('.modal-tab').forEach(x=>x.classList.toggle('active',x.dataset.mv===curMV));renderModalView();}));
-window.openProject=openProject;window.closeModal=closeModal;
+window.openProject=openProject;window.closeModal=closeModal;window.generateProjectPDF=generateProjectPDF;
 /* ====== MODAL EQUIPOS ====== */
 function renderModalEquipos(p){
   const eqs=window._allEquipos?window._allEquipos():[];

@@ -1256,8 +1256,12 @@ const NP = {
     return Object.keys(errors).length===0;
   },
   goToPreview: function(){
+    console.log('[NP] goToPreview clicked');
     const d = this.collectData();
-    if(!this.validate(d)) return;
+    console.log('[NP] collected data:', d);
+    const valid = this.validate(d);
+    console.log('[NP] validation result:', valid);
+    if(!valid) { console.warn('[NP] validation failed, staying on form'); return; }
     // Build preview card
     const card = document.getElementById('np-preview-card');
     const ventaFmt = d.venta ? `$ ${Number(d.venta).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—';

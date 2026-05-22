@@ -9002,7 +9002,7 @@ function renderEquiposPremium(){
       <div class="eqv2-search">
         <input id="imp-search" placeholder="Proyecto, equipo, doc…" oninput="W._eqSearch&&W._eqSearch(this.value)" value="${(el.querySelector('#imp-search')||{}).value||''}">
       </div>
-      <input type="file" id="eq-import-input" accept=".csv,.xlsx,.xls" style="display:none" onchange="W.onEquiposImport&&W.onEquiposImport(event)">
+      <input type="file" id="eq-import-input" accept=".csv,.xlsx,.xls,.pdf,application/pdf" style="display:none" onchange="W.onEquiposImport&&W.onEquiposImport(event)">
       <button class="eqv2-btn primary" onclick="document.getElementById('eq-import-input').click()">📂 Importar</button>
       <button class="eqv2-btn icon-only" onclick="W.renderEquipos&&W.renderEquipos()" title="Refrescar">🔄</button>
     </div>

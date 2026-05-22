@@ -559,21 +559,15 @@
       </div>
     </div>
 
-    <!-- View: Preview (hidden by default) -->
-    <div id="np-preview-view" style="display:none">
-      <div class="form-section-t" style="margin-bottom:16px"><i data-lucide="eye" class="ic"></i>Vista previa antes de guardar</div>
-      <div style="background:linear-gradient(135deg,#f7f9fc 0%,#eef2f7 100%);border:1px solid #e7ebf2;border-radius:14px;padding:18px 20px;margin-bottom:14px" id="np-preview-card"></div>
-      <p style="font-size:12px;color:#64748b;line-height:1.4">Revisa los datos. Si todo es correcto, haz click en <b>Confirmar y guardar</b>. Si necesitas ajustar algo, vuelve a <b>← Volver al formulario</b>.</p>
-    </div>
   </div>
 
   <div class="drawer-foot">
     <span class="hint" id="np-hint">Solo <b>Nombre</b> es obligatorio · el resto puedes completarlo después</span>
     <div class="drawer-foot-btns" id="np-btns">
       <button type="button" class="btn-secondary" data-np-action="close">Cancelar</button>
-      <button type="button" class="btn-primary" data-np-action="preview">
-        <span>Vista previa</span>
-        <i data-lucide="arrow-right" class="ic"></i>
+      <button type="button" class="btn-primary" data-np-action="save">
+        <i data-lucide="save" class="ic"></i>
+        <span>Guardar proyecto</span>
       </button>
     </div>
   </div>

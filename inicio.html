@@ -1213,29 +1213,36 @@ const NP = {
     const errors = {};
     // Clear previous
     ['nombre','fini','ffin'].forEach(id=>{
-      document.getElementById(`np-${id}`).classList.remove('err');
+      const el=document.getElementById(`np-${id}`);
+      if(el)el.classList.remove('err');
       const e=document.getElementById(`np-${id}-err`);
       if(e){e.style.display='none';e.textContent='';}
     });
+    // Solo nombre es obligatorio — todo lo demás se puede completar después
     if(!d.nombre || d.nombre.length<3){
-      errors.nombre='El nombre debe tener al menos 3 caracteres';
+      errors.nombre='El nombre del proyecto es obligatorio (mínimo 3 caracteres)';
     }
-    if(!d.fecha_ini_contractual){
-      errors.fini='Fecha de inicio obligatoria';
-    }
-    if(!d.fecha_fin_contractual){
-      errors.ffin='Fecha de fin obligatoria';
-    }
+    // Validación lógica: si llenó ambas fechas, fin debe ser >= inicio
     if(d.fecha_ini_contractual && d.fecha_fin_contractual && d.fecha_fin_contractual < d.fecha_ini_contractual){
       errors.ffin='La fecha de fin no puede ser anterior al inicio';
     }
-    // Render errors
+    // Render errors + scroll al primero
+    let firstEl=null;
     Object.entries(errors).forEach(([k,msg])=>{
       const id = k==='nombre'?'np-nombre':k==='fini'?'np-fini':'np-ffin';
-      document.getElementById(id).classList.add('err');
+      const fEl=document.getElementById(id);
+      if(fEl){
+        fEl.classList.add('err');
+        if(!firstEl)firstEl=fEl;
+      }
       const eEl = document.getElementById(id+'-err');
       if(eEl){eEl.textContent=msg;eEl.style.display='block';}
     });
+    if(firstEl){
+      firstEl.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(()=>firstEl.focus(),300);
+      showToast('Faltan datos','Solo el nombre es obligatorio. Revisa el campo marcado en rojo.','err');
+    }
     return Object.keys(errors).length===0;
   },
   goToPreview: function(){

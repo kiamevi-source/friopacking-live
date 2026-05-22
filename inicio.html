@@ -1097,7 +1097,6 @@ const NP = {
     document.getElementById('drawer-np').classList.add('on');
     const fv=document.getElementById('np-form-view');
     if(fv) fv.style.display='block';
-    this.renderFormBtns();
     document.body.style.overflow='hidden';
     if(!this.supervisors.length) await this.loadSupervisors();
   },

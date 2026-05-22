@@ -564,8 +564,8 @@
   <div class="drawer-foot">
     <span class="hint" id="np-hint">Solo <b>Nombre</b> es obligatorio · el resto puedes completarlo después</span>
     <div class="drawer-foot-btns" id="np-btns">
-      <button type="button" class="btn-secondary" data-np-action="close">Cancelar</button>
-      <button type="button" class="btn-primary" data-np-action="save">
+      <button type="button" class="btn-secondary" onclick="window.NP && window.NP.close()">Cancelar</button>
+      <button type="button" class="btn-primary" id="np-save-btn" onclick="window.__doSaveProject(event)">
         <i data-lucide="save" class="ic"></i>
         <span>Guardar proyecto</span>
       </button>

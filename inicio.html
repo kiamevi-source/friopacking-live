@@ -1248,7 +1248,7 @@ const NP = {
     if(!this.validate(d)) return;
     // Build preview card
     const card = document.getElementById('np-preview-card');
-    const ventaFmt = d.venta ? `S/ ${Number(d.venta).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—';
+    const ventaFmt = d.venta ? `$ ${Number(d.venta).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—';
     const fmtDate = s => s ? new Date(s+'T00:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'}) : '—';
     card.innerHTML = `
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px">

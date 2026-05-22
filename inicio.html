@@ -658,19 +658,19 @@ async function loadDashboard(){
     const elVal=document.getElementById('kpi-val');
     elVal.innerHTML='0'; animateNumber(elVal, valorizacion);
 
-    // KPI 3 — CF Vencidas (fecha_fin_cont pasada y valp<99)
+    // KPI 3 — CF Vencidas (fecha_fin_contractual pasada y valorizacion_pct<99)
     const cfVencidas = projs.filter(p=>{
-      if(!p.fecha_fin_cont) return false;
-      const cf=new Date(p.fecha_fin_cont);
-      return cf<today && (p.valp||0)<99;
+      if(!p.fecha_fin_contractual) return false;
+      const cf=new Date(p.fecha_fin_contractual);
+      return cf<today && (p.valorizacion_pct||0)<99;
     }).length;
     const elCf=document.getElementById('kpi-cf');
     elCf.innerHTML='0'; animateNumber(elCf, cfVencidas);
 
-    // Próximos vencimientos (próximos 7 días)
+    // Próximos vencimientos (próximos 14 días)
     const upcoming = projs
-      .filter(p=>p.fecha_fin_cont)
-      .map(p=>({...p, _days: daysUntil(p.fecha_fin_cont)}))
+      .filter(p=>p.fecha_fin_contractual)
+      .map(p=>({...p, _days: daysUntil(p.fecha_fin_contractual)}))
       .filter(p=>p._days>=0 && p._days<=14)
       .sort((a,b)=>a._days-b._days)
       .slice(0,3);
@@ -688,7 +688,7 @@ async function loadDashboard(){
               <div class="venc-sub">Fin contractual</div>
             </div>
             <div>
-              <div class="venc-date ${urgent?'urgent':''}">${fmtDateShort(p.fecha_fin_cont)}</div>
+              <div class="venc-date ${urgent?'urgent':''}">${fmtDateShort(p.fecha_fin_contractual)}</div>
               <div class="venc-when">${whenLabel}</div>
             </div>
           </div>`;

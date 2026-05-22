@@ -1356,13 +1356,26 @@ function showToast(t, s, type){
   document.head.appendChild(s);
 })();
 
-// Wire up CTA
+// Wire up CTA + event delegation (a prueba de re-renders)
 document.getElementById('btn-new-project').addEventListener('click', ()=>NP.open());
-document.getElementById('drawer-close-btn').addEventListener('click', ()=>NP.close());
 document.getElementById('drawer-bg').addEventListener('click', ()=>NP.close());
-document.getElementById('np-cancel').addEventListener('click', ()=>NP.close());
-document.getElementById('np-preview').addEventListener('click', ()=>NP.goToPreview());
-document.getElementById('np-cod-auto').addEventListener('click', ()=>NP.suggestCode());
+
+/* Event delegation: cualquier click DENTRO del drawer se enruta aquí.
+   Los botones usan data-np-action="..." (close/preview/back/save/suggest) */
+document.getElementById('drawer-np').addEventListener('click', function(e){
+  const closeX = e.target.closest('#drawer-close-btn');
+  if(closeX){ NP.close(); return; }
+  const codBtn = e.target.closest('#np-cod-auto');
+  if(codBtn){ NP.suggestCode(); return; }
+  const btn = e.target.closest('[data-np-action]');
+  if(!btn) return;
+  const action = btn.getAttribute('data-np-action');
+  console.log('[NP] button action:', action);
+  if(action==='close') NP.close();
+  else if(action==='preview') NP.goToPreview();
+  else if(action==='back') NP.backToForm();
+  else if(action==='save') NP.save();
+});
 
 // ESC closes drawer
 document.addEventListener('keydown', e=>{

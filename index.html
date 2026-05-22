@@ -616,6 +616,15 @@ input[type=date]{font-family:inherit;color:var(--ink);background:transparent;bor
 #bulk-dlg input,#bulk-dlg select{outline:none}
 #bulk-dlg input:focus,#bulk-dlg select:focus{border-color:var(--teal)!important}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+@media print{
+  body.printing-modal>*:not(#modal){display:none!important}
+  body.printing-modal #modal{position:static!important;background:#fff!important;display:block!important;padding:0!important;height:auto!important;overflow:visible!important}
+  body.printing-modal #modal .modal{box-shadow:none!important;max-width:none!important;width:100%!important;max-height:none!important;border:none!important;background:#fff!important;color:#000!important;page-break-inside:auto}
+  body.printing-modal #modal .modal-h .btn,body.printing-modal #modal .modal-h .x{display:none!important}
+  body.printing-modal #modal .modal-tabs{display:none!important}
+  body.printing-modal #modal .mview{display:block!important;page-break-inside:auto}
+  body.printing-modal #modal *{color:#000!important;background-color:transparent!important;border-color:#999!important}
+}
 </style>
 </head>
 <body>

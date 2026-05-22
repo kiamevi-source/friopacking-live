@@ -1292,25 +1292,21 @@ const NP = {
   },
   renderFormBtns: function(){
     document.getElementById('np-btns').innerHTML = `
-      <button type="button" class="btn-secondary" id="np-cancel">Cancelar</button>
-      <button type="button" class="btn-primary" id="np-preview">
+      <button type="button" class="btn-secondary" data-np-action="close">Cancelar</button>
+      <button type="button" class="btn-primary" data-np-action="preview">
         <span>Vista previa</span>
         <i data-lucide="arrow-right" class="ic"></i>
       </button>`;
     if(window.lucide) lucide.createIcons();
-    document.getElementById('np-cancel').onclick=()=>this.close();
-    document.getElementById('np-preview').onclick=()=>this.goToPreview();
   },
   renderPreviewBtns: function(){
     document.getElementById('np-btns').innerHTML = `
-      <button type="button" class="btn-secondary" id="np-back">← Volver al formulario</button>
-      <button type="button" class="btn-primary" id="np-save">
+      <button type="button" class="btn-secondary" data-np-action="back">← Volver al formulario</button>
+      <button type="button" class="btn-primary" data-np-action="save">
         <i data-lucide="check" class="ic"></i>
         <span>Confirmar y guardar</span>
       </button>`;
     if(window.lucide) lucide.createIcons();
-    document.getElementById('np-back').onclick=()=>this.backToForm();
-    document.getElementById('np-save').onclick=()=>this.save();
   },
   save: async function(){
     if(!sb){ showToast('Error', 'Supabase no disponible', 'err'); return; }

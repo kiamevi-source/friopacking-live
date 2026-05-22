@@ -74,14 +74,14 @@ button{font-family:inherit}
 .scroller::-webkit-scrollbar{width:0}
 .section{min-height:100vh;scroll-snap-align:start;scroll-snap-stop:always;padding:90px 56px 60px 96px;position:relative;display:flex;flex-direction:column}
 
-.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;gap:32px}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-d);display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.eyebrow::before{content:"";width:24px;height:1px;background:var(--teal)}
-.section-title{font-size:42px;font-weight:700;line-height:1.05;margin:0 0 10px;color:var(--navy)}
-.section-sub{font-size:15px;color:var(--tx-2);max-width:680px;line-height:1.55;margin:0}
-.section-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right;flex-shrink:0}
-.section-meta .num{font-family:'Manrope';font-size:11px;color:var(--tx-4);font-weight:600;letter-spacing:.1em}
-.section-meta .who{font-size:12px;color:var(--tx-2);font-weight:500}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:44px;gap:48px}
+.eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--teal-d);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.eyebrow::before{content:"";width:32px;height:1px;background:var(--teal)}
+.section-title{font-family:'Manrope';font-size:clamp(36px,4.8vw,64px);font-weight:800;line-height:.95;margin:0 0 14px;color:var(--navy);letter-spacing:-.035em;max-width:880px}
+.section-sub{font-size:15.5px;color:var(--tx-2);max-width:620px;line-height:1.55;margin:0;font-weight:400}
+.section-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;text-align:right;flex-shrink:0;padding-left:24px;border-left:1px solid var(--line);padding-top:6px;padding-bottom:6px}
+.section-meta .num{font-family:'JetBrains Mono';font-size:10px;color:var(--tx-4);font-weight:700;letter-spacing:.16em}
+.section-meta .who{font-size:11px;color:var(--tx-3);font-weight:600;letter-spacing:.08em}
 
 /* ============== UTILITIES ============== */
 .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--rad-pill);font-size:11px;font-weight:600;letter-spacing:.02em;background:var(--bg-soft);color:var(--tx-2);border:1px solid var(--line)}
@@ -101,107 +101,162 @@ button{font-family:inherit}
 .kpi-flag.dev{background:var(--teal-mist);color:var(--teal-d)}
 .kpi-flag.new{background:#f0e9fc;color:#7c3aed}
 
-/* ============== HERO ============== */
-.hero{padding:0 96px;justify-content:center}
-.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center;width:100%}
-.hero-left{position:relative}
-.hero-logo{height:88px;width:auto;display:block;margin-bottom:36px;filter:drop-shadow(0 12px 30px rgba(15,30,53,.08))}
-.hero-eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal-d);font-weight:700;margin-bottom:16px}
-.hero-eyebrow span{color:var(--tx-3)}
-.hero-title{font-family:'Manrope';font-size:72px;font-weight:800;line-height:.98;letter-spacing:-.035em;color:var(--navy);margin:0 0 24px}
-.hero-title em{font-style:normal;color:var(--teal-d);position:relative;display:inline-block}
-.hero-title em::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:6px;background:linear-gradient(90deg,var(--teal),transparent);opacity:.25;border-radius:6px}
-.hero-sub{font-size:18px;line-height:1.55;color:var(--tx-2);max-width:540px;margin:0 0 36px;font-weight:400}
-.hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;max-width:560px;padding-top:24px;border-top:1px solid var(--line)}
-.hero-meta-item label{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-4);font-weight:700;margin-bottom:8px}
-.hero-meta-item .val{font-family:'Manrope';font-size:18px;font-weight:700;color:var(--navy);line-height:1.2}
+/* ============== HERO · CINEMATIC ============== */
+.hero{padding:0 8vw;justify-content:center;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:0;align-items:center;width:100%;position:relative;z-index:2;max-width:1400px;margin:0 auto}
+.hero-logo{height:64px;width:auto;display:block;margin-bottom:48px;filter:drop-shadow(0 18px 40px rgba(15,30,53,.06));animation:floatY 6s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:14px;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal-d);font-weight:700;margin-bottom:28px;padding:8px 16px;background:rgba(62,203,176,.08);border:1px solid rgba(62,203,176,.18);border-radius:var(--rad-pill);backdrop-filter:blur(8px)}
+.hero-eyebrow span{color:var(--tx-3);font-weight:600}
+.hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal);animation:pulse 2s infinite}
+.hero-title{font-family:'Manrope';font-size:clamp(56px,8vw,124px);font-weight:800;line-height:.92;letter-spacing:-.045em;color:var(--navy);margin:0 0 32px;max-width:1100px}
+.hero-title em{font-style:normal;color:var(--teal-d);position:relative;display:inline-block;background:linear-gradient(135deg,var(--teal-d) 0%,var(--teal) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:clamp(15px,1.4vw,20px);line-height:1.55;color:var(--tx-2);max-width:620px;margin:0 0 56px;font-weight:400}
+.hero-floats{position:absolute;inset:0;pointer-events:none;z-index:1}
+.hero-float{position:absolute;background:rgba(255,255,255,.55);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:18px 22px;box-shadow:0 30px 60px -30px rgba(15,30,53,.25),0 8px 24px -12px rgba(15,30,53,.1);pointer-events:auto;animation:floatCard 10s ease-in-out infinite}
+.hero-float.f1{top:14%;right:8%;animation-delay:0s}
+.hero-float.f2{bottom:18%;right:15%;animation-delay:-3s}
+.hero-float.f3{bottom:30%;right:3%;animation-delay:-6s}
+@keyframes floatCard{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(-12px) rotate(.5deg)}}
+.hero-float .lbl{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.hero-float .lbl .live-dot{width:6px;height:6px}
+.hero-float .num{font-family:'Manrope';font-size:42px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.025em}
+.hero-float .num small{font-family:'Inter';font-size:14px;color:var(--tx-3);font-weight:500;margin-left:4px}
+.hero-float .dlt{font-size:11.5px;color:var(--tx-3);margin-top:6px;font-weight:500}
+.hero-meta{display:flex;gap:48px;align-items:center;padding-top:32px;border-top:1px solid var(--line);max-width:900px}
+.hero-meta-item{display:flex;flex-direction:column;gap:6px}
+.hero-meta-item label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-4);font-weight:700}
+.hero-meta-item .val{font-family:'Manrope';font-size:16px;font-weight:700;color:var(--navy);line-height:1.2}
 .hero-meta-item .val small{display:block;font-family:'Inter';font-size:11.5px;color:var(--tx-3);font-weight:500;margin-top:3px;letter-spacing:0}
+.hero-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--tx-3);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;animation:bob 2.4s ease-in-out infinite;z-index:5}
+@keyframes bob{0%,100%{transform:translate(-50%,0);opacity:.5}50%{transform:translate(-50%,6px);opacity:1}}
+.hero-hint svg{width:14px;height:14px;color:var(--tx-4)}
+/* legacy hidden */
+.hero-right,.cmd-card,.cmd-head,.cmd-stats,.cmd-radar,.cmd-foot{display:none!important}
 
-.hero-right{position:relative;height:560px;display:flex;align-items:center;justify-content:center}
-.cmd-card{position:relative;width:100%;max-width:480px;background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);box-shadow:var(--shadow-3);padding:24px;backdrop-filter:blur(20px);overflow:hidden}
-.cmd-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--navy));opacity:.8}
-.cmd-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.cmd-head-l{display:flex;align-items:center;gap:10px}
-.cmd-head-l .led{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(62,203,176,.2);animation:pulse 2s infinite}
-.cmd-head-l b{font-family:'Manrope';font-size:13px;color:var(--navy);font-weight:700;letter-spacing:.01em}
-.cmd-head-l span{font-size:10.5px;color:var(--tx-3);letter-spacing:.08em;font-weight:600}
-.cmd-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
-.cmd-stat{background:var(--bg-soft);border-radius:var(--rad);padding:14px 16px;border:1px solid var(--line)}
-.cmd-stat label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-4);font-weight:600;display:block;margin-bottom:6px}
-.cmd-stat .v{font-family:'Manrope';font-size:24px;font-weight:700;color:var(--navy);line-height:1}
-.cmd-stat .d{font-size:11px;color:var(--tx-3);margin-top:3px;font-weight:500}
-.cmd-radar{height:200px;position:relative;display:flex;align-items:center;justify-content:center;margin:8px -4px 12px}
-.cmd-foot{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--line);font-size:10.5px;color:var(--tx-3);letter-spacing:.06em;font-weight:600}
-.hero-hint{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--tx-3);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
-.hero-hint svg{width:16px;height:16px;color:var(--tx-4)}
-
-/* ============== KPI BOARD ============== */
-.kpi-board{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1}
-.kpi-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);padding:22px 22px 20px;display:flex;flex-direction:column;gap:14px;cursor:pointer;transition:all .35s var(--ease);overflow:hidden;min-height:280px}
-.kpi-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--line-2);transition:all .35s var(--ease)}
-.kpi-card.s-good::before{background:linear-gradient(90deg,var(--good),var(--teal))}
-.kpi-card.s-warn::before{background:linear-gradient(90deg,var(--warn),#f0a93b)}
-.kpi-card.s-bad::before{background:linear-gradient(90deg,var(--bad),#ea5b6c)}
-.kpi-card.s-pending::before{background:linear-gradient(90deg,#c9d2e2,#e6ebf2)}
-.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-3);border-color:var(--line-2)}
-.kpi-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.kpi-id{font-family:'JetBrains Mono';font-size:10.5px;font-weight:600;letter-spacing:.1em;color:var(--tx-4)}
-.kpi-name{font-family:'Manrope';font-size:16px;font-weight:700;color:var(--navy);line-height:1.2;margin-top:4px}
-.kpi-owner{font-size:10.5px;color:var(--tx-3);font-weight:600;letter-spacing:.06em;margin-top:6px;display:flex;align-items:center;gap:6px}
-.kpi-owner .av{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy-3));color:white;display:inline-flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;letter-spacing:0}
-.kpi-status{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.kpi-card.s-good .kpi-status{background:var(--good-soft);color:var(--good)}
-.kpi-card.s-warn .kpi-status{background:var(--warn-soft);color:var(--warn)}
-.kpi-card.s-bad .kpi-status{background:var(--bad-soft);color:var(--bad)}
-.kpi-card.s-pending .kpi-status{background:#eef1f7;color:var(--tx-3)}
-
-.kpi-figure{display:flex;align-items:baseline;gap:8px;font-family:'Manrope';line-height:1}
-.kpi-figure .big{font-size:44px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
-.kpi-figure .unit{font-size:18px;font-weight:600;color:var(--tx-3)}
-.kpi-figure .vs{font-size:11px;color:var(--tx-3);font-family:'Inter';font-weight:500;margin-left:6px;letter-spacing:0}
-.kpi-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--tx-3);font-weight:500}
-.kpi-meta b{display:block;font-size:12px;color:var(--navy);font-weight:700;font-family:'Manrope';margin-top:2px}
-
-.kpi-bar{position:relative;height:6px;background:var(--bg-soft);border-radius:var(--rad-pill);overflow:hidden;margin-top:4px}
-.kpi-bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:var(--rad-pill);transition:width 1.2s var(--ease-out)}
-.s-good .kpi-bar .fill{background:linear-gradient(90deg,var(--good),var(--teal))}
+/* ============== KPI BOARD · MINIMAL ============== */
+.kpi-board{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;flex:1;align-content:stretch}
+.kpi-card{position:relative;background:rgba(255,255,255,.65);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border:1px solid rgba(255,255,255,.6);border-radius:24px;padding:28px 28px 22px;display:flex;flex-direction:column;gap:0;cursor:pointer;transition:transform .55s var(--ease-out),box-shadow .55s var(--ease-out),border-color .35s ease;overflow:hidden;min-height:260px;box-shadow:0 1px 2px rgba(15,30,53,.03),0 12px 32px -16px rgba(15,30,53,.12)}
+.kpi-card::before{content:"";position:absolute;inset:0;border-radius:24px;background:radial-gradient(800px 220px at 100% 0%,rgba(62,203,176,.08),transparent 60%);opacity:0;transition:opacity .5s var(--ease-out);pointer-events:none}
+.kpi-card::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px;transition:all .35s var(--ease-out);transform:scaleY(.4);transform-origin:center}
+.kpi-card.s-good::after{background:linear-gradient(180deg,var(--teal),var(--good))}
+.kpi-card.s-warn::after{background:linear-gradient(180deg,#f0a93b,var(--warn))}
+.kpi-card.s-bad::after{background:linear-gradient(180deg,#ea5b6c,var(--bad))}
+.kpi-card.s-pending::after{background:linear-gradient(180deg,#dde3ee,#c9d2e2)}
+.kpi-card:hover{transform:translateY(-6px);box-shadow:0 1px 2px rgba(15,30,53,.05),0 40px 80px -30px rgba(15,30,53,.28),0 18px 40px -20px rgba(62,203,176,.15);border-color:rgba(62,203,176,.25)}
+.kpi-card:hover::before{opacity:1}
+.kpi-card:hover::after{transform:scaleY(1)}
+.kpi-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:auto}
+.kpi-id{font-family:'JetBrains Mono';font-size:10px;font-weight:600;letter-spacing:.18em;color:var(--tx-4);display:flex;align-items:center;gap:8px}
+.kpi-id::after{content:"";width:14px;height:1px;background:var(--line-2)}
+.kpi-name{font-family:'Manrope';font-size:14px;font-weight:600;color:var(--ink-2);line-height:1.25;margin-top:10px;letter-spacing:-.005em}
+/* hidden in card */
+.kpi-owner,.kpi-status,.kpi-meta,.kpi-foot,.kpi-target{display:none!important}
+.kpi-figure{display:flex;align-items:baseline;gap:6px;font-family:'Manrope';line-height:.9;margin:26px 0 14px}
+.kpi-figure .big{font-size:64px;font-weight:800;color:var(--navy);letter-spacing:-.035em;font-feature-settings:"tnum"}
+.kpi-card.s-bad .kpi-figure .big{color:var(--bad)}
+.kpi-card.s-warn .kpi-figure .big{color:var(--warn)}
+.kpi-figure .unit{font-size:20px;font-weight:600;color:var(--tx-3);letter-spacing:-.01em}
+.kpi-figure .vs{display:none}
+.kpi-meta-mini{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--tx-3);font-weight:500;margin-bottom:14px}
+.kpi-meta-mini .meta-vs{color:var(--tx-3)}
+.kpi-meta-mini .meta-vs b{color:var(--navy);font-weight:700;font-family:'Manrope'}
+.kpi-meta-mini .meta-delta{font-family:'JetBrains Mono';font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.kpi-meta-mini .meta-delta.up{background:var(--good-soft);color:var(--good)}
+.kpi-meta-mini .meta-delta.down{background:var(--bad-soft);color:var(--bad)}
+.kpi-meta-mini .meta-delta.flat{background:var(--bg-soft);color:var(--tx-3)}
+.kpi-bar{position:relative;height:3px;background:var(--bg-soft);border-radius:99px;overflow:hidden;margin-top:0;margin-bottom:18px}
+.kpi-bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px;transition:width 1.4s var(--ease-out)}
+.s-good .kpi-bar .fill{background:linear-gradient(90deg,var(--teal),var(--good))}
 .s-warn .kpi-bar .fill{background:linear-gradient(90deg,var(--warn),#f0a93b)}
 .s-bad .kpi-bar .fill{background:linear-gradient(90deg,var(--bad),#ea5b6c)}
-.s-pending .kpi-bar .fill{background:repeating-linear-gradient(45deg,#cbd4e4,#cbd4e4 6px,#dde3ee 6px,#dde3ee 12px)}
-.kpi-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--navy);border-radius:1px}
-.kpi-target::after{content:"";position:absolute;top:-3px;left:-2px;width:6px;height:6px;border-radius:50%;background:var(--navy)}
+.s-pending .kpi-bar .fill{background:repeating-linear-gradient(45deg,#cbd4e4,#cbd4e4 4px,#e6ebf2 4px,#e6ebf2 8px)}
+.kpi-spark{height:48px;width:calc(100% + 32px);margin:0 -16px -8px;display:block;opacity:.9}
+.kpi-card .kpi-cta{position:absolute;bottom:18px;right:20px;width:32px;height:32px;border-radius:50%;background:rgba(15,30,53,.04);display:flex;align-items:center;justify-content:center;color:var(--tx-3);transition:all .35s var(--ease-out);font-size:14px}
+.kpi-card:hover .kpi-cta{background:var(--navy);color:#fff;transform:scale(1.1) rotate(-45deg)}
 
-.kpi-foot{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--line);font-size:10.5px;color:var(--tx-3);font-weight:500}
-.kpi-foot .open{display:inline-flex;align-items:center;gap:4px;color:var(--teal-d);font-weight:700;letter-spacing:.04em}
-.kpi-foot .open::after{content:"→";transition:transform .25s var(--ease)}
-.kpi-card:hover .kpi-foot .open::after{transform:translateX(3px)}
-
-.kpi-spark{height:42px;width:100%;display:block}
-
-/* ============== DETAIL DRAWER ============== */
-.drawer{position:fixed;inset:0;z-index:50;display:none;justify-content:flex-end;background:rgba(15,30,53,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .35s var(--ease)}
+/* ============== CINEMATIC OVERLAY ============== */
+.drawer{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(8,16,32,.55);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);opacity:0;transition:opacity .5s var(--ease-out);padding:40px}
 .drawer.open{display:flex;opacity:1}
-.drawer-panel{width:min(720px,92vw);height:100%;background:#fff;box-shadow:-30px 0 80px -20px rgba(15,30,53,.4);transform:translateX(40px);transition:transform .4s var(--ease-out);overflow-y:auto;border-left:1px solid var(--line)}
-.drawer.open .drawer-panel{transform:translateX(0)}
-.drawer-head{padding:24px 32px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:20px;position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);z-index:2}
-.drawer-close{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tx-2);transition:all .2s var(--ease);flex-shrink:0}
-.drawer-close:hover{background:var(--bg-soft);color:var(--navy)}
-.drawer-body{padding:24px 32px 60px}
-.drawer-section{margin-bottom:28px}
-.drawer-section h4{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin:0 0 12px;display:flex;align-items:center;gap:8px}
-.drawer-section h4::before{content:"";width:3px;height:14px;background:var(--teal);border-radius:2px}
+.drawer-panel{width:min(1180px,96vw);max-height:92vh;background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.92));backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);box-shadow:0 60px 120px -20px rgba(15,30,53,.55),0 0 0 1px rgba(255,255,255,.6) inset;transform:translateY(40px) scale(.96);opacity:0;transition:transform .55s var(--ease-out),opacity .45s ease-out;overflow:hidden;border-radius:28px;display:flex;flex-direction:column;position:relative}
+.drawer.open .drawer-panel{transform:translateY(0) scale(1);opacity:1}
+.drawer-panel::before{content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;background:radial-gradient(800px 240px at 20% -10%,rgba(62,203,176,.12),transparent 60%),radial-gradient(600px 200px at 90% 110%,rgba(15,30,53,.08),transparent 60%)}
+.drawer-head{padding:32px 44px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-shrink:0;position:relative;z-index:2}
+.drawer-close{width:42px;height:42px;border-radius:14px;border:1px solid rgba(15,30,53,.08);background:rgba(255,255,255,.7);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tx-2);transition:all .25s var(--ease);flex-shrink:0}
+.drawer-close:hover{background:var(--navy);color:#fff;border-color:var(--navy);transform:rotate(90deg)}
+.drawer-body{padding:24px 44px 44px;overflow-y:auto;position:relative;z-index:2;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.drawer-body::-webkit-scrollbar{width:8px}
+.drawer-body::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+
+/* New overlay layout */
+.ovr-hero{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:end;margin-bottom:36px}
+.ovr-titleblock .ovr-id{font-family:'JetBrains Mono';font-size:11px;color:var(--tx-3);letter-spacing:.22em;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.ovr-titleblock .ovr-id::after{content:"";width:24px;height:1px;background:var(--line-2)}
+.ovr-titleblock h2{font-family:'Manrope';font-size:42px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.025em;margin:0 0 18px}
+.ovr-titleblock .ovr-lead{font-size:15.5px;color:var(--tx-2);line-height:1.55;max-width:560px;margin:0;font-weight:400}
+.ovr-bignum{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.ovr-bignum .nbig{font-family:'Manrope';font-size:128px;font-weight:800;color:var(--navy);line-height:.85;letter-spacing:-.045em;font-feature-settings:"tnum";display:flex;align-items:baseline;gap:8px}
+.ovr-bignum .nbig small{font-size:36px;color:var(--tx-3);font-weight:600;letter-spacing:-.02em}
+.ovr-bignum.s-bad .nbig{color:var(--bad)}
+.ovr-bignum.s-warn .nbig{color:var(--warn)}
+.ovr-bignum .ntag{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:99px;font-family:'JetBrains Mono';font-size:11px;font-weight:700;letter-spacing:.12em}
+.ovr-bignum.s-good .ntag{background:var(--good-soft);color:var(--good)}
+.ovr-bignum.s-warn .ntag{background:var(--warn-soft);color:var(--warn)}
+.ovr-bignum.s-bad .ntag{background:var(--bad-soft);color:var(--bad)}
+.ovr-bignum.s-pending .ntag{background:#eef1f7;color:var(--tx-3)}
+.ovr-bignum .nmeta{font-size:11.5px;color:var(--tx-3);font-weight:500;letter-spacing:.04em}
+
+.ovr-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.ovr-tile{background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:16px;padding:18px 20px;backdrop-filter:blur(8px);transition:all .3s var(--ease)}
+.ovr-tile:hover{border-color:var(--teal);background:rgba(255,255,255,.85);transform:translateY(-2px)}
+.ovr-tile label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-3);font-weight:700;display:block;margin-bottom:8px}
+.ovr-tile .v{font-family:'Manrope';font-size:26px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+.ovr-tile .d{font-size:11.5px;color:var(--tx-3);margin-top:6px;font-weight:500;line-height:1.4}
+
+.ovr-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;margin-bottom:28px}
+.ovr-grid.equal{grid-template-columns:1fr 1fr}
+.ovr-grid.single{grid-template-columns:1fr}
+.ovr-block{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:18px;padding:22px 24px;backdrop-filter:blur(8px)}
+.ovr-block h3{font-family:'Manrope';font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin:0 0 16px;display:flex;align-items:center;gap:10px}
+.ovr-block h3::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--teal)}
+
+/* Visual insight rows (replace text lists) */
+.insight-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(15,30,53,.06)}
+.insight-row:last-child{border-bottom:none}
+.insight-row .ic{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--bg-soft),#fff);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:11px;color:var(--navy);font-weight:700;flex-shrink:0}
+.insight-row .ic.warn{background:var(--warn-soft);border-color:var(--warn-soft);color:var(--warn)}
+.insight-row .ic.bad{background:var(--bad-soft);border-color:var(--bad-soft);color:var(--bad)}
+.insight-row .ic.good{background:var(--good-soft);border-color:var(--good-soft);color:var(--good)}
+.insight-row .tx{flex:1;font-size:13.5px;color:var(--ink-2);line-height:1.5;font-weight:500}
+
+/* Action chips (compact) */
+.action-chips{display:flex;flex-direction:column;gap:10px}
+.action-chip{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 14px;background:rgba(62,203,176,.05);border:1px solid rgba(62,203,176,.18);border-radius:12px;transition:all .25s var(--ease)}
+.action-chip:hover{background:rgba(62,203,176,.1);transform:translateX(4px)}
+.action-chip .ix{width:28px;height:28px;border-radius:8px;background:#fff;color:var(--teal-d);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:1px solid rgba(62,203,176,.2)}
+.action-chip .tx{font-size:13px;color:var(--ink-2);line-height:1.45;font-weight:500}
+.action-chip .due{font-family:'JetBrains Mono';font-size:10.5px;color:var(--teal-d);font-weight:700;letter-spacing:.06em;white-space:nowrap}
+
+/* Responsible mini */
+.resp-mini{display:flex;align-items:center;gap:14px;padding:14px 18px;background:linear-gradient(135deg,rgba(15,30,53,.04),rgba(62,203,176,.04));border-radius:14px;border:1px solid var(--line)}
+.resp-mini .av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--teal-d));color:white;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:'Manrope'}
+.resp-mini .who{font-family:'Manrope';font-size:14px;color:var(--navy);font-weight:700}
+.resp-mini .role{font-size:11px;color:var(--tx-3);font-weight:500;margin-top:2px}
+
+/* legacy fallbacks for content not yet rebuilt */
+.drawer-section{margin-bottom:24px}
+.drawer-section h4{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin:0 0 14px;display:flex;align-items:center;gap:10px}
+.drawer-section h4::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--teal)}
 .drawer-section p{font-size:14px;line-height:1.6;color:var(--ink-2);margin:0 0 8px}
 .drawer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.drawer-stat{background:var(--bg-soft);border-radius:var(--rad);padding:14px;border:1px solid var(--line)}
-.drawer-stat label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-4);font-weight:700}
-.drawer-stat .v{font-family:'Manrope';font-size:22px;font-weight:700;color:var(--navy);margin-top:4px}
-.drawer-stat .d{font-size:11px;color:var(--tx-3);margin-top:3px}
+.drawer-stat{background:rgba(255,255,255,.5);border-radius:14px;padding:16px 18px;border:1px solid var(--line)}
+.drawer-stat label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-4);font-weight:700}
+.drawer-stat .v{font-family:'Manrope';font-size:22px;font-weight:700;color:var(--navy);margin-top:6px}
+.drawer-stat .d{font-size:12px;color:var(--tx-3);margin-top:4px;line-height:1.5}
 .list-cause{list-style:none;padding:0;margin:0}
-.list-cause li{padding:10px 14px;background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:13px;line-height:1.5;color:var(--ink-2);display:flex;gap:12px;align-items:flex-start}
+.list-cause li{padding:12px 14px;background:rgba(255,255,255,.4);border:1px solid var(--line);border-radius:10px;margin-bottom:6px;font-size:13px;line-height:1.5;color:var(--ink-2);display:flex;gap:12px;align-items:flex-start}
 .list-cause li .ix{width:22px;height:22px;border-radius:6px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:10px;color:var(--navy);font-weight:700;flex-shrink:0}
-
-.responsable{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-soft);border-radius:var(--rad);border:1px solid var(--line);font-size:12px;color:var(--ink-2);font-weight:600}
+.responsable{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,.6);border-radius:var(--rad);border:1px solid var(--line);font-size:12px;color:var(--ink-2);font-weight:600}
 .responsable .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--teal-d));color:white;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
 
 /* ============== SMART OBJECTIVES ============== */
@@ -226,53 +281,66 @@ button{font-family:inherit}
 .smart-flow-stat .v{font-family:'Manrope';font-size:24px;font-weight:700;color:var(--navy);line-height:1}
 .smart-flow-stat .v span{font-size:14px;color:var(--tx-3);margin-left:4px}
 
-/* ============== BSC ============== */
-.bsc-stage{display:grid;grid-template-columns:1fr 380px;gap:32px;flex:1;align-items:stretch}
-.bsc-canvas{background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);padding:24px;box-shadow:var(--shadow-2);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center}
-.bsc-canvas svg{width:100%;height:auto;max-height:560px}
+/* ============== BSC · CINEMATIC ============== */
+.bsc-stage{display:grid;grid-template-columns:1.4fr 1fr;gap:36px;flex:1;align-items:stretch}
+.bsc-canvas{background:radial-gradient(ellipse at center,rgba(255,255,255,.85) 0%,rgba(250,251,253,.7) 100%);border:1px solid rgba(255,255,255,.7);border-radius:28px;padding:28px;box-shadow:0 30px 80px -30px rgba(15,30,53,.22),inset 0 1px 0 rgba(255,255,255,.7);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;backdrop-filter:blur(16px)}
+.bsc-canvas::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,rgba(62,203,176,.08),transparent 30%,transparent 60%,rgba(15,30,53,.05),transparent 90%);animation:rotateBg 60s linear infinite;pointer-events:none;z-index:0}
+@keyframes rotateBg{to{transform:rotate(360deg)}}
+.bsc-canvas svg{width:100%;height:auto;max-height:580px;position:relative;z-index:1}
 .bsc-quad-label{font-family:'Manrope';font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
 .bsc-side{display:flex;flex-direction:column;gap:14px}
-.bsc-side-card{background:#fff;border:1px solid var(--line);border-radius:var(--rad);padding:16px 18px;cursor:pointer;transition:all .3s var(--ease)}
-.bsc-side-card:hover,.bsc-side-card.active{border-color:var(--teal);box-shadow:0 0 0 3px rgba(62,203,176,.12),var(--shadow-2);transform:translateY(-1px)}
-.bsc-side-card .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);font-weight:700;display:flex;align-items:center;gap:8px}
-.bsc-side-card h4{font-family:'Manrope';font-size:15px;font-weight:700;color:var(--navy);margin:6px 0 8px;line-height:1.25}
-.bsc-side-card .mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.bsc-side-card .mini .pill{font-family:'JetBrains Mono';font-size:9.5px;background:var(--bg-soft);color:var(--tx-2);padding:3px 7px;border-radius:5px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.bsc-side-card{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:18px 20px;cursor:pointer;transition:all .4s var(--ease-out);backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.bsc-side-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line-2);transition:all .35s var(--ease-out)}
+.bsc-side-card:hover,.bsc-side-card.active{background:rgba(255,255,255,.92);box-shadow:0 18px 40px -20px rgba(15,30,53,.22),0 0 0 1px rgba(62,203,176,.15);transform:translateY(-2px)}
+.bsc-side-card:hover::before,.bsc-side-card.active::before{background:var(--teal);box-shadow:0 0 16px var(--teal)}
+.bsc-side-card .lbl{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-3);font-weight:700;display:flex;align-items:center;gap:8px}
+.bsc-side-card h4{font-family:'Manrope';font-size:16px;font-weight:700;color:var(--navy);margin:8px 0 10px;line-height:1.25;letter-spacing:-.01em}
+.bsc-side-card .mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.bsc-side-card .mini .pill{font-family:'JetBrains Mono';font-size:9.5px;background:var(--bg-soft);color:var(--tx-2);padding:4px 8px;border-radius:6px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+.bsc-quad-circle{cursor:pointer;transition:filter .45s var(--ease-out),opacity .35s ease}
+.bsc-quad-circle:hover{filter:brightness(1.04) drop-shadow(0 12px 32px rgba(62,203,176,.35))}
+.bsc-stage:has(.bsc-side-card:hover) .bsc-quad-circle{opacity:.6}
+.bsc-stage:has(.bsc-side-card.q-fin:hover) .bsc-quad-circle[data-q="fin"],
+.bsc-stage:has(.bsc-side-card.q-cli:hover) .bsc-quad-circle[data-q="cli"],
+.bsc-stage:has(.bsc-side-card.q-pro:hover) .bsc-quad-circle[data-q="pro"],
+.bsc-stage:has(.bsc-side-card.q-apr:hover) .bsc-quad-circle[data-q="apr"]{opacity:1;filter:brightness(1.08) drop-shadow(0 14px 36px rgba(62,203,176,.45))}
 
-.bsc-quad-circle{cursor:pointer;transition:all .35s var(--ease)}
-.bsc-quad-circle:hover{filter:brightness(1.05) drop-shadow(0 8px 20px rgba(62,203,176,.3))}
-
-/* ============== TECH SHOWCASE ============== */
-.tech-stage{display:grid;grid-template-columns:340px 1fr;gap:24px;flex:1}
-.tech-nav{display:flex;flex-direction:column;gap:10px}
-.tech-tab{background:#fff;border:1px solid var(--line);border-radius:var(--rad);padding:16px 18px;cursor:pointer;transition:all .3s var(--ease);display:flex;flex-direction:column;gap:6px;text-align:left}
-.tech-tab:hover{border-color:var(--line-2);transform:translateX(2px)}
-.tech-tab.active{border-color:var(--teal);background:linear-gradient(135deg,#fff,var(--teal-mist) 200%);box-shadow:0 0 0 3px rgba(62,203,176,.12),var(--shadow-2)}
-.tech-tab .ix{font-family:'JetBrains Mono';font-size:10.5px;color:var(--tx-3);font-weight:600;letter-spacing:.06em;display:flex;align-items:center;justify-content:space-between}
+/* ============== TECH SHOWCASE · APPLE-LIKE ============== */
+.tech-stage{display:grid;grid-template-columns:300px 1fr;gap:28px;flex:1}
+.tech-nav{display:flex;flex-direction:column;gap:8px}
+.tech-tab{background:rgba(255,255,255,.4);border:1px solid transparent;border-radius:16px;padding:18px 20px;cursor:pointer;transition:all .35s var(--ease-out);display:flex;flex-direction:column;gap:8px;text-align:left;backdrop-filter:blur(8px);position:relative}
+.tech-tab::before{content:"";position:absolute;left:0;top:50%;width:3px;height:0;background:var(--teal);border-radius:0 3px 3px 0;transition:height .35s var(--ease-out),top .35s var(--ease-out);transform:translateY(-50%)}
+.tech-tab:hover{background:rgba(255,255,255,.7);transform:translateX(3px)}
+.tech-tab.active{background:rgba(255,255,255,.95);box-shadow:0 18px 40px -20px rgba(15,30,53,.22),0 0 0 1px rgba(62,203,176,.15)}
+.tech-tab.active::before{height:50%}
+.tech-tab .ix{font-family:'JetBrains Mono';font-size:10px;color:var(--tx-3);font-weight:600;letter-spacing:.18em;display:flex;align-items:center;justify-content:space-between}
 .tech-tab .ix .dot-active{width:6px;height:6px;border-radius:50%;background:var(--line-2);transition:all .25s}
-.tech-tab.active .ix .dot-active{background:var(--teal);box-shadow:0 0 0 3px rgba(62,203,176,.25)}
-.tech-tab h4{font-family:'Manrope';font-size:14.5px;font-weight:700;color:var(--navy);margin:0;line-height:1.25}
-.tech-tab p{font-size:12px;color:var(--tx-3);margin:0;line-height:1.5;font-weight:500}
+.tech-tab.active .ix .dot-active{background:var(--teal);box-shadow:0 0 0 3px rgba(62,203,176,.25),0 0 12px var(--teal)}
+.tech-tab h4{font-family:'Manrope';font-size:15px;font-weight:700;color:var(--navy);margin:0;line-height:1.25;letter-spacing:-.01em}
+.tech-tab p{font-size:12px;color:var(--tx-3);margin:0;line-height:1.5;font-weight:500;max-width:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 .tech-stage-right{display:flex;flex-direction:column;gap:14px}
-.browser-frame{background:#fff;border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--shadow-3);overflow:hidden;flex:1;display:flex;flex-direction:column;min-height:520px}
-.browser-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#f7f9fc;border-bottom:1px solid var(--line)}
-.browser-dots{display:flex;gap:6px}
-.browser-dots span{width:11px;height:11px;border-radius:50%;background:#dde3ee}
+.browser-frame{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.7);border-radius:20px;box-shadow:0 40px 80px -30px rgba(15,30,53,.3),0 18px 40px -20px rgba(15,30,53,.12);overflow:hidden;flex:1;display:flex;flex-direction:column;min-height:520px;position:relative}
+.browser-frame::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);z-index:5}
+.browser-bar{display:flex;align-items:center;gap:14px;padding:14px 18px;background:linear-gradient(180deg,rgba(247,249,252,.95),rgba(243,245,250,.95));border-bottom:1px solid rgba(15,30,53,.06);backdrop-filter:blur(10px)}
+.browser-dots{display:flex;gap:7px}
+.browser-dots span{width:11px;height:11px;border-radius:50%;background:#dde3ee;transition:transform .25s ease}
 .browser-dots span:nth-child(1){background:#fc6058}
 .browser-dots span:nth-child(2){background:#fdbc40}
 .browser-dots span:nth-child(3){background:#34c749}
-.browser-url{flex:1;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono';font-size:11.5px;color:var(--tx-2);display:flex;align-items:center;gap:8px}
-.browser-url .lock{color:var(--good);font-size:10px}
-.browser-body{flex:1;padding:20px 24px;background:linear-gradient(180deg,#fbfcfe,#fff);overflow:auto;position:relative}
+.browser-frame:hover .browser-dots span{transform:scale(1.05)}
+.browser-url{flex:1;background:rgba(255,255,255,.8);border:1px solid rgba(15,30,53,.06);border-radius:10px;padding:7px 14px;font-family:'JetBrains Mono';font-size:11.5px;color:var(--tx-2);display:flex;align-items:center;gap:10px;letter-spacing:.01em}
+.browser-url .lock{color:var(--good);font-size:9px}
+.browser-body{flex:1;padding:24px 28px;background:linear-gradient(180deg,#fbfcfe 0%,#ffffff 100%);overflow:auto;position:relative}
 .browser-pane{display:none}
 .browser-pane.active{display:block;animation:fadein .35s var(--ease)}
 @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-.tech-capabilities{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.cap{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
-.cap .ix{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-d);font-weight:700}
-.cap b{font-family:'Manrope';font-size:13px;color:var(--navy);font-weight:700}
+.tech-capabilities{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cap{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.7);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;backdrop-filter:blur(10px);transition:all .3s var(--ease)}
+.cap:hover{background:rgba(255,255,255,.9);border-color:rgba(62,203,176,.2);transform:translateY(-2px);box-shadow:0 12px 30px -16px rgba(15,30,53,.2)}
+.cap .ix{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-d);font-weight:700}
+.cap b{font-family:'Manrope';font-size:15px;color:var(--navy);font-weight:800;letter-spacing:-.01em}
 .cap span{font-size:11px;color:var(--tx-3);font-weight:500;line-height:1.4}
 
 /* mockup dashboard inside browser */
@@ -288,9 +356,9 @@ button{font-family:inherit}
 .mock-table th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--tx-3);font-weight:700;background:var(--bg-soft)}
 
 /* Closing */
-.closing{justify-content:center;text-align:center;padding:0 96px}
-.closing-title{font-family:'Manrope';font-size:54px;font-weight:800;color:var(--navy);line-height:1.05;margin:0 0 18px;letter-spacing:-.03em}
-.closing-title em{font-style:normal;color:var(--teal-d)}
+.closing{justify-content:center;text-align:center;padding:0 8vw;position:relative;overflow:hidden}
+.closing-title{font-family:'Manrope';font-size:clamp(48px,7vw,96px);font-weight:800;color:var(--navy);line-height:.95;margin:0 0 24px;letter-spacing:-.04em;max-width:1100px;margin-left:auto;margin-right:auto}
+.closing-title em{font-style:normal;background:linear-gradient(135deg,var(--teal-d) 0%,var(--teal) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .closing-sub{font-size:18px;color:var(--tx-2);max-width:640px;margin:0 auto 36px;line-height:1.55}
 .closing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin:0 auto 36px}
 .closing-stat{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:var(--rad);padding:18px 20px;backdrop-filter:blur(8px)}
@@ -366,73 +434,49 @@ button{font-family:inherit}
 
 <main class="scroller" id="scroller">
 
-<!-- ============== SECTION 1 · HERO ============== -->
+<!-- ============== SECTION 1 · HERO · CINEMATIC ============== -->
 <section class="section hero" id="s-hero" data-rail="s-hero">
+  <div class="hero-floats" aria-hidden="true">
+    <div class="hero-float f1 fade-up d4">
+      <div class="lbl"><span class="live-dot"></span>KPI 01 · PLAZOS</div>
+      <div class="num" id="heroK1">—<small>%</small></div>
+      <div class="dlt" id="heroK1d">Calculando desde Supabase…</div>
+    </div>
+    <div class="hero-float f2 fade-up d5">
+      <div class="lbl">PORTAFOLIO</div>
+      <div class="num" id="heroProj">20<small>activos</small></div>
+      <div class="dlt">Norte 11 · Centro 4 · Sur 5</div>
+    </div>
+    <div class="hero-float f3 fade-up d6">
+      <div class="lbl">REPORTES MAYO</div>
+      <div class="num" id="heroReports">—</div>
+      <div class="dlt" id="heroReportsD">Migrados + en vivo</div>
+    </div>
+  </div>
   <div class="hero-grid">
-    <div class="hero-left">
+    <div>
       <img class="hero-logo fade-up" id="heroLogo" alt="Grupo Friopacking">
-      <div class="hero-eyebrow fade-up d1">Presentación ejecutiva <span>·</span> Directorio <span>·</span> Martes 02 Jun 2026</div>
-      <h1 class="hero-title fade-up d2">Cierre <em>Mayo</em><br>y plan operativo <em>Junio</em></h1>
-      <p class="hero-sub fade-up d3">Resultados del portafolio, lectura ejecutiva de los 6 KPIs estratégicos 2026, plan de acción SMART para junio y la arquitectura tecnológica del área.</p>
+      <div class="hero-eyebrow fade-up d1">Directorio <span>·</span> Martes 02 Jun 2026 <span>·</span> 25 min</div>
+      <h1 class="hero-title fade-up d2">Cierre <em>Mayo.</em><br>Plan <em>Junio.</em></h1>
+      <p class="hero-sub fade-up d3">Seis KPIs estratégicos, plan SMART para el siguiente mes y la plataforma operativa propia que sostiene el portafolio. Todo conectado en tiempo real.</p>
       <div class="hero-meta fade-up d4">
         <div class="hero-meta-item">
           <label>Expositor</label>
-          <div class="val">Ing. Daniel Fuentes K.<small>Gerente de Operaciones</small></div>
-        </div>
-        <div class="hero-meta-item">
-          <label>Portafolio activo</label>
-          <div class="val">19 en progreso<small>+ 17 en cartera · Norte 10 · Centro 4 · Sur 5</small></div>
+          <div class="val">Daniel Fuentes K.<small>Gerente de Operaciones</small></div>
         </div>
         <div class="hero-meta-item">
           <label>Cartera 2026</label>
-          <div class="val">USD 32 M<small>+18.5% vs 2025 (USD 27 M)</small></div>
+          <div class="val">USD 32 M<small>+18.5% vs 2025</small></div>
         </div>
-      </div>
-    </div>
-    <div class="hero-right fade-up d3">
-      <div class="cmd-card">
-        <div class="cmd-head">
-          <div class="cmd-head-l">
-            <span class="led"></span>
-            <div style="display:flex;flex-direction:column;line-height:1.1">
-              <b>OPERATIONS COMMAND</b>
-              <span>SUMMARY · TIEMPO REAL</span>
-            </div>
-          </div>
-          <span class="kpi-flag live"><span class="live-dot"></span>LIVE</span>
-        </div>
-        <div class="cmd-stats">
-          <div class="cmd-stat">
-            <label>Proyectos activos</label>
-            <div class="v mono" id="heroProj">19</div>
-            <div class="d">Norte 10 · Centro 4 · Sur 5</div>
-          </div>
-          <div class="cmd-stat">
-            <label>Personal en sitio</label>
-            <div class="v mono">≈ 50</div>
-            <div class="d">21 supervisores · 31 apoyo</div>
-          </div>
-          <div class="cmd-stat">
-            <label>KPI 01 · Plazos May</label>
-            <div class="v mono" id="heroK1">—</div>
-            <div class="d" id="heroK1d">Calculando desde Supabase…</div>
-          </div>
-          <div class="cmd-stat">
-            <label>Reportes diarios</label>
-            <div class="v mono" id="heroReports">—</div>
-            <div class="d" id="heroReportsD">Migrados + en vivo</div>
-          </div>
-        </div>
-        <div class="cmd-radar"><svg viewBox="0 0 320 200" id="heroRadar"></svg></div>
-        <div class="cmd-foot">
-          <span>FUENTE · PMO DIGITAL</span>
-          <span class="mono" id="heroFootTs">—</span>
+        <div class="hero-meta-item">
+          <label>Equipo</label>
+          <div class="val">≈ 50 personas<small>21 supervisores en sitio</small></div>
         </div>
       </div>
     </div>
   </div>
   <div class="hero-hint">
-    <span>Desliza para explorar</span>
+    <span>scroll</span>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
   </div>
 </section>
@@ -621,7 +665,7 @@ button{font-family:inherit}
   </div>
   <div class="closing-grid fade-up d2">
     <div class="closing-stat"><div class="v">6 / 6</div><label>KPIs habilitados</label></div>
-    <div class="closing-stat"><div class="v">19</div><label>Proyectos en progreso</label></div>
+    <div class="closing-stat"><div class="v">20</div><label>Proyectos activos</label></div>
     <div class="closing-stat"><div class="v">USD 32 M</div><label>Cartera 2026</label></div>
   </div>
   <div class="fade-up d3" style="display:flex;flex-direction:column;align-items:center;gap:14px">
@@ -678,11 +722,11 @@ const KPIS = [
     status:null,
     perspective:'cli',
     descripcion:'Porcentaje de proyectos en progreso del portafolio que están dentro del plazo según el SPI (Schedule Performance Index) del último reporte diario en mayo.',
-    formula:'Proyectos con SPI ≥ 0.95 en el último reporte de mayo ÷ Total proyectos en progreso (universo = proyectos.activo=true y estado=\'En progreso\', dedup por cod_proyecto).',
+    formula:'Proyectos con SPI ≥ 0.95 en el último reporte de mayo ÷ Total proyectos activos (universo = proyectos.activo=true y estado IN (\'En progreso\',\'Con obs\'), dedup por cod_proyecto). Se excluyen proyectos en pausa (Suspendido / Cerrado).',
     fuente:'Supabase · join proyectos × reportes · último reporte ≥ 2026-05-01 por cod_proyecto.',
-    spark:[71,74,76,78,79,null,null], // tendencia hacia meta
+    spark:[71,74,76,78,80,null,null], // tendencia hasta cumplir meta
     detalle:{
-      lectura:'Cálculo vivo desde Supabase con los 19 proyectos en progreso del portafolio. Un proyecto cumple plazo si su SPI (avance real / avance planificado) es ≥ 0.95 en su último reporte de mayo.',
+      lectura:'Cálculo vivo desde Supabase con los 20 proyectos activos del portafolio (19 \'En progreso\' + 1 \'Con obs\'). Un proyecto cumple plazo si su SPI (avance real / avance planificado) es ≥ 0.95 en su último reporte de mayo. Se excluyen los proyectos en pausa (Diamond, Florisert, Virú).',
       causa:[
         'Importación de equipos genera arrastre en proyectos con avance bajo planificación.',
         'Re-baselines no formalizados — los supervisores ajustan el plan sin aprobación de Gerencia.',
@@ -922,7 +966,7 @@ const TECH = [
     url:'kiamevi-source.github.io/friopacking-live',
     desc:'Dashboard ejecutivo del portafolio de proyectos con KPIs, zonas geográficas y estado de avance en tiempo real.',
     caps:[
-      ['SCOPE','19 en progreso','+17 en cartera · 3 zonas'],
+      ['SCOPE','20 activos','+13 en cartera · 3 zonas'],
       ['STACK','HTML + Supabase','Single file'],
       ['CADENCIA','Live','Auto-refresh 60 s'],
       ['ACCESO','PMO + Gerencia','5 usuarios']
@@ -1137,38 +1181,31 @@ function renderKpis(){
       else if(k.code==='k6') fillPct = Math.min(100, 100 * (90/Math.max(k.real,1)));
       else fillPct = Math.min(100, k.real);
     }
-    const targetPos = k.code==='k4'?(4/5*100):(k.code==='k5'?(3.5/5*100):(k.code==='k6'?100:80));
-    const flag = k.flag?`<span class="kpi-flag ${k.flag}">${k.flag==='live'?'<span class="live-dot"></span>':''}${flagLabel(k.flag)}</span>`:'';
+    // mini delta line (meta vs real)
+    let metaLabel='', deltaTxt='', deltaCls='flat';
+    if(k.real==null){ metaLabel='Pendiente'; deltaTxt='—'; }
+    else if(k.code==='k1'){ const d=k.real-80; metaLabel='meta 80%'; deltaTxt=(d>=0?'+':'')+d.toFixed(1)+'pt'; deltaCls=d>=0?'up':'down'; }
+    else if(k.code==='k4'){ const d=k.real-4; metaLabel='meta 4.0'; deltaTxt=(d>=0?'+':'')+d.toFixed(2); deltaCls=d>=0?'up':'down'; }
+    else if(k.code==='k5'){ const d=k.real-3.5; metaLabel='meta 3.5'; deltaTxt=(d>=0?'+':'')+d.toFixed(2); deltaCls=d>=0?'up':'down'; }
+    else if(k.code==='k6'){ const d=k.real-90; metaLabel='meta ≤90%'; deltaTxt='+'+d.toFixed(1)+'pt'; deltaCls='down'; }
+    else { metaLabel=k.meta; deltaTxt='—'; }
     return `<div class="kpi-card s-${s} fade-up d${(i%6)+1}" data-kpi="${k.code}">
       <div class="kpi-card-head">
-        <div>
-          <div class="kpi-id">${k.id}</div>
-          <div class="kpi-name">${k.name}</div>
-          <div class="kpi-owner"><span class="av">${k.owner.slice(0,2)}</span>${k.ownerFull}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-          ${flag}
-          <span class="kpi-status">${statusLabel(s)}</span>
-        </div>
+        <div class="kpi-id">${k.id}</div>
+        ${k.flag?`<span class="kpi-flag ${k.flag}">${k.flag==='live'?'<span class="live-dot"></span>':''}${flagLabel(k.flag)}</span>`:''}
       </div>
+      <div class="kpi-name">${k.name}</div>
       <div class="kpi-figure">
         <span class="big" data-val>${f.big}</span>
         <span class="unit">${f.unit}</span>
-        <span class="vs">meta ${k.meta}</span>
       </div>
-      <div class="kpi-bar">
-        <div class="fill" style="width:${fillPct.toFixed(1)}%"></div>
-        <div class="kpi-target" style="left:${targetPos}%"></div>
+      <div class="kpi-meta-mini">
+        <span class="meta-vs">vs <b>${metaLabel}</b></span>
+        <span class="meta-delta ${deltaCls}">${deltaTxt}</span>
       </div>
+      <div class="kpi-bar"><div class="fill" style="width:${fillPct.toFixed(1)}%"></div></div>
       ${sparkSvg(k.spark,s)}
-      <div class="kpi-meta">
-        <div><span>Frecuencia</span><b>${['k1','k2','k3'].includes(k.code)?'Mensual':'Trimestral'}</b></div>
-        <div><span>Perspectiva BSC</span><b>${({fin:'Finanzas',cli:'Clientes',pro:'Procesos',apr:'Aprendizaje'})[k.perspective]}</b></div>
-      </div>
-      <div class="kpi-foot">
-        <span>${({k1:'Datos de mayo · vivo',k2:'Curva S · pendiente',k3:'Línea base · jun',k4:'Encuesta anual 2026',k5:'Cierre Abr 2026',k6:'Acumulado Ene-Abr'})[k.code]}</span>
-        <span class="open">Detalle</span>
-      </div>
+      <div class="kpi-cta">→</div>
     </div>`;
   }).join('');
   grid.querySelectorAll('.kpi-card').forEach(c=>c.addEventListener('click',()=>openKpiDrawer(c.dataset.kpi)));
@@ -1187,17 +1224,22 @@ function openKpiDrawer(code){
   const f = formatReal(k);
   const head = document.getElementById('drawerHead');
   const body = document.getElementById('drawerBody');
+  const statusTag = ({good:'EN META',warn:'EN RIESGO',bad:'NO CUMPLE',pending:'EN HABILITACIÓN',dev:'EN DESARROLLO'})[s]||'';
+  const nextReview = ['k4','k5','k6'].includes(k.code)?'Cierre Q3 · Oct 2026':'Lun 09-Jun · 08:00';
+
   head.innerHTML = `
     <div style="flex:1">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <span class="kpi-flag ${k.flag||'pending'}">${k.flag==='live'?'<span class="live-dot"></span>':''}${flagLabel(k.flag)||'INFO'}</span>
-        <span class="chip ${s==='good'?'good':(s==='warn'?'warn':(s==='bad'?'bad':''))}">${statusLabel(s)}</span>
-      </div>
-      <div style="font-family:'JetBrains Mono';font-size:10.5px;color:var(--tx-3);letter-spacing:.1em;font-weight:600">${k.id}</div>
-      <h3 style="font-family:'Manrope';font-size:24px;font-weight:700;color:var(--navy);margin:4px 0 8px;line-height:1.2">${k.name}</h3>
-      <div style="display:flex;gap:24px;align-items:baseline">
-        <div style="font-family:'Manrope';font-size:36px;font-weight:800;color:var(--navy);line-height:1">${f.big}<span style="font-size:16px;color:var(--tx-3);margin-left:4px">${f.unit}</span></div>
-        <div style="font-size:12px;color:var(--tx-3)">meta ${k.meta}</div>
+      <div class="ovr-hero">
+        <div class="ovr-titleblock">
+          <div class="ovr-id">${k.id} <span style="color:var(--tx-4);font-weight:500">·</span> ${k.flag==='live'?'LIVE':(k.flag||'').toUpperCase()}</div>
+          <h2>${k.name}</h2>
+          <p class="ovr-lead">${k.detalle.lectura||'—'}</p>
+        </div>
+        <div class="ovr-bignum s-${s}">
+          <div class="nbig">${f.big}<small>${f.unit||''}</small></div>
+          <div class="ntag">${s==='good'?'✓':s==='warn'?'!':s==='bad'?'✕':'⋯'} ${statusTag}</div>
+          <div class="nmeta">meta ${k.meta}</div>
+        </div>
       </div>
     </div>
     <button class="drawer-close" onclick="closeDrawer()" aria-label="Cerrar">
@@ -1205,148 +1247,136 @@ function openKpiDrawer(code){
     </button>`;
 
   let html = '';
-  html += `<div class="drawer-section"><h4>Lectura ejecutiva</h4><p>${k.detalle.lectura||'—'}</p></div>`;
 
-  // Live per-project breakdown for KPI 01
+  // KPI 01 live: tiles + project table
   if(k.code==='k1' && k.liveDetalle && k.liveDetalle.length){
     const det = k.liveDetalle;
     const cumple = det.filter(d=>d.status==='on-time').length;
-    const atras = det.filter(d=>d.status==='delayed');
-    const sinRep = det.filter(d=>d.status==='sin-reporte');
-    html += `<div class="drawer-section"><h4>Detalle por proyecto · Mayo 2026 (vivo)</h4>
-      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-        <span class="chip good"><span class="dot good"></span>${cumple} en plazo</span>
-        <span class="chip bad"><span class="dot bad"></span>${atras.length} atrasados</span>
-        ${sinRep.length?`<span class="chip warn"><span class="dot warn"></span>${sinRep.length} sin reporte</span>`:''}
+    const atras = det.filter(d=>d.status==='delayed').length;
+    const sinRep = det.filter(d=>d.status==='sin-reporte').length;
+    const atrasados = det.filter(d=>d.status==='delayed');
+    html += `<div class="ovr-tiles">
+      <div class="ovr-tile"><label>Universo</label><div class="v">${det.length}</div><div class="d">proyectos activos · mayo</div></div>
+      <div class="ovr-tile"><label>En plazo</label><div class="v" style="color:var(--good)">${cumple}</div><div class="d">SPI ≥ 0.95</div></div>
+      <div class="ovr-tile"><label>Atrasados</label><div class="v" style="color:var(--bad)">${atras}</div><div class="d">SPI &lt; 0.95</div></div>
+      <div class="ovr-tile"><label>Sin reporte</label><div class="v">${sinRep||0}</div><div class="d">en mayo</div></div>
+    </div>
+    <div class="ovr-grid equal">
+      <div class="ovr-block">
+        <h3>Atrasados · Foco junio</h3>
+        ${atrasados.map(d=>`<div class="insight-row">
+          <div class="ic bad">${Number(d.spi).toFixed(2)}</div>
+          <div class="tx"><b style="color:var(--navy);font-family:'Manrope';font-size:14px">${d.nombre}</b><br><span style="color:var(--tx-3);font-size:12px">${d.zona||''} · ${(d.supervisor||'').split(' ').slice(0,2).join(' ')}</span></div>
+        </div>`).join('')||'<p style="color:var(--tx-3);font-size:13px;margin:0">Sin atrasos en mayo.</p>'}
       </div>
-      <table style="width:100%;border-collapse:collapse;font-size:12px">
-        <thead><tr style="text-align:left;color:var(--tx-3);font-size:10px;letter-spacing:.08em;text-transform:uppercase">
-          <th style="padding:6px 6px 6px 0;font-weight:700">Proyecto</th>
-          <th style="font-weight:700">Zona</th>
-          <th style="font-weight:700">Supervisor</th>
-          <th style="text-align:right;font-weight:700">SPI</th>
-          <th style="text-align:right;font-weight:700">% Plan</th>
-          <th style="text-align:right;font-weight:700">% Real</th>
-          <th style="text-align:center;font-weight:700">Est.</th>
-        </tr></thead>
-        <tbody>${det.map(d=>{
-          const col = d.status==='on-time'?'var(--good)':d.status==='delayed'?'var(--bad)':'var(--warn)';
-          const ic = d.status==='on-time'?'✓':d.status==='delayed'?'✗':'—';
-          return `<tr style="border-top:1px solid var(--line)">
-            <td style="padding:8px 6px 8px 0;color:var(--ink-2);font-weight:600">${d.nombre||d.cod_proyecto}</td>
-            <td style="color:var(--tx-3);font-size:11px">${d.zona||'—'}</td>
-            <td style="color:var(--tx-3);font-size:11px">${(d.supervisor||'').split(' ').slice(0,2).join(' ')}</td>
-            <td style="text-align:right;font-weight:700;color:${col}" class="mono">${d.spi!=null?Number(d.spi).toFixed(2):'—'}</td>
-            <td style="text-align:right;color:var(--tx-2)" class="mono">${d.plan!=null?Number(d.plan).toFixed(1):'—'}</td>
-            <td style="text-align:right;color:var(--tx-2)" class="mono">${d.real!=null?Number(d.real).toFixed(1):'—'}</td>
-            <td style="text-align:center;color:${col};font-weight:700">${ic}</td>
-          </tr>`;
-        }).join('')}</tbody>
-      </table>
-      <div style="font-size:11px;color:var(--tx-3);margin-top:10px">Criterio: cumple plazo si <strong>SPI ≥ 0.95</strong> en el último reporte de mayo. Universo: proyectos con <code>activo=true</code> y <code>estado=&apos;En progreso&apos;</code>, dedup por <code>cod_proyecto</code> (FRUSAN = FRUSAN/HUARMEY · QPACK = QUELEN/QBERRIES/QPACK).</div>
+      <div class="ovr-block">
+        <h3>Distribución SPI</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          ${det.sort((a,b)=>(b.spi||0)-(a.spi||0)).map(d=>{
+            const col=d.status==='on-time'?'var(--teal)':d.status==='delayed'?'var(--bad)':'var(--warn)';
+            const pct=Math.min(100,(Number(d.spi)||0)*80);
+            return `<div style="display:grid;grid-template-columns:120px 1fr 44px;gap:10px;align-items:center;font-size:11.5px">
+              <span style="color:var(--ink-2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.nombre}</span>
+              <div style="height:4px;background:var(--bg-soft);border-radius:99px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col};border-radius:99px;transition:width 1s ease-out"></div></div>
+              <span class="mono" style="text-align:right;color:${col};font-weight:700">${d.spi?Number(d.spi).toFixed(2):'—'}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
     </div>`;
   }
 
-  html += `<div class="drawer-section"><h4>Definición y fuente</h4>
-    <div class="drawer-grid">
-      <div class="drawer-stat"><label>Qué mide</label><div class="d" style="font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.5">${k.descripcion}</div></div>
-      <div class="drawer-stat"><label>Fórmula</label><div class="d" style="font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.5;font-family:'JetBrains Mono'">${k.formula}</div></div>
-      <div class="drawer-stat" style="grid-column:span 2"><label>Fuente</label><div class="d" style="font-size:12px;color:var(--ink-2);margin-top:6px">${k.fuente}</div></div>
-    </div></div>`;
-
+  // KPI 04 / KPI 05: visual dimensions/areas
   if(k.detalle.dimensiones){
-    html += `<div class="drawer-section"><h4>Dimensiones evaluadas</h4>
+    html += `<div class="ovr-block" style="margin-bottom:24px"><h3>Dimensiones evaluadas</h3>
       ${k.detalle.dimensiones.map(d=>{
         const cls = d[2]==='FORTALEZA'?'good':(d[2]==='ESTÁNDAR'?'warn':'bad');
+        const col = cls==='good'?'var(--good)':cls==='warn'?'var(--warn)':'var(--bad)';
         const pct = (d[1]/5)*100;
-        return `<div style="display:grid;grid-template-columns:200px 1fr 60px 90px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
-          <span style="font-size:12.5px;color:var(--ink-2);font-weight:600">${d[0]}</span>
-          <div class="kpi-bar"><div class="fill" style="width:${pct}%;background:${cls==='good'?'#16a37a':cls==='warn'?'#d68a17':'#d63b4f'}"></div></div>
-          <span class="mono" style="font-size:13px;color:var(--navy);font-weight:700;text-align:right">${d[1].toFixed(2)}</span>
-          <span class="chip ${cls}" style="justify-self:end">${d[2]}</span>
+        return `<div style="display:grid;grid-template-columns:220px 1fr 64px 110px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(15,30,53,.06)">
+          <span style="font-size:13px;color:var(--ink-2);font-weight:600">${d[0]}</span>
+          <div style="height:4px;background:var(--bg-soft);border-radius:99px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col};border-radius:99px;transition:width 1.2s ease-out"></div></div>
+          <span class="mono" style="font-size:16px;color:var(--navy);font-weight:800;text-align:right;letter-spacing:-.02em">${d[1].toFixed(2)}</span>
+          <span class="chip ${cls}" style="justify-self:end;font-size:9.5px">${d[2]}</span>
         </div>`;
       }).join('')}</div>`;
   }
   if(k.detalle.areas){
-    html += `<div class="drawer-section"><h4>Áreas evaluadoras</h4>
+    html += `<div class="ovr-block" style="margin-bottom:24px"><h3>Áreas evaluadoras</h3>
       ${k.detalle.areas.map(a=>{
-        const cls = a[1]>=4?'good':(a[1]>=3.5?'good':(a[1]>=3?'warn':'bad'));
+        const cls = a[1]>=3.5?'good':(a[1]>=3?'warn':'bad');
+        const col = cls==='good'?'var(--good)':cls==='warn'?'var(--warn)':'var(--bad)';
         const pct = (a[1]/5)*100;
-        return `<div style="display:grid;grid-template-columns:200px 1fr 60px 110px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
-          <span style="font-size:12.5px;color:var(--ink-2);font-weight:600">${a[0]}</span>
-          <div class="kpi-bar"><div class="fill" style="width:${pct}%;background:${cls==='good'?'#16a37a':cls==='warn'?'#d68a17':'#d63b4f'}"></div></div>
-          <span class="mono" style="font-size:13px;color:var(--navy);font-weight:700;text-align:right">${a[1].toFixed(2)}</span>
-          <span class="chip ${cls}" style="justify-self:end">${a[2]}</span>
+        return `<div style="display:grid;grid-template-columns:220px 1fr 64px 110px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(15,30,53,.06)">
+          <span style="font-size:13px;color:var(--ink-2);font-weight:600">${a[0]}</span>
+          <div style="height:4px;background:var(--bg-soft);border-radius:99px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col};border-radius:99px;transition:width 1.2s ease-out"></div></div>
+          <span class="mono" style="font-size:16px;color:var(--navy);font-weight:800;text-align:right;letter-spacing:-.02em">${a[1].toFixed(2)}</span>
+          <span class="chip ${cls}" style="justify-self:end;font-size:9.5px">${a[2]}</span>
         </div>`;
       }).join('')}</div>`;
   }
+
+  // KPI 06: composition + monthly chart
   if(k.detalle.composicion){
-    html += `<div class="drawer-section"><h4>Composición del gasto</h4>
-      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
-        <thead><tr style="text-align:left;color:var(--tx-3);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase">
-          <th style="padding:8px 6px 8px 0;font-weight:700">Categoría</th>
-          <th style="text-align:right;font-weight:700">Real</th>
-          <th style="text-align:right;font-weight:700">Presupuesto</th>
-          <th style="text-align:right;font-weight:700">Desv.</th>
-        </tr></thead>
-        <tbody>${k.detalle.composicion.map(r=>`<tr style="border-top:1px solid var(--line)">
-          <td style="padding:10px 6px 10px 0;color:var(--ink-2);font-weight:600">${r[0]}</td>
-          <td style="text-align:right;color:var(--navy);font-weight:700" class="mono">${r[1]}</td>
-          <td style="text-align:right;color:var(--tx-2)" class="mono">${r[2]}</td>
-          <td style="text-align:right;color:${r[3].startsWith('+11')||r[3].startsWith('+5')?'var(--bad)':'var(--warn)'};font-weight:700" class="mono">${r[3]}</td>
-        </tr>`).join('')}</tbody>
-      </table></div>`;
+    html += `<div class="ovr-block" style="margin-bottom:24px"><h3>Composición del gasto</h3>
+      ${k.detalle.composicion.map(r=>{
+        const isDriver = r[3].includes('117');
+        const col = isDriver?'var(--bad)':'var(--warn)';
+        return `<div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 90px;gap:18px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(15,30,53,.06)">
+          <span style="font-size:13.5px;color:var(--ink-2);font-weight:600">${r[0]}</span>
+          <span class="mono" style="color:var(--navy);font-weight:800;font-size:18px;letter-spacing:-.02em">${r[1]}</span>
+          <span class="mono" style="color:var(--tx-3);font-size:13px">vs ${r[2]}</span>
+          <span class="mono" style="text-align:right;color:${col};font-weight:800;font-size:15px;letter-spacing:-.01em">${r[3]}</span>
+        </div>`;
+      }).join('')}</div>`;
   }
   if(k.monthly){
     const mx = Math.max(...k.monthly.map(m=>Math.max(m.real,m.ppto)));
-    html += `<div class="drawer-section"><h4>Tendencia mensual · Real vs Presupuesto</h4>
-      <div style="display:grid;grid-template-columns:repeat(${k.monthly.length},1fr);gap:14px;padding:8px 0">
+    html += `<div class="ovr-block" style="margin-bottom:24px"><h3>Tendencia mensual</h3>
+      <div style="display:grid;grid-template-columns:repeat(${k.monthly.length},1fr);gap:24px;padding:14px 8px 4px">
         ${k.monthly.map(m=>{
-          const hR = (m.real/mx)*120;
-          const hP = (m.ppto/mx)*120;
-          return `<div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-            <div style="display:flex;align-items:flex-end;gap:6px;height:130px">
-              <div title="Real" style="width:18px;background:linear-gradient(180deg,var(--bad) 0%,#ea5b6c 100%);border-radius:4px 4px 0 0;height:${hR}px"></div>
-              <div title="Presupuesto" style="width:18px;background:linear-gradient(180deg,var(--teal) 0%,var(--teal-d) 100%);border-radius:4px 4px 0 0;height:${hP}px"></div>
+          const hR = (m.real/mx)*160;
+          const hP = (m.ppto/mx)*160;
+          return `<div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <span class="mono" style="font-size:18px;color:var(--bad);font-weight:800;letter-spacing:-.02em">${m.ratio.toFixed(0)}%</span>
+            <div style="display:flex;align-items:flex-end;gap:8px;height:170px;width:100%;justify-content:center">
+              <div title="Real" style="width:26px;background:linear-gradient(180deg,#ea5b6c,var(--bad));border-radius:6px 6px 2px 2px;height:${hR}px;box-shadow:0 8px 20px -8px rgba(214,59,79,.4)"></div>
+              <div title="Presupuesto" style="width:26px;background:linear-gradient(180deg,var(--teal),var(--teal-d));border-radius:6px 6px 2px 2px;height:${hP}px;box-shadow:0 8px 20px -8px rgba(62,203,176,.4)"></div>
             </div>
-            <span class="mono" style="font-size:10px;color:var(--tx-3);font-weight:700">${m.m}</span>
-            <span class="mono" style="font-size:11px;color:var(--navy);font-weight:700">${m.ratio.toFixed(1)}%</span>
+            <span class="mono" style="font-size:11px;color:var(--tx-3);font-weight:700;letter-spacing:.1em">${m.m.toUpperCase()}</span>
           </div>`;
         }).join('')}
       </div>
-      <div style="display:flex;gap:14px;justify-content:center;font-size:11px;color:var(--tx-3);margin-top:8px"><span><span class="dot bad" style="display:inline-block;margin-right:5px;vertical-align:middle"></span>Real</span><span><span class="dot good" style="display:inline-block;margin-right:5px;vertical-align:middle;background:var(--teal)"></span>Presupuesto</span></div>
+      <div style="display:flex;gap:24px;justify-content:center;font-size:11px;color:var(--tx-3);margin-top:18px;font-weight:600;letter-spacing:.04em"><span style="display:flex;align-items:center;gap:7px"><span style="width:10px;height:10px;border-radius:3px;background:var(--bad)"></span>Real</span><span style="display:flex;align-items:center;gap:7px"><span style="width:10px;height:10px;border-radius:3px;background:var(--teal)"></span>Presupuesto</span></div>
     </div>`;
   }
+
+  // Causa + Acciones + Riesgos (visual rows)
+  const sideBlocks = [];
   if(k.detalle.causa){
-    html += `<div class="drawer-section"><h4>Causa raíz</h4>
-      <ul class="list-cause">${k.detalle.causa.map((c,i)=>`<li><span class="ix">${String(i+1).padStart(2,'0')}</span><span>${c}</span></li>`).join('')}</ul>
-    </div>`;
+    sideBlocks.push(`<div class="ovr-block"><h3>Causa raíz</h3>${k.detalle.causa.map((c,i)=>`<div class="insight-row"><div class="ic warn">${String(i+1).padStart(2,'0')}</div><div class="tx">${c}</div></div>`).join('')}</div>`);
   }
   if(k.detalle.acciones){
-    html += `<div class="drawer-section"><h4>Plan de acción</h4>
-      <ul class="list-cause">${k.detalle.acciones.map((c,i)=>`<li><span class="ix">→</span><span>${c}</span></li>`).join('')}</ul>
-    </div>`;
+    sideBlocks.push(`<div class="ovr-block"><h3>Plan de acción</h3><div class="action-chips">${k.detalle.acciones.map(c=>`<div class="action-chip"><div class="ix">→</div><div class="tx">${c}</div><div class="due">JUN</div></div>`).join('')}</div></div>`);
+  }
+  if(sideBlocks.length){
+    html += `<div class="ovr-grid equal" style="margin-bottom:24px">${sideBlocks.join('')}</div>`;
   }
   if(k.detalle.riesgos){
-    html += `<div class="drawer-section"><h4>Riesgos &amp; alertas</h4>
-      <ul class="list-cause">${k.detalle.riesgos.map(c=>`<li><span class="ix" style="color:var(--bad)">!</span><span>${c}</span></li>`).join('')}</ul>
-    </div>`;
+    html += `<div class="ovr-block" style="margin-bottom:24px"><h3>Riesgos &amp; alertas</h3>${k.detalle.riesgos.map(c=>`<div class="insight-row"><div class="ic bad">!</div><div class="tx">${c}</div></div>`).join('')}</div>`;
   }
-  html += `<div class="drawer-section" style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-soft);padding:14px 16px;border-radius:var(--rad);border:1px solid var(--line)">
-    <div>
-      <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin-bottom:4px">Responsable</div>
-      <div class="responsable"><span class="av">${k.owner.slice(0,2)}</span>${k.ownerFull}</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin-bottom:4px">Próxima revisión</div>
-      <div style="font-family:'Manrope';font-size:14px;font-weight:700;color:var(--navy)">${['k4','k5','k6'].includes(k.code)?'Cierre Q3 · Octubre 2026':'Lunes 09-Jun 2026 · 08:00'}</div>
-    </div>
+
+  // Footer: responsable + revisión + fuente
+  html += `<div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:14px;margin-top:8px">
+    <div class="resp-mini"><span class="av">${k.owner.slice(0,2)}</span><div><div class="who">${k.ownerFull.split(' · ')[0]}</div><div class="role">${(k.ownerFull.split(' · ')[1]||'Responsable')}</div></div></div>
+    <div class="resp-mini"><span class="av" style="background:linear-gradient(135deg,var(--teal-d),var(--teal))">📅</span><div><div class="who">${nextReview}</div><div class="role">Próxima revisión</div></div></div>
+    <div class="resp-mini" style="grid-column:span 1"><span class="av" style="background:linear-gradient(135deg,#7c8aab,var(--navy-soft))">⌁</span><div><div class="who">${(k.fuente||'').split('·')[0].trim()}</div><div class="role">${(k.fuente||'').split('·').slice(1).join('·').trim()||'Fuente'}</div></div></div>
   </div>`;
 
   body.innerHTML = html;
   drawer.style.display = 'flex';
   requestAnimationFrame(()=>drawer.classList.add('open'));
-  body.parentElement.scrollTop = 0;
+  body.scrollTop = 0;
 }
 </script>
 
@@ -1402,7 +1432,7 @@ function renderBscSide(active){
   bscSide.innerHTML = QUAD_KEYS.map(q=>{
     const b = BSC[q];
     const dotCol = b.semaforo==='good'?'var(--good)':b.semaforo==='warn'?'var(--warn)':'var(--bad)';
-    return `<div class="bsc-side-card fade-up d${QUAD_KEYS.indexOf(q)+1} ${active===q?'active':''}" data-q="${q}">
+    return `<div class="bsc-side-card q-${q} fade-up d${QUAD_KEYS.indexOf(q)+1} ${active===q?'active':''}" data-q="${q}">
       <div class="lbl"><span class="dot" style="background:${dotCol}"></span>${b.label}</div>
       <h4>${b.pregunta}</h4>
       <div style="font-size:12px;color:var(--tx-2);line-height:1.5">${b.lectura}</div>
@@ -1454,48 +1484,59 @@ function openBscDrawer(q){
   const b = BSC[q];
   const head = document.getElementById('drawerHead');
   const body = document.getElementById('drawerBody');
-  const dotCol = b.semaforo==='good'?'var(--good)':b.semaforo==='warn'?'var(--warn)':'var(--bad)';
-  const cls = b.semaforo==='good'?'good':b.semaforo==='warn'?'warn':'bad';
+  const s = b.semaforo;
+  const statusTag = ({good:'EN META',warn:'EN HABILITACIÓN',bad:'NO CUMPLE'})[s]||'';
   head.innerHTML = `
     <div style="flex:1">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <span class="chip ${cls}">${b.semaforo==='good'?'EN META':b.semaforo==='warn'?'EN HABILITACIÓN':'NO CUMPLIDO'}</span>
-        <span class="chip">${b.kpis.length} KPI${b.kpis.length>1?'s':''}</span>
+      <div class="ovr-hero">
+        <div class="ovr-titleblock">
+          <div class="ovr-id">PERSPECTIVA BSC <span style="color:var(--tx-4);font-weight:500">·</span> ${b.kpis.length} KPI${b.kpis.length>1?'s':''}</div>
+          <h2>${b.label}</h2>
+          <p class="ovr-lead">${b.pregunta}</p>
+        </div>
+        <div class="ovr-bignum s-${s}">
+          <div class="nbig" style="font-size:64px">${b.kpis.length}<small style="font-size:18px">KPIs</small></div>
+          <div class="ntag">${s==='good'?'✓':s==='warn'?'!':'✕'} ${statusTag}</div>
+          <div class="nmeta">${b.contexto.split('.')[0]}.</div>
+        </div>
       </div>
-      <div style="font-family:'JetBrains Mono';font-size:10.5px;color:var(--tx-3);letter-spacing:.1em;font-weight:600">PERSPECTIVA BSC</div>
-      <h3 style="font-family:'Manrope';font-size:24px;font-weight:700;color:var(--navy);margin:4px 0 4px;line-height:1.2">${b.label}</h3>
-      <p style="font-size:13px;color:var(--ink-2);margin:0;line-height:1.5">${b.pregunta}</p>
     </div>
     <button class="drawer-close" onclick="closeDrawer()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
     </button>`;
-  let html='';
-  html += `<div class="drawer-section"><h4>Contexto</h4><p>${b.contexto}</p></div>`;
-  html += `<div class="drawer-section"><h4>KPIs asignados</h4>
-    <div style="display:flex;flex-direction:column;gap:10px">
+  let html = '';
+  html += `<div class="ovr-block" style="margin-bottom:24px"><h3>KPIs asignados</h3>
+    <div style="display:flex;flex-direction:column;gap:12px">
       ${b.kpis.map(id=>{
         const k = KPIS.find(x=>x.id===id); if(!k) return '';
-        const s = statusOf(k); const f = formatReal(k);
-        const dot = s==='good'?'<span class="dot good"></span>':s==='warn'?'<span class="dot warn"></span>':s==='bad'?'<span class="dot bad"></span>':'<span class="dot" style="background:var(--line-2)"></span>';
-        return `<div onclick="openKpiDrawer('${k.code}')" style="cursor:pointer;display:grid;grid-template-columns:1fr 110px 80px;gap:14px;align-items:center;padding:14px 16px;background:var(--bg-soft);border-radius:var(--rad);border:1px solid var(--line);transition:all .2s ease" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--line)'">
+        const ks = statusOf(k); const f = formatReal(k);
+        const col = ks==='good'?'var(--good)':ks==='warn'?'var(--warn)':ks==='bad'?'var(--bad)':'var(--tx-3)';
+        return `<div onclick="openKpiDrawer('${k.code}')" style="cursor:pointer;display:grid;grid-template-columns:60px 1fr 110px 60px;gap:18px;align-items:center;padding:16px 20px;background:rgba(255,255,255,.55);border-radius:14px;border:1px solid var(--line);transition:all .3s ease;backdrop-filter:blur(8px)" onmouseover="this.style.background='rgba(255,255,255,.95)';this.style.transform='translateX(4px)';this.style.borderColor='var(--teal)'" onmouseout="this.style.background='rgba(255,255,255,.55)';this.style.transform='translateX(0)';this.style.borderColor='var(--line)'">
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(${ks==='good'?'22,163,122':ks==='warn'?'214,138,23':ks==='bad'?'214,59,79':'124,138,171'},.1);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:10px;color:${col};font-weight:800;letter-spacing:.05em">${k.id.replace('KPI ','')}</div>
           <div>
-            <div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:10.5px;color:var(--tx-3);letter-spacing:.06em;font-weight:600">${dot}${k.id}</div>
-            <div style="font-family:'Manrope';font-size:14.5px;font-weight:700;color:var(--navy);margin-top:3px">${k.name}</div>
+            <div style="font-family:'Manrope';font-size:16px;font-weight:700;color:var(--navy);letter-spacing:-.01em">${k.name}</div>
+            <div style="font-size:11.5px;color:var(--tx-3);margin-top:3px">${k.ownerFull}</div>
           </div>
           <div style="text-align:right">
-            <div class="mono" style="font-size:18px;color:var(--navy);font-weight:700">${f.big}${f.unit}</div>
-            <div style="font-size:11px;color:var(--tx-3)">meta ${k.meta}</div>
+            <div class="mono" style="font-size:24px;color:${col};font-weight:800;letter-spacing:-.02em">${f.big}${f.unit}</div>
+            <div style="font-size:10.5px;color:var(--tx-3);font-weight:500">meta ${k.meta}</div>
           </div>
-          <div style="text-align:right;color:var(--teal-d);font-weight:700;font-size:12px">Detalle →</div>
+          <div style="text-align:right;color:var(--teal-d);font-weight:700;font-size:18px;transition:transform .25s">→</div>
         </div>`;
       }).join('')}
     </div></div>`;
-  html += `<div class="drawer-section"><h4>Lectura ejecutiva</h4><p>${b.lectura}</p></div>`;
-  html += `<div class="drawer-section"><h4>Acción</h4><p>${b.accion}</p></div>`;
+  html += `<div class="ovr-grid equal">
+    <div class="ovr-block"><h3>Lectura ejecutiva</h3>
+      <div class="insight-row"><div class="ic ${s==='good'?'good':s==='warn'?'warn':'bad'}">${s==='good'?'✓':s==='warn'?'!':'✕'}</div><div class="tx" style="font-size:14px">${b.lectura}</div></div>
+    </div>
+    <div class="ovr-block"><h3>Acción estratégica</h3>
+      <div class="insight-row"><div class="ic good">→</div><div class="tx" style="font-size:14px">${b.accion}</div></div>
+    </div>
+  </div>`;
   body.innerHTML = html;
   drawer.style.display='flex';
   requestAnimationFrame(()=>drawer.classList.add('open'));
-  body.parentElement.scrollTop=0;
+  body.scrollTop=0;
 }
 
 /* ====== TECH SHOWCASE ====== */
@@ -1530,7 +1571,7 @@ function renderBrowserMock(t){
         <span class="kpi-flag live"><span class="live-dot"></span>LIVE · Mayo</span>
       </div>
       <div class="mock-kpis">
-        <div class="mock-kpi"><label>Proyectos</label><div class="v">19</div><div class="d">Norte 10 · Centro 4 · Sur 5</div></div>
+        <div class="mock-kpi"><label>Proyectos</label><div class="v">20</div><div class="d">Norte 11 · Centro 4 · Sur 5</div></div>
         <div class="mock-kpi"><label>Cartera</label><div class="v">USD 32M</div><div class="d">+18.5% YoY</div></div>
         <div class="mock-kpi"><label>Plazos · vivo</label><div class="v" id="mockK1">—</div><div class="d">meta ≥ 80%</div></div>
         <div class="mock-kpi"><label>Reportes</label><div class="v">331</div><div class="d">migrados + live</div></div>
@@ -1652,7 +1693,7 @@ const HDR = {apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY};
 
 async function fetchKpi01(){
   // 1. Universo de proyectos: activo=true AND estado='En progreso'
-  const projUrl = `${SUPABASE_URL}/rest/v1/proyectos?activo=eq.true&estado=eq.En%20progreso&select=id,nombre,cod_proyecto,supervisor,zona&order=zona.asc,nombre.asc`;
+  const projUrl = `${SUPABASE_URL}/rest/v1/proyectos?activo=eq.true&estado=in.(%22En%20progreso%22,%22Con%20obs%22)&select=id,nombre,cod_proyecto,supervisor,zona,estado&order=zona.asc,nombre.asc`;
   const projRes = await fetch(projUrl, {headers:HDR});
   if(!projRes.ok) throw new Error('proyectos HTTP '+projRes.status);
   const proyectos = await projRes.json();

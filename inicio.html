@@ -369,6 +369,219 @@
 <div class="ambient-glow"></div>
 <div class="sb-backdrop" id="sb-backdrop"></div>
 
+<!-- ═══════════════ DRAWER: NUEVO PROYECTO ═══════════════ -->
+<div class="drawer-bg" id="drawer-bg"></div>
+<aside class="drawer" id="drawer-np" role="dialog" aria-label="Nuevo Proyecto">
+  <div class="drawer-h">
+    <div class="flex-1 min-w-0">
+      <div class="drawer-h-t">Nuevo Proyecto</div>
+      <div class="drawer-h-s">Registra un proyecto. Se sincroniza con Supabase al guardar.</div>
+    </div>
+    <button class="drawer-close" id="drawer-close-btn" aria-label="Cerrar">
+      <i data-lucide="x" class="ic"></i>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <!-- View: Form (default) -->
+    <div id="np-form-view">
+
+      <!-- Sección: Identificación -->
+      <div class="form-section">
+        <div class="form-section-t"><i data-lucide="badge" class="ic"></i>Identificación</div>
+        <div class="form-grid">
+          <div class="form-grp full">
+            <label class="form-lbl">Código del proyecto</label>
+            <div class="flex gap-2">
+              <input type="text" class="form-inp flex-1" id="np-cod" placeholder="Ej. FP-2026-001" autocomplete="off">
+              <button type="button" class="btn-secondary" id="np-cod-auto" title="Sugerir siguiente código">
+                <i data-lucide="sparkles" style="width:14px;height:14px;stroke-width:2.2;color:#3ECBB0"></i>
+              </button>
+            </div>
+            <div class="form-hint" id="np-cod-hint">Click en el ícono para auto-sugerir el siguiente código</div>
+          </div>
+          <div class="form-grp full">
+            <label class="form-lbl">Nombre del proyecto <span class="req">*</span></label>
+            <input type="text" class="form-inp" id="np-nombre" placeholder="Cliente · Tipo · Año" autocomplete="off">
+            <div class="form-err" id="np-nombre-err" style="display:none"></div>
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Estado inicial</label>
+            <select class="form-sel" id="np-estado">
+              <option value="Por Iniciar" selected>Por Iniciar</option>
+              <option value="En progreso">En progreso</option>
+              <option value="Suspendido">Suspendido</option>
+              <option value="Con obs">Con observaciones</option>
+            </select>
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Categoría</label>
+            <input type="text" class="form-inp" id="np-categoria" placeholder="Frigorífico, instalación...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Equipo -->
+      <div class="form-section">
+        <div class="form-section-t"><i data-lucide="users" class="ic"></i>Equipo asignado</div>
+        <div class="form-grid">
+          <div class="form-grp full">
+            <label class="form-lbl">Supervisor</label>
+            <select class="form-sel" id="np-supervisor">
+              <option value="">— Seleccionar supervisor —</option>
+            </select>
+            <div class="form-hint" id="np-sup-load" style="display:none;color:#c98800">⚠ <span></span></div>
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Asistente</label>
+            <input type="text" class="form-inp" id="np-asistente" placeholder="Opcional">
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Email supervisor</label>
+            <input type="email" class="form-inp" id="np-sup-email" placeholder="ejemplo@friopacking.com">
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Ubicación -->
+      <div class="form-section">
+        <div class="form-section-t"><i data-lucide="map-pin" class="ic"></i>Ubicación</div>
+        <div class="form-grid">
+          <div class="form-grp">
+            <label class="form-lbl">Zona</label>
+            <select class="form-sel" id="np-zona">
+              <option value="">— Seleccionar —</option>
+              <option value="NORTE">NORTE</option>
+              <option value="CENTRO">CENTRO</option>
+              <option value="SUR">SUR</option>
+            </select>
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Departamento</label>
+            <select class="form-sel" id="np-depto">
+              <option value="">— Seleccionar —</option>
+              <option>ANCASH</option><option>AREQUIPA</option><option>ICA</option>
+              <option>LA LIBERTAD</option><option>LAMBAYEQUE</option><option>LIMA</option><option>PIURA</option>
+              <option>CAJAMARCA</option><option>JUNIN</option><option>CUSCO</option>
+              <option>SAN MARTIN</option><option>UCAYALI</option>
+            </select>
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Provincia</label>
+            <input type="text" class="form-inp" id="np-provincia" placeholder="Ej. Trujillo">
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Distrito</label>
+            <input type="text" class="form-inp" id="np-distrito" placeholder="Ej. Moche">
+          </div>
+          <div class="form-grp full">
+            <label class="form-lbl">Dirección</label>
+            <input type="text" class="form-inp" id="np-direccion" placeholder="Calle, número, referencia">
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Fechas -->
+      <div class="form-section">
+        <div class="form-section-t"><i data-lucide="calendar-days" class="ic"></i>Fechas contractuales</div>
+        <div class="form-grid">
+          <div class="form-grp">
+            <label class="form-lbl">Inicio contractual <span class="req">*</span></label>
+            <input type="date" class="form-inp" id="np-fini">
+            <div class="form-err" id="np-fini-err" style="display:none"></div>
+          </div>
+          <div class="form-grp">
+            <label class="form-lbl">Fin contractual <span class="req">*</span></label>
+            <input type="date" class="form-inp" id="np-ffin">
+            <div class="form-err" id="np-ffin-err" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Económico -->
+      <div class="form-section">
+        <div class="form-section-t"><i data-lucide="banknote" class="ic"></i>Económico</div>
+        <div class="form-grid">
+          <div class="form-grp full">
+            <label class="form-lbl">Valor de venta</label>
+            <div class="input-prefix">
+              <span class="pfx">S/</span>
+              <input type="number" class="form-inp" id="np-venta" placeholder="0.00" step="0.01" min="0">
+            </div>
+            <div class="form-hint">El monto contractual del proyecto</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avanzado -->
+      <div class="form-advanced" id="np-advanced">
+        <div class="form-advanced-toggle" onclick="this.parentElement.classList.toggle('open')">
+          <span><i data-lucide="sliders-horizontal" style="width:14px;height:14px;stroke-width:2.2;display:inline-block;vertical-align:middle;margin-right:6px;color:#64748b"></i>Más opciones</span>
+          <i data-lucide="chevron-down" class="chev" style="width:16px;height:16px;stroke-width:2.2"></i>
+        </div>
+        <div class="form-advanced-body">
+          <div class="form-grid">
+            <div class="form-grp">
+              <label class="form-lbl">Inicio real</label>
+              <input type="date" class="form-inp" id="np-fini-real">
+            </div>
+            <div class="form-grp">
+              <label class="form-lbl">Fin real</label>
+              <input type="date" class="form-inp" id="np-ffin-real">
+            </div>
+            <div class="form-grp">
+              <label class="form-lbl">Penalidades</label>
+              <select class="form-sel" id="np-penalidades">
+                <option value="No aplica">No aplica</option>
+                <option value="Aplica">Aplica</option>
+              </select>
+            </div>
+            <div class="form-grp">
+              <label class="form-lbl">% Penalidad</label>
+              <input type="text" class="form-inp" id="np-pen-pct" placeholder="Ej. 0.1">
+            </div>
+            <div class="form-grp full">
+              <label class="form-lbl">Tipo de penalidad</label>
+              <input type="text" class="form-inp" id="np-pen-tipo" placeholder="Diaria, por hito, etc.">
+            </div>
+            <div class="form-grp full">
+              <label class="form-lbl">Ambientes</label>
+              <input type="text" class="form-inp" id="np-ambientes" placeholder="Túneles, antesalas, conservación...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View: Preview (hidden by default) -->
+    <div id="np-preview-view" style="display:none">
+      <div class="form-section-t" style="margin-bottom:16px"><i data-lucide="eye" class="ic"></i>Vista previa antes de guardar</div>
+      <div style="background:linear-gradient(135deg,#f7f9fc 0%,#eef2f7 100%);border:1px solid #e7ebf2;border-radius:14px;padding:18px 20px;margin-bottom:14px" id="np-preview-card"></div>
+      <p style="font-size:12px;color:#64748b;line-height:1.4">Revisa los datos. Si todo es correcto, haz click en <b>Confirmar y guardar</b>. Si necesitas ajustar algo, vuelve a <b>← Volver al formulario</b>.</p>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <span class="hint" id="np-hint">Los campos con <span style="color:#ef4444">*</span> son obligatorios</span>
+    <div class="drawer-foot-btns" id="np-btns">
+      <button type="button" class="btn-secondary" id="np-cancel">Cancelar</button>
+      <button type="button" class="btn-primary" id="np-preview">
+        <span>Vista previa</span>
+        <i data-lucide="arrow-right" class="ic"></i>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="ic-wrap"><i data-lucide="check" class="ic"></i></div>
+  <div>
+    <div class="toast-t" id="toast-t">Listo</div>
+    <div class="toast-s" id="toast-s"></div>
+  </div>
+</div>
+
 <div class="flex min-h-screen relative">
 
   <!-- ═══════════════ SIDEBAR ═══════════════ -->

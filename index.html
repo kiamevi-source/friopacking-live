@@ -735,27 +735,6 @@ input[type=date]{font-family:inherit;color:var(--ink);background:transparent;bor
   </div>
 </div>
 
-<!-- ============ OCR DIALOG ============ -->
-<div class="dialog-bg" id="ocr-dialog">
-  <div class="dialog">
-    <h2>📷 Importar reporte por OCR</h2>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:14px">Subí PDFs o capturas de WhatsApp. El sistema extrae avance %, supervisor, fecha, personal y observaciones automáticamente.</p>
-    <label class="drop" id="drop-zone">
-      <div class="ic">📤</div>
-      <div><b>Hacé click o arrastrá archivos</b></div>
-      <div style="font-size:11px;margin-top:4px">PDF, JPG, PNG · varios a la vez</div>
-      <input type="file" id="ocr-file" multiple accept="image/*,application/pdf" style="display:none">
-    </label>
-    <div id="ocr-progress" style="margin-top:14px;display:none">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:6px" id="ocr-status">Procesando…</div>
-      <div style="height:8px;background:#eef2f7;border-radius:4px;overflow:hidden"><div id="ocr-bar" style="height:100%;width:0;background:var(--teal);transition:width .2s"></div></div>
-    </div>
-    <div style="margin-top:14px;display:flex;justify-content:flex-end;gap:6px">
-      <button class="btn" style="background:var(--bg);color:var(--ink);border:1px solid var(--line)" onclick="closeOCR()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
 <!-- ============ COMPARE DIALOG ============ -->
 <div class="dialog-bg" id="cmp-dialog">
   <div class="dialog" style="max-width:900px">

@@ -191,6 +191,14 @@
   /* Header gradient detail */
   .header-deco{position:absolute;top:0;right:0;width:50%;height:240px;background:linear-gradient(135deg,rgba(62,203,176,.06) 0%,rgba(62,203,176,0) 100%);pointer-events:none;z-index:-1;border-radius:0 0 0 100px}
 
+  /* ─── Carga del supervisor (banner inteligente) ─── */
+  .carga-banner{display:none;align-items:center;gap:8px;padding:9px 12px;margin-top:7px;border-radius:9px;font-size:11.5px;font-weight:600;line-height:1.35;animation:fade-up .25s ease}
+  .carga-banner.on{display:flex}
+  .carga-banner.ok{background:rgba(34,197,94,.08);color:#15803d;border:1px solid rgba(34,197,94,.18)}
+  .carga-banner.med{background:rgba(245,158,11,.08);color:#a16207;border:1px solid rgba(245,158,11,.22)}
+  .carga-banner.alta{background:rgba(239,68,68,.08);color:#b91c1c;border:1px solid rgba(239,68,68,.22)}
+  .carga-banner i{flex-shrink:0}
+
   /* ─── CTA Nuevo Proyecto (primario teal) ─── */
   .cta-new{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;background:linear-gradient(135deg,#3ECBB0 0%,#2db59a 100%);color:white;font-size:13.5px;font-weight:700;border-radius:12px;cursor:pointer;border:none;transition:all .2s;box-shadow:0 6px 18px -6px rgba(62,203,176,.50);font-family:'Inter',sans-serif;white-space:nowrap}
   .cta-new:hover{transform:translateY(-1px);box-shadow:0 12px 24px -6px rgba(62,203,176,.55)}

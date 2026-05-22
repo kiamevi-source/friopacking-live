@@ -8450,6 +8450,84 @@ function _eqv2RenderCards(rows){
   }).join('');
 }
 
+/* ── Equipos: detail modal (click on any card opens this) ── */
+function _eqOpenDetail(doc){
+  if(!doc)return;
+  const eqs=window._allEquipos?window._allEquipos():[];
+  const r=eqs.find(x=>(x.doc||'')===doc);
+  if(!r)return;
+  const stages=[
+    {l:'Fabricación',ico:'🔧'},
+    {l:'Origen',ico:'📍'},
+    {l:'Tránsito',ico:'🚢'},
+    {l:'Aduana',ico:'🛃'},
+    {l:'En Obra',ico:'🏗'},
+    {l:'Entregado',ico:'✓'},
+  ];
+  /* _eqv2StageIdx returns 0..6 over [fabricacion,origen,transito,aduana,transporte,obra,entregado];
+     collapse transporte+obra → "En Obra" in the 6-step visual */
+  const origIdx=_eqv2StageIdx(r);
+  const cur=[0,1,2,3,4,4,5][origIdx]??0;
+  const tlHTML=stages.map((s,i)=>{
+    const cls=i<cur?'done':i===cur?'current':'';
+    return`<div class="eqd-tl-step ${cls}"><div class="eqd-tl-dot">${s.ico}</div><div class="eqd-tl-lbl">${s.l}</div></div>`;
+  }).join('');
+  const badge=_eqv2BadgeLabel(r);
+  const cardCls=_eqv2CardClass(r);
+  const badgeColor={crit:'#ef4444',warn:'#f59e0b',ok:'#22c55e',hist:'#94a3b8',fab:'#f59e0b',transit:'#0ea5e9',aduana:'#6366f1',origen:'#8b5cf6'}[cardCls]||'#0d9488';
+  const ou=(r.origen||'').toUpperCase();
+  const origenIco=r.origen?(ou.includes('CHINA')?'🇨🇳':ou.includes('ARGENT')?'🇦🇷':ou.includes('BRAS')?'🇧🇷':ou.includes('ESTADOS')||ou.includes('USA')?'🇺🇸':ou.includes('ITAL')?'🇮🇹':ou.includes('ALEMAN')||ou.includes('GERM')?'🇩🇪':ou.includes('ESPA')?'🇪🇸':ou.includes('DINAM')?'🇩🇰':'🌐'):'';
+  const obraStr=r._fechaObra?_eqFmtDate(r._fechaObra):'—';
+  const diasStr=r._diasObra!==null&&r._diasObra!==undefined?(r._diasObra===0?'HOY':r._diasObra>0?'+'+r._diasObra+'d':r._diasObra+'d'):'—';
+  const flag=r._nuevo?'<span class="eqd-flag new">NUEVO</span>':r._changed?'<span class="eqd-flag chg">CAMBIO</span>':'';
+  const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  document.getElementById('eq-detail-body').innerHTML=`
+    <div class="eqd-h">
+      <div class="eqd-h-l">
+        <div class="eqd-tipo">${esc(r.tipo)||'Equipo'}${flag}</div>
+        <div class="eqd-doc">${esc(r.doc)||'—'}</div>
+        <div><span class="eqd-proj">📦 ${esc(r.proyecto)||'—'}</span></div>
+      </div>
+      <span class="eqd-badge" style="background:color-mix(in srgb,${badgeColor} 14%,transparent);color:${badgeColor}">${badge}</span>
+      <button class="eqd-x" onclick="_eqCloseDetail()" title="Cerrar">×</button>
+    </div>
+    <div class="eqd-section">
+      <div class="eqd-section-t">Trazabilidad</div>
+      <div class="eqd-tl">${tlHTML}</div>
+    </div>
+    <div class="eqd-section">
+      <div class="eqd-section-t">Detalles</div>
+      <div class="eqd-grid">
+        <div class="eqd-l">Origen</div><div class="eqd-v">${origenIco} ${esc(r.origen)||'—'}</div>
+        <div class="eqd-l">Modalidad</div><div class="eqd-v">${esc(r.modalidad)||'—'}</div>
+        <div class="eqd-l">ETA</div><div class="eqd-v">${esc(r.eta)||'—'}</div>
+        <div class="eqd-l">F. en Obra</div><div class="eqd-v">${obraStr}</div>
+        <div class="eqd-l">Días vs obra</div><div class="eqd-v">${diasStr}</div>
+        <div class="eqd-l">Proveedor</div><div class="eqd-v">${esc(r.proveedor)||'—'}</div>
+        <div class="eqd-l">Status actual</div><div class="eqd-v ${r.status_dest?'':'muted'}">${esc(r.status_dest)||'(sin status)'}</div>
+      </div>
+    </div>`;
+  document.getElementById('eq-detail-modal').classList.add('on');
+}
+function _eqCloseDetail(){
+  const m=document.getElementById('eq-detail-modal');
+  if(m)m.classList.remove('on');
+}
+if(typeof W!=='undefined'){W._eqOpenDetail=_eqOpenDetail;W._eqCloseDetail=_eqCloseDetail;}
+window._eqOpenDetail=_eqOpenDetail;window._eqCloseDetail=_eqCloseDetail;
+/* Event delegation — any click on an equipo card opens the detail modal */
+if(!window._eqDetailListenerAttached){
+  window._eqDetailListenerAttached=true;
+  document.addEventListener('click',function(e){
+    const card=e.target.closest('.eqv2-card');
+    if(!card)return;
+    /* Skip clicks on links/buttons inside the card */
+    if(e.target.closest('a,button'))return;
+    const doc=card.getAttribute('data-doc');
+    if(doc)_eqOpenDetail(doc);
+  });
+}
+
 let _eqRenderPending=false;
 let _eqRenderInFlight=false;
 function renderEquiposPremium(){

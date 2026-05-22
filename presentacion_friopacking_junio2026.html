@@ -381,7 +381,7 @@ button{font-family:inherit}
         </div>
         <div class="hero-meta-item">
           <label>Portafolio activo</label>
-          <div class="val">39 proyectos<small>Norte · Centro · Sur · 2026</small></div>
+          <div class="val">19 en progreso<small>+ 17 en cartera · Norte 10 · Centro 4 · Sur 5</small></div>
         </div>
         <div class="hero-meta-item">
           <label>Cartera 2026</label>
@@ -404,8 +404,8 @@ button{font-family:inherit}
         <div class="cmd-stats">
           <div class="cmd-stat">
             <label>Proyectos activos</label>
-            <div class="v mono" id="heroProj">39</div>
-            <div class="d">Norte 14 · Centro 16 · Sur 9</div>
+            <div class="v mono" id="heroProj">19</div>
+            <div class="d">Norte 10 · Centro 4 · Sur 5</div>
           </div>
           <div class="cmd-stat">
             <label>Personal en sitio</label>
@@ -621,7 +621,7 @@ button{font-family:inherit}
   </div>
   <div class="closing-grid fade-up d2">
     <div class="closing-stat"><div class="v">6 / 6</div><label>KPIs habilitados</label></div>
-    <div class="closing-stat"><div class="v">39</div><label>Proyectos vigilados</label></div>
+    <div class="closing-stat"><div class="v">19</div><label>Proyectos en progreso</label></div>
     <div class="closing-stat"><div class="v">USD 32 M</div><label>Cartera 2026</label></div>
   </div>
   <div class="fade-up d3" style="display:flex;flex-direction:column;align-items:center;gap:14px">
@@ -666,7 +666,7 @@ document.getElementById('heroLogo').src = window.__LOGO_B64__;
 // =================================================================
 // DATA MODEL
 // =================================================================
-const SUPABASE_URL = 'https://vsploxgluktbeokumunp.supabase.co';
+const SUPABASE_URL = 'https://vsploxglutkbeokumunp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzcGxveGdsdXRrYmVva3VtdW5wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTMyMzEsImV4cCI6MjA5MjM2OTIzMX0.wca52ejPsimIyG-iHS3TFRv4xjZF-55eDWoRR2I9nL0';
 
 const KPIS = [
@@ -677,25 +677,25 @@ const KPIS = [
     real:null, // poblado por fetch
     status:null,
     perspective:'cli',
-    descripcion:'Porcentaje de proyectos del portafolio que cumplieron el hito comprometido del mes según el último reporte diario del supervisor en sitio.',
-    formula:'Proyectos con desfase ≤ 0 días en el último reporte de mayo ÷ Total proyectos con reporte en mayo.',
-    fuente:'Supabase · tabla reportes · campo desfase_dias (computado desde fecha_fin_cont vs fecha_fin_proy).',
-    spark:[78,74,71,76,82,79,null], // proxy histórico
+    descripcion:'Porcentaje de proyectos en progreso del portafolio que están dentro del plazo según el SPI (Schedule Performance Index) del último reporte diario en mayo.',
+    formula:'Proyectos con SPI ≥ 0.95 en el último reporte de mayo ÷ Total proyectos en progreso (universo = proyectos.activo=true y estado=\'En progreso\', dedup por cod_proyecto).',
+    fuente:'Supabase · join proyectos × reportes · último reporte ≥ 2026-05-01 por cod_proyecto.',
+    spark:[71,74,76,78,79,null,null], // tendencia hacia meta
     detalle:{
-      lectura:'Indicador vivo, calculado en el navegador a partir del último reporte de cada proyecto registrado en mayo. Si el desfase reportado es ≤ 0 días, se considera cumplido.',
+      lectura:'Cálculo vivo desde Supabase con los 19 proyectos en progreso del portafolio. Un proyecto cumple plazo si su SPI (avance real / avance planificado) es ≥ 0.95 en su último reporte de mayo.',
       causa:[
-        'Importación de equipos en 4 proyectos críticos (Vanguard, Mission, Viru, Imbarex) genera arrastre.',
-        'Cambios de alcance del cliente sin redefinición formal de cronograma en 3 proyectos.',
-        'Reporte de fecha proyectada de fin no se actualiza en sitio cuando hay re-baseline.'
+        'Importación de equipos genera arrastre en proyectos con avance bajo planificación.',
+        'Re-baselines no formalizados — los supervisores ajustan el plan sin aprobación de Gerencia.',
+        'Cambios de alcance del cliente cargados al cronograma original.'
       ],
       acciones:[
-        'Review semanal Lunes 08:00 entre Gerencia y los 21 supervisores con tablero filtrado por proyectos rojos.',
-        'Activar alerta automática cuando desfase_dias > 5 (notificación al supervisor + al PMO).',
-        'Re-baseline formal aprobado por la Gerencia antes de cargar nueva fecha_fin_proy.'
+        'Review semanal Lunes 08:00 con tablero filtrado por SPI < 0.95.',
+        'Alerta automática al supervisor + PMO cuando SPI baja de 0.95 en dos reportes consecutivos.',
+        'Re-baseline formal aprobado por la Gerencia antes de actualizar fecha_fin_proy.'
       ],
       riesgos:[
-        'Si no se cierra Imbarex y Ta Export en junio, KPI cae mecánicamente 6-8 puntos.',
-        'Reportes con campo fecha vacío no entran al cálculo — riesgo de subreporte.'
+        'Si los 4 proyectos atrasados (Berry Harvest, Bomarea, QPACK, Ta Export) no recuperan SPI en junio, el KPI cae bajo 70%.',
+        'Proyectos por iniciar (6) entran al cálculo apenas registren primer reporte — riesgo de bajada inicial.'
       ]
     }
   },
@@ -920,9 +920,9 @@ const TECH = [
   {
     code:'01', name:'Centro de Control PMO',
     url:'kiamevi-source.github.io/friopacking-live',
-    desc:'Dashboard ejecutivo del portafolio de 39 proyectos con KPIs, zonas geográficas y estado de avance en tiempo real.',
+    desc:'Dashboard ejecutivo del portafolio de proyectos con KPIs, zonas geográficas y estado de avance en tiempo real.',
     caps:[
-      ['SCOPE','39 proyectos','Norte · Centro · Sur'],
+      ['SCOPE','19 en progreso','+17 en cartera · 3 zonas'],
       ['STACK','HTML + Supabase','Single file'],
       ['CADENCIA','Live','Auto-refresh 60 s'],
       ['ACCESO','PMO + Gerencia','5 usuarios']
@@ -1206,6 +1206,47 @@ function openKpiDrawer(code){
 
   let html = '';
   html += `<div class="drawer-section"><h4>Lectura ejecutiva</h4><p>${k.detalle.lectura||'—'}</p></div>`;
+
+  // Live per-project breakdown for KPI 01
+  if(k.code==='k1' && k.liveDetalle && k.liveDetalle.length){
+    const det = k.liveDetalle;
+    const cumple = det.filter(d=>d.status==='on-time').length;
+    const atras = det.filter(d=>d.status==='delayed');
+    const sinRep = det.filter(d=>d.status==='sin-reporte');
+    html += `<div class="drawer-section"><h4>Detalle por proyecto · Mayo 2026 (vivo)</h4>
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <span class="chip good"><span class="dot good"></span>${cumple} en plazo</span>
+        <span class="chip bad"><span class="dot bad"></span>${atras.length} atrasados</span>
+        ${sinRep.length?`<span class="chip warn"><span class="dot warn"></span>${sinRep.length} sin reporte</span>`:''}
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead><tr style="text-align:left;color:var(--tx-3);font-size:10px;letter-spacing:.08em;text-transform:uppercase">
+          <th style="padding:6px 6px 6px 0;font-weight:700">Proyecto</th>
+          <th style="font-weight:700">Zona</th>
+          <th style="font-weight:700">Supervisor</th>
+          <th style="text-align:right;font-weight:700">SPI</th>
+          <th style="text-align:right;font-weight:700">% Plan</th>
+          <th style="text-align:right;font-weight:700">% Real</th>
+          <th style="text-align:center;font-weight:700">Est.</th>
+        </tr></thead>
+        <tbody>${det.map(d=>{
+          const col = d.status==='on-time'?'var(--good)':d.status==='delayed'?'var(--bad)':'var(--warn)';
+          const ic = d.status==='on-time'?'✓':d.status==='delayed'?'✗':'—';
+          return `<tr style="border-top:1px solid var(--line)">
+            <td style="padding:8px 6px 8px 0;color:var(--ink-2);font-weight:600">${d.nombre||d.cod_proyecto}</td>
+            <td style="color:var(--tx-3);font-size:11px">${d.zona||'—'}</td>
+            <td style="color:var(--tx-3);font-size:11px">${(d.supervisor||'').split(' ').slice(0,2).join(' ')}</td>
+            <td style="text-align:right;font-weight:700;color:${col}" class="mono">${d.spi!=null?Number(d.spi).toFixed(2):'—'}</td>
+            <td style="text-align:right;color:var(--tx-2)" class="mono">${d.plan!=null?Number(d.plan).toFixed(1):'—'}</td>
+            <td style="text-align:right;color:var(--tx-2)" class="mono">${d.real!=null?Number(d.real).toFixed(1):'—'}</td>
+            <td style="text-align:center;color:${col};font-weight:700">${ic}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+      <div style="font-size:11px;color:var(--tx-3);margin-top:10px">Criterio: cumple plazo si <strong>SPI ≥ 0.95</strong> en el último reporte de mayo. Universo: proyectos con <code>activo=true</code> y <code>estado=&apos;En progreso&apos;</code>, dedup por <code>cod_proyecto</code> (FRUSAN = FRUSAN/HUARMEY · QPACK = QUELEN/QBERRIES/QPACK).</div>
+    </div>`;
+  }
+
   html += `<div class="drawer-section"><h4>Definición y fuente</h4>
     <div class="drawer-grid">
       <div class="drawer-stat"><label>Qué mide</label><div class="d" style="font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.5">${k.descripcion}</div></div>
@@ -1489,7 +1530,7 @@ function renderBrowserMock(t){
         <span class="kpi-flag live"><span class="live-dot"></span>LIVE · Mayo</span>
       </div>
       <div class="mock-kpis">
-        <div class="mock-kpi"><label>Proyectos</label><div class="v">39</div><div class="d">Norte 14 · Centro 16 · Sur 9</div></div>
+        <div class="mock-kpi"><label>Proyectos</label><div class="v">19</div><div class="d">Norte 10 · Centro 4 · Sur 5</div></div>
         <div class="mock-kpi"><label>Cartera</label><div class="v">USD 32M</div><div class="d">+18.5% YoY</div></div>
         <div class="mock-kpi"><label>Plazos · vivo</label><div class="v" id="mockK1">—</div><div class="d">meta ≥ 80%</div></div>
         <div class="mock-kpi"><label>Reportes</label><div class="v">331</div><div class="d">migrados + live</div></div>
@@ -1607,40 +1648,52 @@ function renderBrowserMock(t){
 }
 
 /* ====== SUPABASE LIVE FETCH KPI 01 ====== */
+const HDR = {apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY};
+
 async function fetchKpi01(){
-  // Fetch all reports from May 2026 (UTC tolerant)
-  const url = `${SUPABASE_URL}/rest/v1/reportes?select=cod_proyecto,nombre_proyecto,supervisor,fecha_reporte,desfase_dias,spi,pct_ejecutado,pct_planificado,fecha_fin_cont,fecha_fin_proy,es_draft&fecha_reporte=gte.2026-05-01&fecha_reporte=lt.2026-06-01&order=fecha_reporte.desc`;
-  const res = await fetch(url, {
-    headers:{
-      'apikey':SUPABASE_KEY,
-      'Authorization':'Bearer '+SUPABASE_KEY
-    }
-  });
-  if(!res.ok) throw new Error('HTTP '+res.status);
-  const data = await res.json();
-  // Filter out drafts
-  const rows = data.filter(r=>r && !r.es_draft);
-  // Group: last report per project in May
-  const byProj = new Map();
-  for(const r of rows){
-    const key = r.cod_proyecto || r.nombre_proyecto;
-    if(!key) continue;
-    const prev = byProj.get(key);
-    if(!prev || (r.fecha_reporte > prev.fecha_reporte)) byProj.set(key, r);
+  // 1. Universo de proyectos: activo=true AND estado='En progreso'
+  const projUrl = `${SUPABASE_URL}/rest/v1/proyectos?activo=eq.true&estado=eq.En%20progreso&select=id,nombre,cod_proyecto,supervisor,zona&order=zona.asc,nombre.asc`;
+  const projRes = await fetch(projUrl, {headers:HDR});
+  if(!projRes.ok) throw new Error('proyectos HTTP '+projRes.status);
+  const proyectos = await projRes.json();
+  // Dedup por cod_proyecto (FRUSAN = FRUSAN/HUARMEY, QPACK = QUELEN/QBERRIES/QPACK)
+  const uniqMap = new Map();
+  for(const p of proyectos){
+    if(!p.cod_proyecto) continue;
+    if(!uniqMap.has(p.cod_proyecto)) uniqMap.set(p.cod_proyecto, p);
   }
-  const projects = Array.from(byProj.values());
-  const total = projects.length;
-  // On-time: desfase_dias <= 0, OR fallback: spi >= .95
+  const uniqProj = Array.from(uniqMap.values());
+  const cods = uniqProj.map(p=>p.cod_proyecto);
+  if(cods.length===0) return {pct:null,total:0,cumple:0,totalReports:0,detalle:[]};
+
+  // 2. Reportes de mayo para esos cod (no drafts)
+  const codsParam = cods.map(c=>`"${c}"`).join(',');
+  const repUrl = `${SUPABASE_URL}/rest/v1/reportes?select=cod_proyecto,fecha_reporte,spi,pct_planificado,pct_ejecutado,desfase_dias,es_draft&fecha_reporte=gte.2026-05-01&fecha_reporte=lt.2026-06-01&cod_proyecto=in.(${encodeURIComponent(codsParam)})&order=fecha_reporte.desc`;
+  const repRes = await fetch(repUrl, {headers:HDR});
+  if(!repRes.ok) throw new Error('reportes HTTP '+repRes.status);
+  const reportes = await repRes.json();
+  const noDrafts = reportes.filter(r=>!r.es_draft);
+
+  // 3. Último reporte por cod
+  const lastByProj = new Map();
+  for(const r of noDrafts){
+    const k = r.cod_proyecto;
+    if(!lastByProj.has(k) || r.fecha_reporte > lastByProj.get(k).fecha_reporte) lastByProj.set(k, r);
+  }
+
+  // 4. KPI: SPI ≥ 0.95 → cumple
   let cumple = 0;
-  for(const p of projects){
-    const desf = (p.desfase_dias != null) ? Number(p.desfase_dias) : null;
-    if(desf!=null){ if(desf<=0) cumple++; continue; }
-    if(p.spi!=null && Number(p.spi)>=.95) cumple++;
-  }
+  const detalle = uniqProj.map(p=>{
+    const r = lastByProj.get(p.cod_proyecto);
+    if(!r) return {...p, spi:null, plan:null, real:null, status:'sin-reporte'};
+    const spi = r.spi!=null?Number(r.spi):null;
+    const ok = spi!=null && spi>=0.95;
+    if(ok) cumple++;
+    return {...p, spi, plan:r.pct_planificado, real:r.pct_ejecutado, status:ok?'on-time':'delayed'};
+  });
+  const total = uniqProj.length;
   const pct = total>0 ? (cumple/total)*100 : null;
-  // Count total reportes in May
-  const totalReports = rows.length;
-  return {pct, total, cumple, totalReports, projects};
+  return {pct, total, cumple, totalReports:noDrafts.length, detalle};
 }
 
 async function applyKpi01(){
@@ -1656,11 +1709,13 @@ async function applyKpi01(){
       heroReports.textContent='0'; heroReportsD.textContent='Sin actividad';
       KPIS.find(k=>k.code==='k1').real=null;
     } else {
-      const v = Math.round(r.pct);
-      KPIS.find(k=>k.code==='k1').real = v;
-      heroK1.textContent = v+'%';
+      const v = +r.pct.toFixed(1);
+      const k1 = KPIS.find(k=>k.code==='k1');
+      k1.real = v;
+      k1.liveDetalle = r.detalle; // [{nombre,cod_proyecto,supervisor,zona,spi,plan,real,status}]
+      heroK1.textContent = Math.round(v)+'%';
       heroK1d.textContent = r.cumple+' de '+r.total+' proyectos en plazo';
-      if(mockK1) mockK1.textContent = v+'%';
+      if(mockK1) mockK1.textContent = Math.round(v)+'%';
       heroReports.textContent = String(r.totalReports);
       heroReportsD.textContent = r.total+' proyectos · mayo';
       // re-render KPI cards to reflect new value

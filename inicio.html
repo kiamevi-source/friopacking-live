@@ -1114,20 +1114,56 @@ const NP = {
     document.getElementById('drawer-np').classList.remove('on');
     document.body.style.overflow='';
   },
+  supervisorCounts: {},
   loadSupervisors: async function(){
     if(!sb) return;
     try {
-      const {data, error} = await sb.from('proyectos').select('supervisor').not('supervisor','is',null);
+      // Trae supervisor + activo para computar carga
+      const {data, error} = await sb.from('proyectos').select('supervisor,activo').not('supervisor','is',null);
       if(error) throw error;
-      const unique = [...new Set((data||[]).map(r=>r.supervisor).filter(Boolean))].sort();
+      const counts = {};
+      (data||[]).forEach(r=>{
+        if(!r.supervisor) return;
+        if(!counts[r.supervisor]) counts[r.supervisor]={active:0,total:0};
+        counts[r.supervisor].total++;
+        if(r.activo) counts[r.supervisor].active++;
+      });
+      this.supervisorCounts = counts;
+      const unique = Object.keys(counts).sort();
       this.supervisors = unique;
       const sel = document.getElementById('np-supervisor');
       sel.innerHTML = '<option value="">— Seleccionar supervisor —</option>' +
-        unique.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('') +
+        unique.map(s=>{
+          const c=counts[s];
+          const label = c.active>0 ? `${s} · ${c.active} activo${c.active!==1?'s':''}` : `${s} · libre`;
+          return `<option value="${escapeHtml(s)}">${escapeHtml(label)}</option>`;
+        }).join('') +
         '<option value="__new__">+ Otro (escribir manualmente)</option>';
+      // Wire change listener (idempotente)
+      sel.onchange = ()=>this.onSupervisorChange();
     } catch(e) {
       console.warn('Load supervisors error', e);
     }
+  },
+  onSupervisorChange: function(){
+    const sel=document.getElementById('np-supervisor');
+    const banner=document.getElementById('np-carga-banner');
+    const val=sel.value;
+    banner.classList.remove('on','ok','med','alta');
+    banner.innerHTML='';
+    if(!val || val==='__new__' || !this.supervisorCounts[val]) return;
+    const c=this.supervisorCounts[val];
+    let cls='ok', ico='check-circle-2', txt=`Carga óptima — ${c.active} proyecto${c.active!==1?'s':''} activo${c.active!==1?'s':''} actualmente`;
+    if(c.active>=6){
+      cls='alta'; ico='alert-triangle';
+      txt=`Alta carga — ya tiene ${c.active} proyectos activos. Considera otro supervisor o confirma la asignación.`;
+    } else if(c.active>=4){
+      cls='med'; ico='gauge';
+      txt=`Carga media — ${c.active} proyectos activos. Aún puede asumir más.`;
+    }
+    banner.classList.add('on',cls);
+    banner.innerHTML=`<i data-lucide="${ico}" style="width:15px;height:15px;stroke-width:2.2"></i><span>${escapeHtml(txt)}</span>`;
+    if(window.lucide) lucide.createIcons();
   },
   suggestCode: async function(){
     if(!sb) return;

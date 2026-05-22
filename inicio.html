@@ -228,6 +228,8 @@
   .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 20px -4px rgba(62,203,176,.55)}
   .btn-primary:disabled{opacity:.55;cursor:not-allowed}
   .btn-primary .ic{width:15px;height:15px;stroke-width:2.5}
+  /* Fix Safari/SVG click event target: clicks en icono o texto van directo al button */
+  .btn-primary > *, .btn-secondary > *, .cta-new > *, .cta-sala > *, .cta-sp > *, .notif-btn > *, .icon-btn > *, .drawer-close > *, .chip > *, .action-card > *, .tab-item > *, .nav-item > *, .panel-link > *, .kpi-card > *{pointer-events:none}
 
   /* Form fields */
   .form-section{margin-bottom:18px}

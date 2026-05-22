@@ -1033,6 +1033,298 @@ function escapeHtml(s){
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   ALERTAS DE CUMPLIMIENTO — reglas inteligentes
+   ════════════════════════════════════════════════════════════════════ */
+function buildComplianceAlerts(projs, reportedSet, cfVencidasCount, sinReporteCount){
+  const alerts=[];
+  const now=new Date();
+  const dow=now.getDay(); // 0=dom 6=sáb
+  const dayName=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][dow];
+
+  // Day-of-week
+  if(dow===5){
+    alerts.push({type:'info', ico:'calendar-check', t:'Es viernes — sube el reporte semanal de Equipos', s:'PDF/Excel del status de importaciones · Recordatorio operativo', href:'index.html#equipos'});
+  } else if(dow===1){
+    alerts.push({type:'info', ico:'sunrise', t:'Inicio de semana — revisa avances del fin de semana', s:'Confirma reportes pendientes', href:'index.html#reportes'});
+  } else if(dow===0||dow===6){
+    alerts.push({type:'soft', ico:'coffee', t:`Es ${dayName} — sin actividad operativa esperada`, s:'Los reportes se reanudan el lunes', href:'#'});
+  } else {
+    alerts.push({type:'ok', ico:'check-circle-2', t:`${dayName.charAt(0).toUpperCase()+dayName.slice(1)} operativo`, s:'Día regular de gestión PMO', href:'#'});
+  }
+
+  // CF vencidas
+  if(cfVencidasCount>0){
+    alerts.push({type:'crit', ico:'alert-circle', t:`${cfVencidasCount} CF vencidas requieren atención`, s:'Proyectos con fecha contractual pasada sin valorización completa', href:'index.html#cf-vencidas'});
+  }
+
+  // Sin reporte
+  if(sinReporteCount>3){
+    alerts.push({type:'warn', ico:'clipboard-x', t:`${sinReporteCount} proyectos sin reporte reciente`, s:'Más de 24h sin actualización', href:'index.html#alertas'});
+  } else if(sinReporteCount>0){
+    alerts.push({type:'warn', ico:'clipboard-list', t:`${sinReporteCount} proyectos esperando reporte`, s:'Verifica con supervisores', href:'index.html#alertas'});
+  }
+
+  // Próximos a vencer (3 días)
+  const next3 = projs.filter(p=>{
+    if(!p.fecha_fin_contractual) return false;
+    const d=daysUntil(p.fecha_fin_contractual);
+    return d>=0 && d<=3;
+  }).length;
+  if(next3>0){
+    alerts.push({type:'warn', ico:'clock', t:`${next3} proyecto${next3>1?'s':''} vence${next3>1?'n':''} en ≤3 días`, s:'Atención a la entrega contractual', href:'index.html#proyectos'});
+  }
+
+  // All good?
+  if(alerts.length<=1){
+    alerts.push({type:'ok', ico:'shield-check', t:'Todo en orden operativo', s:'Sin alertas críticas detectadas', href:'#'});
+  }
+
+  return alerts;
+}
+
+function renderComplianceAlerts(alerts){
+  const el=document.getElementById('alert-list');
+  if(!el) return;
+  el.innerHTML = alerts.map(a=>`
+    <a href="${a.href}" class="compl-item" ${a.href==='#'?'onclick="event.preventDefault()"':''}>
+      <div class="compl-ico ${a.type}">
+        <i data-lucide="${a.ico}" class="ic"></i>
+      </div>
+      <div class="compl-content">
+        <div class="compl-t">${escapeHtml(a.t)}</div>
+        <div class="compl-s">${escapeHtml(a.s)}</div>
+      </div>
+      <i data-lucide="chevron-right" class="compl-arrow" style="width:16px;height:16px;stroke-width:1.8"></i>
+    </a>
+  `).join('');
+  if(window.lucide) lucide.createIcons();
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   NUEVO PROYECTO — drawer + form + save
+   ════════════════════════════════════════════════════════════════════ */
+const NP = {
+  supervisors: [],
+  open: async function(){
+    document.getElementById('drawer-bg').classList.add('on');
+    document.getElementById('drawer-np').classList.add('on');
+    document.getElementById('np-form-view').style.display='block';
+    document.getElementById('np-preview-view').style.display='none';
+    this.renderFormBtns();
+    document.body.style.overflow='hidden';
+    if(!this.supervisors.length) await this.loadSupervisors();
+  },
+  close: function(){
+    document.getElementById('drawer-bg').classList.remove('on');
+    document.getElementById('drawer-np').classList.remove('on');
+    document.body.style.overflow='';
+  },
+  loadSupervisors: async function(){
+    if(!sb) return;
+    try {
+      const {data, error} = await sb.from('proyectos').select('supervisor').not('supervisor','is',null);
+      if(error) throw error;
+      const unique = [...new Set((data||[]).map(r=>r.supervisor).filter(Boolean))].sort();
+      this.supervisors = unique;
+      const sel = document.getElementById('np-supervisor');
+      sel.innerHTML = '<option value="">— Seleccionar supervisor —</option>' +
+        unique.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('') +
+        '<option value="__new__">+ Otro (escribir manualmente)</option>';
+    } catch(e) {
+      console.warn('Load supervisors error', e);
+    }
+  },
+  suggestCode: async function(){
+    if(!sb) return;
+    const hintEl=document.getElementById('np-cod-hint');
+    hintEl.textContent='Buscando último código...';
+    try {
+      const {data, error} = await sb.from('proyectos').select('cod_proyecto').not('cod_proyecto','is',null).order('id',{ascending:false}).limit(50);
+      if(error) throw error;
+      const year=new Date().getFullYear();
+      const re=new RegExp(`FP[-]?${year}[-]?(\\d{3,4})`,'i');
+      let maxN=0;
+      (data||[]).forEach(r=>{
+        const m=(r.cod_proyecto||'').match(re);
+        if(m){const n=parseInt(m[1]);if(n>maxN)maxN=n;}
+      });
+      const nextCode = `FP-${year}-${String(maxN+1).padStart(3,'0')}`;
+      document.getElementById('np-cod').value=nextCode;
+      hintEl.innerHTML=`✨ Sugerido — basado en último: <b>FP-${year}-${String(maxN).padStart(3,'0')}</b>`;
+      hintEl.style.color='#1f9a82';
+    } catch(e) {
+      console.error('suggestCode error',e);
+      hintEl.textContent='No se pudo sugerir código. Escribe uno manualmente.';
+    }
+  },
+  collectData: function(){
+    return {
+      cod_proyecto: document.getElementById('np-cod').value.trim() || null,
+      nombre: document.getElementById('np-nombre').value.trim(),
+      estado: document.getElementById('np-estado').value,
+      categoria: document.getElementById('np-categoria').value.trim() || null,
+      supervisor: document.getElementById('np-supervisor').value !== '__new__' ? document.getElementById('np-supervisor').value || null : null,
+      asistente: document.getElementById('np-asistente').value.trim() || null,
+      supervisor_email: document.getElementById('np-sup-email').value.trim() || null,
+      zona: document.getElementById('np-zona').value || null,
+      departamento: document.getElementById('np-depto').value || null,
+      provincia: document.getElementById('np-provincia').value.trim() || null,
+      distrito: document.getElementById('np-distrito').value.trim() || null,
+      direccion: document.getElementById('np-direccion').value.trim() || null,
+      fecha_ini_contractual: document.getElementById('np-fini').value || null,
+      fecha_fin_contractual: document.getElementById('np-ffin').value || null,
+      fecha_ini_real: document.getElementById('np-fini-real').value || null,
+      fecha_fin_real: document.getElementById('np-ffin-real').value || null,
+      venta: parseFloat(document.getElementById('np-venta').value) || 0,
+      penalidades: document.getElementById('np-penalidades').value,
+      penalidad_pct: document.getElementById('np-pen-pct').value.trim() || null,
+      penalidad_tipo: document.getElementById('np-pen-tipo').value.trim() || null,
+      ambientes: document.getElementById('np-ambientes').value.trim() || null,
+      activo: true,
+    };
+  },
+  validate: function(d){
+    const errors = {};
+    // Clear previous
+    ['nombre','fini','ffin'].forEach(id=>{
+      document.getElementById(`np-${id}`).classList.remove('err');
+      const e=document.getElementById(`np-${id}-err`);
+      if(e){e.style.display='none';e.textContent='';}
+    });
+    if(!d.nombre || d.nombre.length<3){
+      errors.nombre='El nombre debe tener al menos 3 caracteres';
+    }
+    if(!d.fecha_ini_contractual){
+      errors.fini='Fecha de inicio obligatoria';
+    }
+    if(!d.fecha_fin_contractual){
+      errors.ffin='Fecha de fin obligatoria';
+    }
+    if(d.fecha_ini_contractual && d.fecha_fin_contractual && d.fecha_fin_contractual < d.fecha_ini_contractual){
+      errors.ffin='La fecha de fin no puede ser anterior al inicio';
+    }
+    // Render errors
+    Object.entries(errors).forEach(([k,msg])=>{
+      const id = k==='nombre'?'np-nombre':k==='fini'?'np-fini':'np-ffin';
+      document.getElementById(id).classList.add('err');
+      const eEl = document.getElementById(id+'-err');
+      if(eEl){eEl.textContent=msg;eEl.style.display='block';}
+    });
+    return Object.keys(errors).length===0;
+  },
+  goToPreview: function(){
+    const d = this.collectData();
+    if(!this.validate(d)) return;
+    // Build preview card
+    const card = document.getElementById('np-preview-card');
+    const ventaFmt = d.venta ? `S/ ${Number(d.venta).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—';
+    const fmtDate = s => s ? new Date(s+'T00:00:00').toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+    card.innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px">
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#3ECBB0;font-weight:700;letter-spacing:.05em">${escapeHtml(d.cod_proyecto||'SIN CÓDIGO')}</div>
+          <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:18px;color:#0f1e35;margin-top:2px;line-height:1.2">${escapeHtml(d.nombre)}</div>
+        </div>
+        <span style="font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:6px;background:rgba(62,203,176,.12);color:#1f9a82;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap">${escapeHtml(d.estado)}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:12.5px">
+        <div style="color:#64748b;font-weight:600">Supervisor</div><div style="color:#0f1e35;font-weight:600">${escapeHtml(d.supervisor||'—')}</div>
+        ${d.asistente?`<div style="color:#64748b;font-weight:600">Asistente</div><div style="color:#0f1e35;font-weight:600">${escapeHtml(d.asistente)}</div>`:''}
+        <div style="color:#64748b;font-weight:600">Ubicación</div><div style="color:#0f1e35;font-weight:600">${escapeHtml([d.distrito,d.provincia,d.departamento].filter(Boolean).join(', ')||'—')}${d.zona?` · <span style="color:#3ECBB0">${escapeHtml(d.zona)}</span>`:''}</div>
+        <div style="color:#64748b;font-weight:600">Periodo</div><div style="color:#0f1e35;font-weight:600">${fmtDate(d.fecha_ini_contractual)} → ${fmtDate(d.fecha_fin_contractual)}</div>
+        <div style="color:#64748b;font-weight:600">Valor</div><div style="color:#0f1e35;font-weight:800;font-family:'Manrope',sans-serif">${ventaFmt}</div>
+      </div>`;
+    document.getElementById('np-form-view').style.display='none';
+    document.getElementById('np-preview-view').style.display='block';
+    this.renderPreviewBtns();
+  },
+  backToForm: function(){
+    document.getElementById('np-form-view').style.display='block';
+    document.getElementById('np-preview-view').style.display='none';
+    this.renderFormBtns();
+  },
+  renderFormBtns: function(){
+    document.getElementById('np-btns').innerHTML = `
+      <button type="button" class="btn-secondary" id="np-cancel">Cancelar</button>
+      <button type="button" class="btn-primary" id="np-preview">
+        <span>Vista previa</span>
+        <i data-lucide="arrow-right" class="ic"></i>
+      </button>`;
+    if(window.lucide) lucide.createIcons();
+    document.getElementById('np-cancel').onclick=()=>this.close();
+    document.getElementById('np-preview').onclick=()=>this.goToPreview();
+  },
+  renderPreviewBtns: function(){
+    document.getElementById('np-btns').innerHTML = `
+      <button type="button" class="btn-secondary" id="np-back">← Volver al formulario</button>
+      <button type="button" class="btn-primary" id="np-save">
+        <i data-lucide="check" class="ic"></i>
+        <span>Confirmar y guardar</span>
+      </button>`;
+    if(window.lucide) lucide.createIcons();
+    document.getElementById('np-back').onclick=()=>this.backToForm();
+    document.getElementById('np-save').onclick=()=>this.save();
+  },
+  save: async function(){
+    if(!sb){ showToast('Error', 'Supabase no disponible', 'err'); return; }
+    const d = this.collectData();
+    if(!this.validate(d)){ this.backToForm(); return; }
+    const btn = document.getElementById('np-save');
+    btn.disabled=true; btn.innerHTML='<i data-lucide="loader-2" class="ic" style="animation:spin 1s linear infinite"></i><span>Guardando...</span>';
+    if(window.lucide) lucide.createIcons();
+    try {
+      const {data, error} = await sb.from('proyectos').insert([d]).select();
+      if(error) throw error;
+      const created = data && data[0];
+      showToast('Proyecto creado', `${d.nombre} se sincronizó con Supabase`, 'ok');
+      this.close();
+      // Reset form
+      ['np-cod','np-nombre','np-categoria','np-asistente','np-sup-email','np-provincia','np-distrito','np-direccion','np-fini','np-ffin','np-fini-real','np-ffin-real','np-venta','np-pen-pct','np-pen-tipo','np-ambientes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+      ['np-supervisor','np-zona','np-depto'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+      document.getElementById('np-estado').value='Por Iniciar';
+      document.getElementById('np-penalidades').value='No aplica';
+      // Refresh dashboard live
+      await loadDashboard();
+    } catch(e) {
+      console.error('save project error',e);
+      showToast('Error al guardar', e.message||'No se pudo crear el proyecto', 'err');
+      btn.disabled=false;
+      this.renderPreviewBtns();
+    }
+  },
+};
+
+function showToast(t, s, type){
+  const el=document.getElementById('toast');
+  document.getElementById('toast-t').textContent=t;
+  document.getElementById('toast-s').textContent=s||'';
+  el.classList.toggle('err', type==='err');
+  el.classList.add('on');
+  setTimeout(()=>el.classList.remove('on'), 4500);
+}
+
+// Spin animation
+(function injectSpin(){
+  if(document.getElementById('np-spin-style')) return;
+  const s=document.createElement('style');s.id='np-spin-style';
+  s.textContent='@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';
+  document.head.appendChild(s);
+})();
+
+// Wire up CTA
+document.getElementById('btn-new-project').addEventListener('click', ()=>NP.open());
+document.getElementById('drawer-close-btn').addEventListener('click', ()=>NP.close());
+document.getElementById('drawer-bg').addEventListener('click', ()=>NP.close());
+document.getElementById('np-cancel').addEventListener('click', ()=>NP.close());
+document.getElementById('np-preview').addEventListener('click', ()=>NP.goToPreview());
+document.getElementById('np-cod-auto').addEventListener('click', ()=>NP.suggestCode());
+
+// ESC closes drawer
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && document.getElementById('drawer-np').classList.contains('on')) NP.close();
+});
+
 // Run
 loadDashboard();
 </script>

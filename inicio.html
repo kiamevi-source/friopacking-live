@@ -636,7 +636,7 @@ async function loadDashboard(){
     const cutoffIso=cutoff.toISOString().slice(0,10);
 
     // Projects activos
-    const {data:projs,error:e1}=await sb.from('proyectos').select('id,nombre,estado,fecha_fin_proy,fecha_fin_cont,valp').eq('activo',true);
+    const {data:projs,error:e1}=await sb.from('proyectos').select('id,nombre,estado,fecha_fin_contractual,valorizacion_pct').eq('activo',true);
     if(e1) throw e1;
     if(!projs) throw new Error('No data');
 

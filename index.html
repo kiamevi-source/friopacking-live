@@ -8820,7 +8820,7 @@ function renderEquiposPremium(){
   // 3. Días y alertas calculados sobre Fecha Obra (no ETA directo)
   // 4. Histórico: Fecha Obra de año anterior, sin entrega confirmada
   // 5. Vencido: Fecha Obra pasó este año, no entregado ni histórico
-  const rows=imp.filter(r=>r.doc||r.proyecto).map(r=>{
+  let rows=imp.filter(r=>r.doc||r.proyecto).map(r=>{
     const eta=_eqParseDate(r.eta);
     const etd=_eqParseDate(r.etd);
     const entregaReal=_eqParseDate(r.f_real);

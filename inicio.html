@@ -350,10 +350,11 @@
     <div class="header-deco"></div>
 
     <!-- Top utility bar -->
-    <div class="flex items-center justify-between mb-7 fade-up">
-      <button class="icon-btn" id="sidebar-toggle" aria-label="Menú">
-        <i data-lucide="panel-left-close" class="ic"></i>
+    <div class="flex items-center justify-between mb-7 fade-up top-utility">
+      <button class="icon-btn menu-toggle" id="sidebar-toggle" aria-label="Abrir menú">
+        <i data-lucide="menu" class="ic"></i>
       </button>
+      <div class="flex-1"></div>
 
       <div class="flex items-center gap-3">
         <span class="conn-chip">
@@ -383,7 +384,7 @@
     </div>
 
     <!-- Search + CTAs row -->
-    <div class="flex gap-3 mb-7 fade-up delay-2 flex-wrap">
+    <div class="flex gap-3 mb-7 fade-up delay-2 flex-wrap search-row">
       <div class="search-wrap">
         <i data-lucide="search" class="search-icon"></i>
         <input type="text" class="search-input" id="global-search" placeholder="Buscar proyecto, supervisor, cliente, hito, lección…" autocomplete="off">

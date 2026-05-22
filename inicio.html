@@ -1289,18 +1289,9 @@ const NP = {
   renderFormBtns: function(){
     document.getElementById('np-btns').innerHTML = `
       <button type="button" class="btn-secondary" data-np-action="close">Cancelar</button>
-      <button type="button" class="btn-primary" data-np-action="preview">
-        <span>Vista previa</span>
-        <i data-lucide="arrow-right" class="ic"></i>
-      </button>`;
-    if(window.lucide) lucide.createIcons();
-  },
-  renderPreviewBtns: function(){
-    document.getElementById('np-btns').innerHTML = `
-      <button type="button" class="btn-secondary" data-np-action="back">← Volver al formulario</button>
       <button type="button" class="btn-primary" data-np-action="save">
-        <i data-lucide="check" class="ic"></i>
-        <span>Confirmar y guardar</span>
+        <i data-lucide="save" class="ic"></i>
+        <span>Guardar proyecto</span>
       </button>`;
     if(window.lucide) lucide.createIcons();
   },

@@ -1165,23 +1165,32 @@ const NP = {
     if(!sb) return;
     const hintEl=document.getElementById('np-cod-hint');
     hintEl.textContent='Buscando último código...';
+    hintEl.style.color='#94a3b8';
     try {
-      const {data, error} = await sb.from('proyectos').select('cod_proyecto').not('cod_proyecto','is',null).order('id',{ascending:false}).limit(50);
+      const {data, error} = await sb.from('proyectos').select('cod_proyecto').not('cod_proyecto','is',null);
       if(error) throw error;
       const year=new Date().getFullYear();
-      const re=new RegExp(`FP[-]?${year}[-]?(\\d{3,4})`,'i');
+      /* Detecta variaciones reales del patrón PRY:
+         "PRY 2026-0000020", "PRY 2026 - 0000020", "PRY PRY 2026-0000020", etc. */
+      const re=new RegExp(`PRY[\\s]*(?:PRY[\\s]*)?${year}[\\s-]+(\\d{4,7})`,'i');
       let maxN=0;
       (data||[]).forEach(r=>{
         const m=(r.cod_proyecto||'').match(re);
         if(m){const n=parseInt(m[1]);if(n>maxN)maxN=n;}
       });
-      const nextCode = `FP-${year}-${String(maxN+1).padStart(3,'0')}`;
+      const nextN=maxN+1;
+      const nextCode = `PRY ${year}-${String(nextN).padStart(7,'0')}`;
       document.getElementById('np-cod').value=nextCode;
-      hintEl.innerHTML=`✨ Sugerido — basado en último: <b>FP-${year}-${String(maxN).padStart(3,'0')}</b>`;
+      if(maxN>0){
+        hintEl.innerHTML=`✨ Sugerido — último encontrado para ${year}: <b>PRY ${year}-${String(maxN).padStart(7,'0')}</b>`;
+      } else {
+        hintEl.innerHTML=`✨ Primer código de ${year}`;
+      }
       hintEl.style.color='#1f9a82';
     } catch(e) {
       console.error('suggestCode error',e);
       hintEl.textContent='No se pudo sugerir código. Escribe uno manualmente.';
+      hintEl.style.color='#ef4444';
     }
   },
   collectData: function(){

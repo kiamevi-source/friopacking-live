@@ -9340,25 +9340,60 @@ function renderEquiposPremium(){
     await delay(250);
     try{
       let raw=null;
-      if(file.name.match(/\.xlsx?$/i)){
+      const fname=(file.name||'').toLowerCase();
+      const ftype=(file.type||'').toLowerCase();
+      if(fname.match(/\.xlsx?$/i)||ftype.includes('spreadsheet')||ftype.includes('excel')){
         if(typeof XLSX==='undefined'){
-          console.error('[import] librería XLSX no cargada. Asegurate que la página haya terminado de cargar.');
+          console.error('[import] librería XLSX no cargada.');
           if(typeof showToast==='function')showToast('Librería XLSX no cargada · recargá la página','alert',5000);
         } else {
           const ab=await file.arrayBuffer();
           const wb=XLSX.read(ab,{type:'array'});
-          console.log('[import] hojas detectadas:',wb.SheetNames);
+          console.log('[import] (Excel) hojas detectadas:',wb.SheetNames);
           const ws=wb.Sheets[wb.SheetNames[0]];
           raw=XLSX.utils.sheet_to_json(ws,{header:1,raw:false});
         }
-      } else if(file.name.match(/\.csv$/i)){
+      } else if(fname.match(/\.csv$/i)||ftype.includes('csv')){
         const text=await file.text();
         const firstLine=text.split('\n')[0]||'';
         const sep=firstLine.includes(';')?';':firstLine.includes('\t')?'\t':',';
+        console.log('[import] (CSV) separador detectado:',JSON.stringify(sep));
         raw=text.split('\n').map(l=>l.split(sep));
-      } else if(file.name.match(/\.pdf$/i)){
-        console.warn('[import] PDF no soportado por el handler premium. Usa Excel/CSV.');
-        if(typeof showToast==='function')showToast('PDF aún no soportado · exporta a Excel desde NISIRA','warn',6000);
+      } else if(fname.match(/\.pdf$/i)||ftype.includes('pdf')){
+        // PDF: extract text via pdf.js, split into lines, then into cells by 2+ spaces or tabs
+        if(typeof pdfjsLib==='undefined'){
+          console.error('[import] pdf.js no cargada.');
+          if(typeof showToast==='function')showToast('PDF.js no cargada · recargá la página','alert',5000);
+        } else {
+          try{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}catch(_){}
+          const buf=await file.arrayBuffer();
+          const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+          console.log('[import] (PDF) páginas:',pdf.numPages);
+          const lines=[];
+          for(let i=1;i<=pdf.numPages;i++){
+            const page=await pdf.getPage(i);
+            const tc=await page.getTextContent();
+            // Group items by Y coordinate to reconstruct rows
+            const rowsMap=new Map();
+            tc.items.forEach(it=>{
+              if(!it.transform||!it.str)return;
+              const y=Math.round(it.transform[5]);// Y coord
+              const x=it.transform[4];
+              if(!rowsMap.has(y))rowsMap.set(y,[]);
+              rowsMap.get(y).push({x,s:it.str});
+            });
+            // Sort by Y descending (PDF Y grows upward), then by X ascending within each row
+            [...rowsMap.keys()].sort((a,b)=>b-a).forEach(y=>{
+              const cells=rowsMap.get(y).sort((a,b)=>a.x-b.x).map(o=>o.s.trim()).filter(Boolean);
+              if(cells.length)lines.push(cells);
+            });
+          }
+          raw=lines;
+          console.log('[import] (PDF) líneas reconstruidas:',raw.length);
+        }
+      } else {
+        console.warn('[import] formato no reconocido:',file.name,'·',ftype);
+        if(typeof showToast==='function')showToast('Formato no soportado · usa Excel, CSV o PDF','warn',5000);
       }
       if(raw){
         console.log('[import] filas leídas:',raw.length);
@@ -9366,7 +9401,6 @@ function renderEquiposPremium(){
         parsed=_eqParseRows(raw);
         console.log('[import] tras _eqParseRows:',parsed?parsed.length:'null','registros válidos');
         if((!parsed||!parsed.length)&&raw.length){
-          // Mostrar cabeceras candidatas en las primeras 10 filas
           const cands=raw.slice(0,Math.min(10,raw.length)).map((r,i)=>`fila ${i}: ${(r||[]).slice(0,8).join(' | ')}`);
           console.warn('[import] no se detectó header NISIRA. Cabeceras candidatas:\n'+cands.join('\n'));
         }

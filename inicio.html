@@ -1095,8 +1095,8 @@ const NP = {
   open: async function(){
     document.getElementById('drawer-bg').classList.add('on');
     document.getElementById('drawer-np').classList.add('on');
-    document.getElementById('np-form-view').style.display='block';
-    document.getElementById('np-preview-view').style.display='none';
+    const fv=document.getElementById('np-form-view');
+    if(fv) fv.style.display='block';
     this.renderFormBtns();
     document.body.style.overflow='hidden';
     if(!this.supervisors.length) await this.loadSupervisors();

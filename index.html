@@ -1331,20 +1331,12 @@ function renderSearchResults(items){
 }
 
 /* ====== DIALOG HELPERS ====== */
-function openOCR(){$('#ocr-dialog').classList.add('on');}
-function closeOCR(){$('#ocr-dialog').classList.remove('on');}
-function openNewReport(){
-  const sel=$('#rd-proj');sel.innerHTML=allP().map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
-  /* Fecha por defecto: regla 6pm (si es antes de las 18:00 Perú → ayer) */
-  $('#rd-fecha').value=fechaReporteLocal(new Date());
-  $('#report-dialog').classList.add('on');
-}
 function openCompare(){
   $('#cmp-a').innerHTML=allP().map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
   $('#cmp-b').innerHTML=allP().map((p,i)=>`<option value="${p.name}" ${i===1?'selected':''}>${p.name}</option>`).join('');
   $('#cmp-dialog').classList.add('on');renderCompare();
 }
-window.openOCR=openOCR;window.closeOCR=closeOCR;window.openNewReport=openNewReport;window.openCompare=openCompare;
+window.openCompare=openCompare;
 
 /* ====== MODAL ====== */
 let curProject=null,curMV='resumen';

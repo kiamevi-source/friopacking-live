@@ -1306,12 +1306,15 @@ const NP = {
     const d = this.collectData();
     console.log('[NP] save data:', d);
     if(!this.validate(d)){ console.warn('[NP] save validation failed'); return; }
-    // Encuentra el botón actual de save y muestra estado loading
-    const saveBtn = document.querySelector('[data-np-action="save"]');
+    // 🎨 Cambia visualmente el botón a estado "Guardando..."
+    const saveBtn = document.getElementById('np-save-btn');
+    let originalLabel = '';
     if(saveBtn){
-      saveBtn.disabled=true;
-      saveBtn.innerHTML='<i data-lucide="loader-2" class="ic" style="animation:spin 1s linear infinite"></i><span>Guardando...</span>';
-      if(window.lucide) lucide.createIcons();
+      originalLabel = saveBtn.textContent;
+      saveBtn.disabled = true;
+      saveBtn.style.opacity = '.7';
+      saveBtn.style.cursor = 'wait';
+      saveBtn.textContent = '⏳ Guardando...';
     }
     try {
       const {data, error} = await sb.from('proyectos').insert([d]).select();

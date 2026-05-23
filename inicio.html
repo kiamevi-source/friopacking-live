@@ -1316,15 +1316,33 @@ const NP = {
     try {
       const {data, error} = await sb.from('proyectos').insert([d]).select();
       if(error) throw error;
-      showToast('Proyecto creado', `${d.nombre} se sincronizó con Supabase`, 'ok');
+      const created = (data && data[0]) || d;
+      // ✨ TOAST PROMINENTE con código del proyecto
+      showToast(
+        `✅ Proyecto creado: ${created.nombre}`,
+        `${created.cod_proyecto || 'Sin código'} · ID #${created.id || '?'} · Sincronizado con Supabase`,
+        'ok',
+        7000 // 7 segundos en pantalla
+      );
       this.close();
+      // 🎉 BANNER VERDE TEMPORAL en la página
+      showSuccessBanner(created);
       // Reset form
       ['np-cod','np-nombre','np-categoria','np-asistente','np-sup-email','np-provincia','np-distrito','np-direccion','np-fini','np-ffin','np-fini-real','np-ffin-real','np-venta','np-pen-pct','np-pen-tipo','np-ambientes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
       ['np-supervisor','np-zona','np-depto'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
       const estEl=document.getElementById('np-estado'); if(estEl) estEl.value='Por Iniciar';
       const penEl=document.getElementById('np-penalidades'); if(penEl) penEl.value='No aplica';
-      // Refresh dashboard live
-      try { await loadDashboard(); } catch(de){ console.warn('refresh dashboard error',de); }
+      const carga=document.getElementById('np-carga-banner'); if(carga){carga.classList.remove('on','ok','med','alta');carga.innerHTML='';}
+      // Refresh dashboard live con animación
+      try {
+        // Flash KPIs antes del refresh
+        document.querySelectorAll('.kpi-card').forEach(c=>{
+          c.style.transition='box-shadow .4s';
+          c.style.boxShadow='0 0 0 3px rgba(62,203,176,.4)';
+          setTimeout(()=>{c.style.boxShadow='';c.style.transition='';},800);
+        });
+        await loadDashboard();
+      } catch(de){ console.warn('refresh dashboard error',de); }
     } catch(e) {
       console.error('[NP] save error',e);
       showToast('Error al guardar', e.message||'No se pudo crear el proyecto', 'err');

@@ -1301,21 +1301,53 @@ const NP = {
     if(window.lucide) lucide.createIcons();
   },
   save: async function(){
-    console.log('[NP] save clicked');
-    if(!sb){ showToast('Error', 'Supabase no disponible', 'err'); return; }
-    const d = this.collectData();
-    console.log('[NP] save data:', d);
-    if(!this.validate(d)){ console.warn('[NP] save validation failed'); return; }
-    // 🎨 Cambia visualmente el botón a estado "Guardando..."
+    console.log('═══ [SAVE] START ═══');
     const saveBtn = document.getElementById('np-save-btn');
-    let originalLabel = '';
-    if(saveBtn){
-      originalLabel = saveBtn.textContent;
-      saveBtn.disabled = true;
-      saveBtn.style.opacity = '.7';
-      saveBtn.style.cursor = 'wait';
-      saveBtn.textContent = '⏳ Guardando...';
+    let originalLabel = saveBtn ? saveBtn.textContent : 'Guardar proyecto';
+    const setBtn = (txt, disabled)=>{
+      if(!saveBtn) return;
+      saveBtn.textContent = txt;
+      saveBtn.disabled = !!disabled;
+      saveBtn.style.opacity = disabled ? '.7' : '';
+      saveBtn.style.cursor = disabled ? 'wait' : '';
+    };
+
+    // ─── STEP 1: Verificar Supabase ───
+    console.log('[SAVE] step 1 — checking sb client');
+    if(!sb){
+      showToast('Error step 1','Cliente Supabase no inicializado','err',6000);
+      setBtn(originalLabel, false);
+      return;
     }
+    console.log('[SAVE] step 1 OK');
+
+    // ─── STEP 2: Recolectar datos ───
+    setBtn('⏳ Validando...', true);
+    console.log('[SAVE] step 2 — collect');
+    let d;
+    try {
+      d = this.collectData();
+    } catch(e){
+      console.error('[SAVE] step 2 FAILED:', e);
+      showToast('Error step 2', e.message||'No se pudo leer el formulario','err',6000);
+      setBtn(originalLabel, false);
+      return;
+    }
+    console.log('[SAVE] step 2 OK · data:', d);
+
+    // ─── STEP 3: Validar ───
+    console.log('[SAVE] step 3 — validate');
+    if(!this.validate(d)){
+      console.warn('[SAVE] step 3 FAILED — validación');
+      // showToast ya se mostró dentro de validate
+      setBtn(originalLabel, false);
+      return;
+    }
+    console.log('[SAVE] step 3 OK');
+
+    // ─── STEP 4: INSERT a Supabase ───
+    setBtn('⏳ Guardando en Supabase...', true);
+    console.log('[SAVE] step 4 — INSERT INTO proyectos:', d);
     try {
       const {data, error} = await sb.from('proyectos').insert([d]).select();
       if(error) throw error;

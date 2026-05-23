@@ -1360,6 +1360,26 @@ document.getElementById('drawer-bg').addEventListener('click', ()=>NP.close());
 document.getElementById('drawer-close-btn').addEventListener('click', ()=>NP.close());
 document.getElementById('np-cod-auto').addEventListener('click', ()=>NP.suggestCode());
 
+/* 🔬 DEBUG: logger global de TODOS los clicks
+   Muestra qué elemento está siendo clickeado en cada coordenada.
+   Útil para diagnosticar "el centro del botón no responde" */
+document.addEventListener('click', function(e){
+  const t = e.target;
+  const path = [];
+  let n = t;
+  while(n && path.length<5){
+    path.push(n.tagName+(n.id?'#'+n.id:'')+(n.className&&typeof n.className==='string'?'.'+n.className.split(' ').slice(0,2).join('.'):''));
+    n = n.parentElement;
+  }
+  console.log('🎯 CLICK at ('+e.clientX+','+e.clientY+') →', t.tagName, t.id||t.className||'(no id)');
+  console.log('   📍 path:', path.join(' ← '));
+  // Detecta qué elemento está REALMENTE en esa coordenada
+  const elAtPoint = document.elementFromPoint(e.clientX, e.clientY);
+  if(elAtPoint && elAtPoint !== t){
+    console.warn('   ⚠️ elementFromPoint dice que el target debería ser:', elAtPoint.tagName, elAtPoint.id||elAtPoint.className);
+  }
+}, true);
+
 /* Global error handler — atrapa cualquier excepción y la muestra como toast */
 window.addEventListener('error', e=>{
   console.error('[GlobalError]', e.error||e.message);

@@ -1349,8 +1349,14 @@ const NP = {
     } catch(e) {
       console.error('[NP] save error',e);
       showToast('Error al guardar', e.message||'No se pudo crear el proyecto', 'err');
-      // Restaurar botón
-      this.renderFormBtns();
+    } finally {
+      // 🔄 Restaurar SIEMPRE el botón a su estado original (sea exito o error)
+      if(saveBtn){
+        saveBtn.disabled = false;
+        saveBtn.style.opacity = '';
+        saveBtn.style.cursor = '';
+        saveBtn.textContent = originalLabel || 'Guardar proyecto';
+      }
     }
   },
 };

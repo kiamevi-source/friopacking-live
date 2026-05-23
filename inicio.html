@@ -1379,8 +1379,29 @@ const NP = {
         await loadDashboard();
       } catch(de){ console.warn('refresh dashboard error',de); }
     } catch(e) {
-      console.error('[NP] save error',e);
-      showToast('Error al guardar', e.message||'No se pudo crear el proyecto', 'err');
+      console.error('[NP] save error', e);
+      // 🔍 Detección específica de errores comunes
+      const code = e.code || (e.details && e.details.code);
+      const msg = (e.message || '').toLowerCase();
+      if(code === '23505' || msg.includes('duplicate') || msg.includes('unique') || msg.includes('nombre')){
+        // UNIQUE constraint violation en nombre
+        const nombreEl = document.getElementById('np-nombre');
+        const errEl = document.getElementById('np-nombre-err');
+        if(nombreEl) nombreEl.classList.add('err');
+        if(errEl){
+          errEl.textContent = `Ya existe un proyecto llamado "${d.nombre}". Usa un nombre distinto o agrega un sufijo (ej. "${d.nombre} 2026" o "${d.nombre} / UBICACIÓN").`;
+          errEl.style.display = 'block';
+        }
+        if(nombreEl){ nombreEl.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>nombreEl.focus(),300); }
+        showToast(
+          '⚠️ Nombre duplicado',
+          `Ya existe "${d.nombre}". Cambia el nombre o agrega ubicación/año.`,
+          'err',
+          8000
+        );
+      } else {
+        showToast('Error al guardar', e.message || JSON.stringify(e).slice(0,150) || 'No se pudo crear el proyecto', 'err', 8000);
+      }
     } finally {
       // 🔄 Restaurar SIEMPRE el botón a su estado original (sea exito o error)
       if(saveBtn){

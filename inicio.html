@@ -1352,13 +1352,43 @@ const NP = {
   },
 };
 
-function showToast(t, s, type){
+function showToast(t, s, type, duration){
   const el=document.getElementById('toast');
   document.getElementById('toast-t').textContent=t;
   document.getElementById('toast-s').textContent=s||'';
   el.classList.toggle('err', type==='err');
   el.classList.add('on');
-  setTimeout(()=>el.classList.remove('on'), 4500);
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>el.classList.remove('on'), duration || 4500);
+}
+
+/* 🎉 Banner verde temporal en la parte superior del main con el proyecto recién creado */
+function showSuccessBanner(proj){
+  // Remove existing
+  const old = document.getElementById('np-success-banner');
+  if(old) old.remove();
+  const banner = document.createElement('div');
+  banner.id = 'np-success-banner';
+  banner.style.cssText = 'position:relative;margin:0 0 18px;padding:16px 22px;background:linear-gradient(135deg,#daf4ec 0%,#b5e8d6 100%);border:1px solid #5fd9c1;border-radius:14px;display:flex;align-items:center;gap:14px;animation:fade-up .4s ease both;box-shadow:0 8px 24px -8px rgba(62,203,176,.35)';
+  banner.innerHTML = `
+    <div style="width:42px;height:42px;background:#3ECBB0;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;color:white;font-weight:800">✓</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-family:Manrope,sans-serif;font-weight:800;font-size:15px;color:#0f1e35;line-height:1.2">Proyecto creado correctamente</div>
+      <div style="font-size:13px;color:#1f9a82;font-weight:600;margin-top:3px"><b>${(proj.nombre||'').replace(/</g,'&lt;')}</b>${proj.cod_proyecto?' · '+proj.cod_proyecto:''}${proj.id?' · ID #'+proj.id:''} ya está en Supabase</div>
+    </div>
+    <button onclick="this.parentElement.remove()" style="background:rgba(255,255,255,.5);border:none;width:30px;height:30px;border-radius:8px;cursor:pointer;color:#0f1e35;font-size:18px;font-weight:600;line-height:1">×</button>`;
+  // Insert at top of main content area (after the top utility bar)
+  const main = document.querySelector('main.main');
+  if(main){
+    const titleSection = main.querySelector('.title-h1')?.parentElement;
+    if(titleSection){
+      titleSection.parentElement.insertBefore(banner, titleSection.nextSibling);
+    } else {
+      main.insertBefore(banner, main.firstChild);
+    }
+  }
+  // Auto-dismiss after 12s
+  setTimeout(()=>{ if(banner.parentElement){ banner.style.transition='opacity .4s, transform .4s'; banner.style.opacity='0'; banner.style.transform='translateY(-8px)'; setTimeout(()=>banner.remove(), 400); } }, 12000);
 }
 
 // Spin animation

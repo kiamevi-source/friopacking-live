@@ -40,8 +40,9 @@
   html{font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
   body{margin:0;color:#0f1e35;background:#f3f5f9;min-height:100vh;position:relative}
 
-  /* Ambient corner glow (top-right) */
-  .ambient-glow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  /* Ambient corner glow (top-right) — pointer-events:none en TODO (parent + pseudos) */
+  .ambient-glow,.ambient-glow::before,.ambient-glow::after{pointer-events:none!important}
+  .ambient-glow{position:fixed;inset:0;z-index:0;overflow:hidden}
   .ambient-glow::before{content:'';position:absolute;top:-200px;right:-100px;width:900px;height:900px;background:radial-gradient(circle, rgba(62,203,176,.08) 0%, rgba(62,203,176,0) 55%);}
   .ambient-glow::after{content:'';position:absolute;top:-300px;right:-200px;width:700px;height:600px;background:radial-gradient(circle, rgba(120,200,255,.06) 0%, rgba(120,200,255,0) 60%);}
 

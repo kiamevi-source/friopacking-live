@@ -1427,21 +1427,21 @@ window.addEventListener('unhandledrejection', e=>{
   if(typeof showToast==='function') showToast('Error async', String(e.reason).slice(0,120), 'err');
 });
 
-/* ⚡ FUNCIÓN BULLETPROOF — dedupe entre onclick + onmousedown */
+/* ⚡ Wrapper bulletproof del save — sin dedupe artificial */
 window.__npSaving = false;
 window.__doSaveProject = async function(ev){
   if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-  if(window.__npSaving){ console.log('[__doSaveProject] ya en progreso, ignorando'); return; }
+  if(window.__npSaving){ console.log('[__doSaveProject] ya en progreso, ignorando click extra'); return; }
   window.__npSaving = true;
-  console.log('[__doSaveProject] click registrado en', ev?.target?.tagName, 'via', ev?.type);
-  showToast('Guardando...','Procesando proyecto','ok');
+  console.log('[__doSaveProject] click registrado');
   try {
     await NP.save();
   } catch(e) {
     console.error('[__doSaveProject] exception:', e);
     showToast('Error', String(e.message||e), 'err');
   } finally {
-    setTimeout(()=>{ window.__npSaving = false; }, 800);
+    /* Libera el flag inmediatamente al terminar — no esperar 800ms */
+    window.__npSaving = false;
   }
 };
 

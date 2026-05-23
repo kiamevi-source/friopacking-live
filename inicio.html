@@ -566,13 +566,14 @@
 
   <div class="drawer-foot">
     <span class="hint" id="np-hint">Solo <b>Nombre</b> es obligatorio · el resto puedes completarlo después</span>
-    <div class="drawer-foot-btns" id="np-btns">
-      <button type="button" class="btn-secondary" onclick="window.NP && window.NP.close()" onmousedown="window.NP && window.NP.close()">Cancelar</button>
-      <button type="button" class="btn-primary btn-save-bulletproof" id="np-save-btn"
-              onclick="window.__doSaveProject(event)"
-              onmousedown="window.__doSaveProject(event)">
-        Guardar proyecto
-      </button>
+    <div class="drawer-foot-btns" id="np-btns" style="display:flex;gap:10px;align-items:center">
+      <button type="button" onclick="window.NP && window.NP.close()" style="padding:12px 20px;background:white;border:1px solid #cbd5e1;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:#475569;font-family:Inter,sans-serif">Cancelar</button>
+      <button
+        type="button"
+        id="np-save-btn"
+        onclick="alert('Click registrado'); window.__doSaveProject(event);"
+        style="padding:12px 28px;background:#3ECBB0;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;color:white;font-family:Inter,sans-serif;min-width:200px;min-height:48px;box-shadow:0 4px 12px rgba(62,203,176,.4)"
+      >Guardar proyecto</button>
     </div>
   </div>
 </aside>

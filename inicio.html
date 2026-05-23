@@ -1368,16 +1368,21 @@ window.addEventListener('unhandledrejection', e=>{
   if(typeof showToast==='function') showToast('Error async', String(e.reason).slice(0,120), 'err');
 });
 
-/* ⚡ FUNCIÓN BULLETPROOF DEL BOTÓN GUARDAR — onclick inline llama acá directo */
+/* ⚡ FUNCIÓN BULLETPROOF — dedupe entre onclick + onmousedown */
+window.__npSaving = false;
 window.__doSaveProject = async function(ev){
   if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-  console.log('[__doSaveProject] click registrado');
+  if(window.__npSaving){ console.log('[__doSaveProject] ya en progreso, ignorando'); return; }
+  window.__npSaving = true;
+  console.log('[__doSaveProject] click registrado en', ev?.target?.tagName, 'via', ev?.type);
   showToast('Guardando...','Procesando proyecto','ok');
   try {
     await NP.save();
   } catch(e) {
     console.error('[__doSaveProject] exception:', e);
     showToast('Error', String(e.message||e), 'err');
+  } finally {
+    setTimeout(()=>{ window.__npSaving = false; }, 800);
   }
 };
 

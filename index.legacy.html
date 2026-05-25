@@ -2044,26 +2044,27 @@ function _gerSparkline(){
   const allReps=[];
   ps.forEach(p=>{
     const reps=(store.reportes||{})[p.name]||[];
-    reps.forEach(r=>{if(r.fecha)allReps.push({fecha:r.fecha,av:r.av||0,pers:r.pers||0,name:p.name});});
+    reps.forEach(r=>{if(r.fecha)allReps.push({fecha:r.fecha,av:r.av||0,plan:r.plan||0,name:p.name});});
   });
   if(!allReps.length){el.innerHTML='<p style="text-align:center;color:var(--muted);padding:20px;font-size:12px">Sin historial de reportes</p>';return;}
   const byDate={};
   allReps.forEach(r=>{
-    if(!byDate[r.fecha])byDate[r.fecha]={sum:0,cnt:0,pers:0,projs:[]};
-    byDate[r.fecha].sum+=r.av;byDate[r.fecha].cnt++;byDate[r.fecha].pers+=r.pers;
+    if(!byDate[r.fecha])byDate[r.fecha]={sumAv:0,sumPl:0,cnt:0,projs:[]};
+    byDate[r.fecha].sumAv+=r.av;byDate[r.fecha].sumPl+=r.plan;byDate[r.fecha].cnt++;
     byDate[r.fecha].projs.push(r.name);
   });
   const days=Object.keys(byDate).sort().slice(-14);
   if(!days.length)return;
-  const vals=days.map(d=>byDate[d].sum/byDate[d].cnt);
-  const pers=days.map(d=>byDate[d].pers);
-  const cnts=days.map(d=>byDate[d].cnt);
-  const maxV=Math.max(...vals,1);const maxP=Math.max(...pers,1);
+  const vals =days.map(d=>byDate[d].sumAv/byDate[d].cnt);
+  const plans=days.map(d=>byDate[d].sumPl/byDate[d].cnt);
+  const cnts =days.map(d=>byDate[d].cnt);
+  // Ambas series son % — comparten escala Y (max común)
+  const maxY=Math.max(...vals,...plans,1);
   const W=el.clientWidth||400;const H=160;const pad={t:30,b:28,l:10,r:10};
   const cW=W-pad.l-pad.r;const cH=H-pad.t-pad.b;
-  const xs=days.map((_,i)=>pad.l+cW*i/(days.length-1||1));
-  const ysV=vals.map(v=>pad.t+cH*(1-v/maxV));
-  const ysP=pers.map(v=>pad.t+cH*(1-v/maxP));
+  const xs =days.map((_,i)=>pad.l+cW*i/(days.length-1||1));
+  const ysV=vals .map(v=>pad.t+cH*(1-v/maxY));
+  const ysP=plans.map(v=>pad.t+cH*(1-v/maxY));
   const poly=(pts)=>pts.map((y,i)=>`${xs[i].toFixed(1)},${y.toFixed(1)}`).join(' ');
   const area=(pts,bot)=>`M${xs[0].toFixed(1)},${bot} `+pts.map((y,i)=>`L${xs[i].toFixed(1)},${y.toFixed(1)}`).join(' ')+` L${xs[xs.length-1].toFixed(1)},${bot} Z`;
   const bot=pad.t+cH;
@@ -2088,8 +2089,8 @@ function _gerSparkline(){
       <circle id="spark-dot-av" cx="0" cy="0" r="5" fill="#2dc4a6" stroke="#fff" stroke-width="2" opacity="0"/>
       <circle id="spark-dot-pe" cx="0" cy="0" r="5" fill="#0d6efd" stroke="#fff" stroke-width="2" opacity="0"/>
       ${[...labelIdxs].map(i=>`<text x="${xs[i].toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="9" fill="var(--muted)">${days[i].slice(5)}</text>`).join('')}
-      <text x="${pad.l+4}" y="${pad.t-12}" font-size="9" fill="#2dc4a6" font-weight="700">● Avance</text>
-      <text x="${pad.l+64}" y="${pad.t-12}" font-size="9" fill="#0d6efd" font-weight="700">- - Personal</text>
+      <text x="${pad.l+4}" y="${pad.t-12}" font-size="9" fill="#2dc4a6" font-weight="700">● Avance real</text>
+      <text x="${pad.l+78}" y="${pad.t-12}" font-size="9" fill="#0d6efd" font-weight="700">- - Planificado</text>
       <rect x="0" y="${pad.t}" width="${W}" height="${cH}" fill="transparent"
         id="spark-overlay"
         onmousemove="window._sparkHover(event,${W},${pad.l},${cW})"
@@ -2099,7 +2100,7 @@ function _gerSparkline(){
   </div>`;
 
   // Store data for hover
-  window._sparkData={days,vals,pers,cnts,xs,ysV,ysP,maxV,maxP,pad,cH,bot,W};
+  window._sparkData={days,vals,plans,cnts,xs,ysV,ysP,maxY,pad,cH,bot,W};
 
   window._sparkHover=function(e,W2,padL,cW2){
     const rect=e.currentTarget.getBoundingClientRect();
@@ -2118,13 +2119,15 @@ function _gerSparkline(){
     dotAv.setAttribute('cx',x);dotAv.setAttribute('cy',data.ysV[nearest]);dotAv.style.opacity='1';
     dotPe.setAttribute('cx',x);dotPe.setAttribute('cy',data.ysP[nearest]);dotPe.style.opacity='1';
     const day=data.days[nearest];
-    const av=data.vals[nearest].toFixed(1);
-    const pe=data.pers[nearest];
-    const cn=data.cnts[nearest];
+    const av =data.vals[nearest].toFixed(1);
+    const pl =data.plans[nearest].toFixed(1);
+    const br =(data.vals[nearest]-data.plans[nearest]).toFixed(1);
+    const cn =data.cnts[nearest];
     tip.style.display='block';
     tip.innerHTML=`<b style="color:#2dc4a6;font-size:12px">📅 ${day}</b><br>
-      🟢 Avance prom: <b style="color:#2dc4a6">${av}%</b><br>
-      👷 Personal: <b style="color:#0d6efd">${pe}</b><br>
+      🟢 Avance real: <b style="color:#2dc4a6">${av}%</b><br>
+      🔵 Planificado: <b style="color:#0d6efd">${pl}%</b><br>
+      📊 Brecha: <b style="color:${parseFloat(br)>=0?'#2e7d32':'#c1272d'}">${parseFloat(br)>=0?'+':''}${br}pts</b><br>
       📋 Reportes: <b>${cn}</b>`;
     // Position tooltip — avoid right overflow
     const tipW=170;

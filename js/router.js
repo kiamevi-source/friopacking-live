@@ -44,3 +44,40 @@ document.addEventListener('keydown', (e) => {
     if (i) { i.focus(); i.select(); }
   }
 });
+
+// ── Sidebar collapse/expand (desktop) ──
+(function setupCollapse() {
+  const sb  = document.querySelector('.sidebar');
+  const btn = document.getElementById('sidebar-collapse');
+  if (!sb || !btn) return;
+
+  const STORAGE_KEY = 'pmo:sidebar-collapsed';
+
+  function applyState(collapsed) {
+    sb.classList.toggle('collapsed', collapsed);
+    const icon = btn.querySelector('i[data-lucide]');
+    if (icon) {
+      icon.setAttribute('data-lucide', collapsed ? 'panel-left-open' : 'panel-left-close');
+      if (window.lucide) lucide.createIcons();
+    }
+    btn.setAttribute('title', collapsed ? 'Desplegar menú (⌘\\)' : 'Plegar menú (⌘\\)');
+  }
+
+  // Restaurar estado guardado
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === '1') applyState(true);
+
+  btn.addEventListener('click', () => {
+    const next = !sb.classList.contains('collapsed');
+    applyState(next);
+    localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
+  });
+
+  // ⌘\ / Ctrl+\ → toggle
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === '\\') {
+      e.preventDefault();
+      btn.click();
+    }
+  });
+})();

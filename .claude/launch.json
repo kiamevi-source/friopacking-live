@@ -4,7 +4,7 @@
     {
       "name": "friopacking",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8765"],
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "/Users/kmedina/Desktop/CCPMO/friopacking-live"],
       "port": 8765
     }
   ]

@@ -19,23 +19,31 @@
   let iframeReady = false;
   let pendingView = null;
 
-  // ── CSS que se inyecta dentro del iframe para ocultar el chrome del legacy ──
+  // ── CSS que se inyecta dentro del iframe para ocultar todo el chrome del legacy ──
+  // (queremos que cada vista muestre SOLO su contenido específico — sin KPIs globales,
+  //  pills, semáforo, ni nada que ya viva en el nuevo shell)
   const HIDE_CHROME_CSS = `
-    /* Ocultar chrome del legacy (header, tabs, timemachine, KPIs, semáforo, ai-fab) */
-    header.app,
-    nav.tabs,
-    .timemachine,
-    .date-pills,
-    .kpis,
-    .semaforo,
-    .ai-fab,
-    #toast-container,
-    .banner,
-    .head-actions,
-    .cmd-bar { display: none !important; }
+    /* Chrome básico */
+    header.app, nav.tabs,
+    .timemachine, .date-pills,
+    .ai-fab, #toast-container, .banner, .head-actions, .cmd-bar,
+    /* KPIs globales y semáforo (incluye contenedor y todos sus hijos v15) */
+    .kpis, #kpis,
+    .semaforo, #semaforo, #semaforo-card,
+    .v15-kpi-wrap, .v15-kpi-grid, .v15-kpi-hero, .v15-kpi-sec,
+    .v15-sem-wrap, .v15-sem-bar, .v15-sem-legend,
+    /* Anomaly / alert banners globales */
+    .anomaly-banner, #anomaly-banner,
+    /* Pill bar proactivo (Sin reporte / Valorización / CF Vencidas / Sala) */
+    #pmo-action-bar, .pmo-pill, .pmo-pill-dropdown,
+    #pmo-bar-ops-btn, #pmo-bell-btn,
+    /* Cualquier banner sticky superior */
+    .pmo-sticky-top, .pmo-top-bar { display: none !important; }
+
     body { padding-top: 0 !important; margin: 0 !important; }
-    /* Quitar el margen superior que dejaba el header sticky */
     body > *:first-child:not(script) { margin-top: 0 !important; }
+    /* Asegurar que el contenedor de vistas use todo el espacio */
+    #views { padding: 16px 20px !important; }
   `;
 
   // ── Inyectar CSS dentro del iframe cuando carga ──

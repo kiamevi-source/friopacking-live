@@ -98,6 +98,10 @@
   function gotoLegacyView(name) {
     try {
       const win = iframe.contentWindow;
+      const doc = iframe.contentDocument || (win && win.document);
+      // Marcar la vista actual en el body del iframe para CSS condicional
+      if (doc && doc.body) doc.body.dataset.pmoView = name;
+
       if (win && typeof win.showView === 'function') {
         win.showView(name);
       } else {

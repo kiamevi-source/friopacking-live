@@ -20,25 +20,38 @@
   let pendingView = null;
 
   // ── CSS que se inyecta dentro del iframe para ocultar todo el chrome del legacy ──
-  // (queremos que cada vista muestre SOLO su contenido específico — sin KPIs globales,
-  //  pills, semáforo, ni nada que ya viva en el nuevo shell)
+  // Por defecto oculta TODO el chrome global. Excepción: en Dashboard Gerencial
+  // mantenemos los KPIs globales (Facturado, Avance real, SPI Cartera, etc.).
   const HIDE_CHROME_CSS = `
-    /* Chrome básico */
+    /* ─── Chrome básico (siempre oculto) ─── */
     header.app, nav.tabs,
     .timemachine, .date-pills,
     .ai-fab, #toast-container, .banner, .head-actions, .cmd-bar,
-    /* KPIs globales y semáforo (incluye contenedor y todos sus hijos v15) */
-    .kpis, #kpis,
-    .semaforo, #semaforo, #semaforo-card,
-    .v15-kpi-wrap, .v15-kpi-grid, .v15-kpi-hero, .v15-kpi-sec,
-    .v15-sem-wrap, .v15-sem-bar, .v15-sem-legend,
     /* Anomaly / alert banners globales */
     .anomaly-banner, #anomaly-banner,
     /* Pill bar proactivo (Sin reporte / Valorización / CF Vencidas / Sala) */
     #pmo-action-bar, .pmo-pill, .pmo-pill-dropdown,
     #pmo-bar-ops-btn, #pmo-bell-btn,
-    /* Cualquier banner sticky superior */
     .pmo-sticky-top, .pmo-top-bar { display: none !important; }
+
+    /* ─── KPIs globales y semáforo: ocultos por defecto ─── */
+    .kpis, #kpis,
+    .semaforo, #semaforo, #semaforo-card,
+    .v15-kpi-wrap, .v15-kpi-grid, .v15-kpi-hero, .v15-kpi-sec,
+    .v15-sem-wrap, .v15-sem-bar, .v15-sem-legend { display: none !important; }
+
+    /* ─── EXCEPCIÓN: en Dashboard Gerencial, mostrar los KPIs globales ─── */
+    body[data-pmo-view="gerencial"] .kpis,
+    body[data-pmo-view="gerencial"] #kpis { display: block !important; }
+    body[data-pmo-view="gerencial"] .v15-kpi-wrap { display: block !important; }
+    body[data-pmo-view="gerencial"] .v15-kpi-grid { display: grid !important; }
+    body[data-pmo-view="gerencial"] .v15-kpi-hero,
+    body[data-pmo-view="gerencial"] .v15-kpi-sec { display: flex !important; }
+    body[data-pmo-view="gerencial"] .semaforo,
+    body[data-pmo-view="gerencial"] #semaforo-card,
+    body[data-pmo-view="gerencial"] .v15-sem-wrap { display: block !important; }
+    body[data-pmo-view="gerencial"] .v15-sem-bar { display: flex !important; }
+    body[data-pmo-view="gerencial"] .v15-sem-legend { display: flex !important; }
 
     body { padding-top: 0 !important; margin: 0 !important; }
     body > *:first-child:not(script) { margin-top: 0 !important; }

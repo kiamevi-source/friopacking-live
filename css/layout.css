@@ -118,10 +118,32 @@
 /* ─── Main ─── */
 .main {
   flex: 1;
-  padding: 28px 36px 40px;
+  padding: 22px 28px 32px;
   position: relative; z-index: 1;
   min-width: 0;
   overflow-x: hidden;
+}
+
+/* ─── Sidebar collapse toggle button (desktop only) ─── */
+.sidebar-collapse-btn {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid #e3e8ef;
+  color: #475569;
+  cursor: pointer;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.sidebar-collapse-btn:hover {
+  border-color: #3ECBB0;
+  color: #0f1e35;
+  background: #f7f9fc;
+}
+.sidebar-collapse-btn .ic { width: 16px; height: 16px; stroke-width: 2; }
+@media (max-width: 767px) {
+  .sidebar-collapse-btn { display: none; }
 }
 
 /* ─── Top utility row ─── */

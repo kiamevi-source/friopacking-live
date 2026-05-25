@@ -278,8 +278,8 @@
   .main { padding: 20px 20px 32px; }
   .title-h1 { font-size: 30px; }
   .sidebar { width: 200px; padding: 20px 12px; }
-  .sidebar-logo-text { font-size: 13px; }
-  .sidebar-logo img { height: 32px; width: 32px; }
+  .sidebar-logo-text { font-size: 9.5px; letter-spacing: .12em; }
+  .sidebar-logo img { height: 56px; }
   .grid.grid-cols-12 > .col-span-4 { grid-column: span 12 / span 12; }
   .tabbar { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .tabbar::-webkit-scrollbar { height: 0; }

@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "friopacking",
+      "name": "friopacking-pmo",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8766", "--directory", "/Users/kmedina/Desktop/CCPMO/friopacking-live"],
       "port": 8766

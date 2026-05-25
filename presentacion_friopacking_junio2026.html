@@ -260,7 +260,7 @@ button{font-family:inherit}
 .responsable .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--teal-d));color:white;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
 
 /* ============== SMART OBJECTIVES ============== */
-.smart-board{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;flex:1;align-items:stretch}
+.smart-board{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;flex:1;align-items:stretch}
 .smart-card{background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);padding:18px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:all .3s var(--ease)}
 .smart-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-3)}
 .smart-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--teal)}
@@ -318,6 +318,11 @@ button{font-family:inherit}
 .tech-tab.active .ix .dot-active{background:var(--teal);box-shadow:0 0 0 3px rgba(62,203,176,.25),0 0 12px var(--teal)}
 .tech-tab h4{font-family:'Manrope';font-size:15px;font-weight:700;color:var(--navy);margin:0;line-height:1.25;letter-spacing:-.01em}
 .tech-tab p{font-size:12px;color:var(--tx-3);margin:0;line-height:1.5;font-weight:500;max-width:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tech-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono';font-size:9px;font-weight:700;letter-spacing:.1em;width:fit-content;margin-top:2px}
+.tech-badge.good{background:var(--good-soft);color:var(--good)}
+.tech-badge.warn{background:var(--warn-soft);color:var(--warn)}
+.tech-badge.pending{background:#eef1f7;color:var(--tx-3)}
+.tech-badge .live-dot{width:5px;height:5px}
 
 .tech-stage-right{display:flex;flex-direction:column;gap:14px}
 .browser-frame{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.7);border-radius:20px;box-shadow:0 40px 80px -30px rgba(15,30,53,.3),0 18px 40px -20px rgba(15,30,53,.12);overflow:hidden;flex:1;display:flex;flex-direction:column;min-height:520px;position:relative}
@@ -505,10 +510,10 @@ button{font-family:inherit}
     <div class="fade-up">
       <div class="eyebrow">Bloque 02 · Ejecución</div>
       <h2 class="section-title">Plan de acción Junio 2026</h2>
-      <p class="section-sub">Cinco objetivos SMART derivados de los gaps de mayo, con responsable asignado, fecha límite dentro de junio e indicador concreto de seguimiento semanal.</p>
+      <p class="section-sub">Seis objetivos SMART derivados de los gaps de mayo, con responsable asignado, fecha límite dentro de junio e indicador concreto de seguimiento semanal.</p>
     </div>
     <div class="section-meta fade-up d2">
-      <span class="num">5 OBJETIVOS · 30 DÍAS · REVIEW SEMANAL</span>
+      <span class="num">6 OBJETIVOS · 30 DÍAS · REVIEW SEMANAL</span>
       <span class="who">PMO · OPERACIONES</span>
     </div>
   </div>
@@ -518,7 +523,7 @@ button{font-family:inherit}
   <div class="smart-flow fade-up d3">
     <div class="smart-flow-stat">
       <label>Objetivos</label>
-      <div class="v">5 <span>SMART</span></div>
+      <div class="v">6 <span>SMART</span></div>
     </div>
     <div class="smart-flow-stat">
       <label>Horizonte</label>
@@ -631,11 +636,11 @@ button{font-family:inherit}
   <div class="section-head">
     <div class="fade-up">
       <div class="eyebrow">Bloque 04 · Tecnología</div>
-      <h2 class="section-title">Plataforma digital PMO</h2>
-      <p class="section-sub">Ecosistema construido internamente por la Gerencia de Operaciones. Cuatro sistemas conectados que sustentan los 6 KPIs y permiten el seguimiento en tiempo real del portafolio.</p>
+      <h2 class="section-title">Desarrollos IA · Plataforma OP</h2>
+      <p class="section-sub">Ecosistema construido internamente por la Gerencia de Operaciones. Seis sistemas conectados — desde control PMO hasta aprobación de facturas — que sustentan los KPIs y digitalizan la operación.</p>
     </div>
     <div class="section-meta fade-up d2">
-      <span class="num">4 SISTEMAS · 26 USUARIOS · 331 REPORTES</span>
+      <span class="num">6 SISTEMAS · 4 EN PRODUCCIÓN · 2 EN HABILITACIÓN</span>
       <span class="who">STACK · SUPABASE + VERCEL + HTML</span>
     </div>
   </div>
@@ -647,7 +652,7 @@ button{font-family:inherit}
         <div class="browser-bar">
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="browser-url"><span class="lock">●</span><span id="techUrl">—</span></div>
-          <span class="kpi-flag live"><span class="live-dot"></span>EN PRODUCCIÓN</span>
+          <span class="kpi-flag good" id="techBrowserBadge"><span class="live-dot"></span>EN PRODUCCIÓN</span>
         </div>
         <div class="browser-body" id="techBody"></div>
       </div>
@@ -918,6 +923,13 @@ const SMART_PLAN = [
     goal:'Bajar el ratio mensual de costo de supervisión de 167% (Abr) a ≤ 130% en junio, vía política de tope de gastos generales y revisión de dimensionamiento en 8 proyectos sobre 200%.',
     attrs:['ESPECÍFICO','MEDIBLE','META 130%','30-JUN'],
     who:'CCC', due:'30-Jun', kpiRef:'KPI 06'
+  },
+  {
+    rank:'06', kpi:'INICIATIVA OP', color:'#0f1e35',
+    title:'Revisión integral de pólizas de seguros',
+    goal:'Auditoría conjunta con Roberto de las pólizas vigentes del portafolio (todo riesgo construcción, RC, equipos) — identificar gaps de cobertura, vencimientos próximos y oportunidades de reducción de prima antes del 30-Jun.',
+    attrs:['ESPECÍFICO','AUDITORÍA','GAP ANALYSIS','30-JUN'],
+    who:'DF', due:'30-Jun', kpiRef:'Seguros · Roberto'
   }
 ];
 
@@ -963,8 +975,9 @@ const BSC = {
 const TECH = [
   {
     code:'01', name:'Centro de Control PMO',
+    badge:'EN PRODUCCIÓN',
     url:'kiamevi-source.github.io/friopacking-live',
-    desc:'Dashboard ejecutivo del portafolio de proyectos con KPIs, zonas geográficas y estado de avance en tiempo real.',
+    desc:'Dashboard ejecutivo del portafolio con KPIs, zonas y estado de avance en tiempo real.',
     caps:[
       ['SCOPE','20 activos','+13 en cartera · 3 zonas'],
       ['STACK','HTML + Supabase','Single file'],
@@ -974,40 +987,70 @@ const TECH = [
     render:'pmo'
   },
   {
-    code:'02', name:'Centro de Control Supervisor',
+    code:'02', name:'Centro de Gestión Supervisores',
+    badge:'EN PRODUCCIÓN',
     url:'friopacking-supervisor.vercel.app',
-    desc:'Plataforma web para los 21 supervisores: reporte diario, Gantt, histograma de personal, riesgos, exportación PDF e integración SharePoint.',
+    desc:'Plataforma web de los 21 supervisores: reporte diario, Gantt, histograma de personal, riesgos, PDF, SharePoint.',
     caps:[
       ['USUARIOS','21 supervisores','+5 PMO'],
-      ['PROYECTOS','33 activos','331 reportes históricos'],
-      ['MÓDULOS','7 módulos','Reporte · Gantt · Histograma · Riesgos · PDF · SharePoint · Valorizaciones'],
-      ['STACK','Supabase + Vercel','HTML single-file']
+      ['REPORTES','388','histórico + live'],
+      ['MÓDULOS','7','Reporte · Gantt · Histograma · Riesgos · PDF · SharePoint · Valorizaciones'],
+      ['EVALUACIÓN','3.62/5','360° · meta ≥ 3.5 ✓']
     ],
     render:'supervisor'
   },
   {
-    code:'03', name:'KPI 05 · Evaluación 360°',
-    url:'reporte-evaluacion-360.local',
-    desc:'Herramienta interna para visualizar la percepción de áreas soporte sobre los 21 supervisores. Heatmap, ranking, radar comparativo y drill-down por área.',
+    code:'03', name:'Centro de Gestión de Contratas',
+    badge:'PILOTO Q3',
+    url:'friopacking-contratas.vercel.app',
+    desc:'Plataforma para evaluar, calificar y dar seguimiento a contratistas por proyecto y especialidad. Base unificada para Compras y Operaciones.',
     caps:[
-      ['MUESTRA','134 evaluaciones','21 sup. × 6 áreas'],
-      ['VISTAS','6 vistas','Resumen · Áreas · Ranking · Heatmap · Quadrant · Plan'],
-      ['SEMÁFORO','3.62/5','Meta ≥ 3.5'],
-      ['ÁREA CRÍTICA','Log. Compras 2.92','Devoluciones 1.99']
+      ['CONTRATAS','56','evaluaciones cargadas'],
+      ['DIMENSIONES','5','Calidad · Plazo · SST · Documentación · Trato'],
+      ['ESTADO','Piloto','Informe de muestra entregado'],
+      ['ROLLOUT','Q3 2026','PMO + Compras']
     ],
-    render:'eval360'
+    render:'contratas'
   },
   {
-    code:'04', name:'KPI 06 · Costo de Supervisión',
-    url:'kpi06-costo-supervision.local',
-    desc:'Dashboard de costo real vs presupuestado por proyecto. Desglose en staff, movilidad, gastos generales y vista mensual con drill-down.',
+    code:'04', name:'Centro de Control de Proyectos',
+    badge:'EN PRODUCCIÓN',
+    url:'friopacking-proyectos.vercel.app',
+    desc:'Vista unificada por proyecto con cruces a todas las áreas (Comercial, Ingeniería, SSOMA, Calidad, Logística, Administración) — un único pane of glass.',
     caps:[
-      ['ALCANCE','33 proyectos','Ene-Abr 2026'],
-      ['REAL','S/ 1,78 M','vs Ppto S/ 1,15 M'],
-      ['DESVIACIÓN','+54.2%','+S/ 625,710'],
-      ['DRIVER','Gastos Generales','+117.4%']
+      ['ÁREAS','6','Comercial · Ing · SSOMA · Calidad · LogC · Adm'],
+      ['PROYECTOS','33','cartera 2026 completa'],
+      ['VISTAS','5','Resumen · Plazo · Costo · Calidad · Cliente'],
+      ['ALERTAS','Live','Semáforos cruzados'],
     ],
-    render:'kpi06'
+    render:'proyectos'
+  },
+  {
+    code:'05', name:'Reporte Diario · Aprobación de Facturas',
+    badge:'LANZAMIENTO JUN',
+    owner:'THALIA · OP',
+    url:'reporte-diario.friopacking',
+    desc:'Plataforma diseñada por Thalia para simplificar el flujo de aprobación de facturas: una sola pantalla, trazabilidad por nivel y SLA por tramo.',
+    caps:[
+      ['CICLO','-65%','tiempo aprobación vs flujo email'],
+      ['NIVELES','4','Supervisor · PMO · Adm · Gerencia'],
+      ['TRAZA','100%','log de aprobaciones'],
+      ['DEMO','25-May','Gerencia · Q&A']
+    ],
+    render:'thalia'
+  },
+  {
+    code:'06', name:'Bitácora Digital',
+    badge:'EN DESARROLLO',
+    url:'bitacora-friopacking.vercel.app',
+    desc:'Centralizar las bitácoras físicas de cada proyecto en un dashboard único — consulta inmediata, búsqueda y respaldo legal digital.',
+    caps:[
+      ['ALCANCE','33 proyectos','100% portafolio'],
+      ['ESTADO','Diseño','prototipo Q3'],
+      ['FUENTE','Bitácoras físicas','digitalización en curso'],
+      ['VALOR','Respaldo','legal + auditoría']
+    ],
+    render:'bitacora'
   }
 ];
 
@@ -1540,12 +1583,19 @@ function openBscDrawer(q){
 }
 
 /* ====== TECH SHOWCASE ====== */
+function badgeColor(b){
+  if(b==='EN PRODUCCIÓN') return 'good';
+  if(b==='PILOTO Q3'||b==='LANZAMIENTO JUN') return 'warn';
+  if(b==='EN DESARROLLO') return 'pending';
+  return 'pending';
+}
 (function renderTech(){
   const nav = document.getElementById('techNav');
   nav.innerHTML = TECH.map((t,i)=>`<button class="tech-tab ${i===0?'active':''}" data-i="${i}">
-    <span class="ix"><span>SISTEMA ${t.code}</span><span class="dot-active"></span></span>
+    <span class="ix"><span>SISTEMA ${t.code}${t.owner?' · '+t.owner:''}</span><span class="dot-active"></span></span>
     <h4>${t.name}</h4>
     <p>${t.desc}</p>
+    ${t.badge?`<span class="tech-badge ${badgeColor(t.badge)}">${t.badge==='EN PRODUCCIÓN'?'<span class="live-dot"></span>':''}${t.badge}</span>`:''}
   </button>`).join('');
   nav.querySelectorAll('.tech-tab').forEach(b=>b.addEventListener('click',()=>{
     nav.querySelectorAll('.tech-tab').forEach(x=>x.classList.remove('active'));
@@ -1558,6 +1608,13 @@ function openBscDrawer(q){
 function showTech(i){
   const t = TECH[i];
   document.getElementById('techUrl').textContent = 'https://'+t.url;
+  // update top-right badge in browser bar
+  const badgePill = document.getElementById('techBrowserBadge');
+  if(badgePill){
+    const cls = badgeColor(t.badge);
+    badgePill.className = 'kpi-flag '+cls;
+    badgePill.innerHTML = (t.badge==='EN PRODUCCIÓN'?'<span class="live-dot"></span>':'')+(t.badge||'EN PRODUCCIÓN');
+  }
   const body = document.getElementById('techBody');
   body.innerHTML = renderBrowserMock(t);
   const caps = document.getElementById('techCaps');
@@ -1643,23 +1700,114 @@ function renderBrowserMock(t){
         </div>
       </div>`;
   }
-  if(t.render==='eval360'){
+  if(t.render==='contratas'){
+    const contras = [
+      ['STORE COLD SERVICES','Refrigeración',4.6,'good','12 proyectos'],
+      ['DJ INSTALACIONES','OOCC',4.2,'good','9 proyectos'],
+      ['MECON PROYECTOS','Refrigeración',3.9,'good','7 proyectos'],
+      ['INGEPRO SAC','EEMM',3.5,'warn','5 proyectos'],
+      ['SERPACK','Paneles',3.3,'warn','4 proyectos'],
+      ['INVERSA','OOCC',2.7,'bad','3 proyectos · alerta']
+    ];
     return `
-      <div class="mock-h"><h5>Evaluación 360° · Resumen Operaciones</h5><span class="chip good">3.62 / 5</span></div>
+      <div class="mock-h"><h5>Gestión de Contratas · Q2 2026</h5><span class="kpi-flag pending">PILOTO · 56 EVAL.</span></div>
       <div class="mock-kpis">
-        <div class="mock-kpi"><label>Promedio global</label><div class="v">3.62</div><div class="d">meta ≥ 3.5 ✓</div></div>
-        <div class="mock-kpi"><label>Áreas evaluadoras</label><div class="v">6</div><div class="d">134 evaluaciones</div></div>
-        <div class="mock-kpi"><label>Supervisores</label><div class="v">21</div><div class="d">rankeados</div></div>
-        <div class="mock-kpi"><label>Crítica</label><div class="v" style="color:var(--bad)">1.99</div><div class="d">Devoluciones LogC</div></div>
+        <div class="mock-kpi"><label>Contratistas</label><div class="v">28</div><div class="d">activos en cartera</div></div>
+        <div class="mock-kpi"><label>Evaluaciones</label><div class="v">56</div><div class="d">cargadas</div></div>
+        <div class="mock-kpi"><label>Promedio</label><div class="v" style="color:var(--good)">3.8</div><div class="d">/5 · sobre 3.5 ✓</div></div>
+        <div class="mock-kpi"><label>En alerta</label><div class="v" style="color:var(--bad)">3</div><div class="d">puntuación &lt; 3.0</div></div>
       </div>
-      <div style="font-size:11px;color:var(--tx-3);font-weight:700;letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Score por área</div>
-      ${[['SSOMA',4.11,'good'],['Ingeniería',4.00,'good'],['Log. Servicios',3.77,'good'],['Administración',3.57,'good'],['Calidad',3.33,'warn'],['Log. Compras',2.92,'bad']].map(a=>{
-        return `<div style="display:grid;grid-template-columns:160px 1fr 60px;gap:10px;align-items:center;margin-bottom:6px">
-          <span style="font-size:12px;color:var(--ink-2);font-weight:600">${a[0]}</span>
-          <div class="kpi-bar"><div class="fill" style="width:${(a[1]/5)*100}%;background:${a[2]==='good'?'var(--good)':a[2]==='warn'?'var(--warn)':'var(--bad)'}"></div></div>
-          <span class="mono" style="text-align:right;font-weight:700;color:var(--navy)">${a[1].toFixed(2)}</span>
-        </div>`;
-      }).join('')}`;
+      <div style="font-size:11px;color:var(--tx-3);font-weight:700;letter-spacing:.08em;margin-bottom:10px;text-transform:uppercase">Ranking · Top contratas evaluadas</div>
+      ${contras.map(c=>`<div style="display:grid;grid-template-columns:200px 110px 1fr 60px 120px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
+        <span style="font-size:12.5px;color:var(--ink-2);font-weight:600">${c[0]}</span>
+        <span class="chip" style="font-size:9.5px;justify-self:start">${c[1]}</span>
+        <div class="kpi-bar"><div class="fill" style="width:${(c[2]/5)*100}%;background:${c[3]==='good'?'var(--good)':c[3]==='warn'?'var(--warn)':'var(--bad)'}"></div></div>
+        <span class="mono" style="text-align:right;font-weight:700;color:var(--navy)">${c[2].toFixed(1)}</span>
+        <span style="font-size:10.5px;color:var(--tx-3);text-align:right">${c[4]}</span>
+      </div>`).join('')}
+      <div style="font-size:10.5px;color:var(--tx-3);margin-top:12px;font-style:italic">Vista referencial. Rollout productivo en Q3 2026 con PMO + Compras. Datos finales según informe de muestra.</div>`;
+  }
+  if(t.render==='proyectos'){
+    const proyectos = [
+      ['AGROFLORAL','CENTRO',['good','good','good','good','warn','good']],
+      ['DELICE','CENTRO',['good','good','good','good','good','warn']],
+      ['IMBAREX','SUR',['good','warn','good','good','warn','bad']],
+      ['BERRY HARVEST','NORTE',['warn','warn','good','good','warn','warn']],
+      ['TA EXPORT','SUR',['bad','warn','good','warn','warn','bad']],
+      ['BOMAREA','NORTE',['warn','warn','good','good','good','warn']],
+      ['VANGUARD','SUR',['good','good','good','good','warn','good']]
+    ];
+    const areas = ['Comercial','Ing','SSOMA','Calidad','LogC','Adm'];
+    const cls = c=>c==='good'?'background:var(--good);box-shadow:0 0 0 2px rgba(22,163,122,.15)':c==='warn'?'background:var(--warn);box-shadow:0 0 0 2px rgba(214,138,23,.15)':c==='bad'?'background:var(--bad);box-shadow:0 0 0 2px rgba(214,59,79,.15)':'background:#dde3ee';
+    return `
+      <div class="mock-h"><h5>Centro de Control de Proyectos · Vista Cruzada</h5><span class="kpi-flag live"><span class="live-dot"></span>LIVE</span></div>
+      <div class="mock-kpis">
+        <div class="mock-kpi"><label>Proyectos</label><div class="v">33</div><div class="d">cartera 2026</div></div>
+        <div class="mock-kpi"><label>Áreas</label><div class="v">6</div><div class="d">vista 360°</div></div>
+        <div class="mock-kpi"><label>Verdes</label><div class="v" style="color:var(--good)">68%</div><div class="d">cruces OK</div></div>
+        <div class="mock-kpi"><label>Críticos</label><div class="v" style="color:var(--bad)">3</div><div class="d">2 áreas en rojo</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--tx-3);font-weight:700;letter-spacing:.08em;margin-bottom:10px;text-transform:uppercase">Heatmap · proyecto × área</div>
+      <div style="display:grid;grid-template-columns:160px 60px repeat(6,1fr);gap:6px;font-size:10.5px">
+        <div></div><div></div>${areas.map(a=>`<div style="text-align:center;color:var(--tx-3);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:9.5px">${a}</div>`).join('')}
+        ${proyectos.map(p=>`
+          <div style="font-size:12px;color:var(--ink-2);font-weight:600;padding:6px 0">${p[0]}</div>
+          <div style="font-size:9.5px;color:var(--tx-3);padding:6px 0">${p[1]}</div>
+          ${p[2].map(c=>`<div style="height:22px;border-radius:5px;${cls(c)};transition:transform .25s" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"></div>`).join('')}
+        `).join('')}
+      </div>
+      <div style="display:flex;gap:18px;justify-content:center;font-size:10.5px;color:var(--tx-3);margin-top:14px;font-weight:600"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:var(--good)"></span>OK</span><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:var(--warn)"></span>Observado</span><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:var(--bad)"></span>Crítico</span></div>`;
+  }
+  if(t.render==='thalia'){
+    return `
+      <div class="mock-h"><h5>Reporte Diario · Aprobación de Facturas <span style="font-size:10px;color:var(--tx-3);font-weight:600;letter-spacing:.08em;margin-left:10px">DISEÑADO POR THALIA</span></h5><span class="kpi-flag pending">LANZAMIENTO JUN</span></div>
+      <div class="mock-kpis">
+        <div class="mock-kpi"><label>Ciclo promedio</label><div class="v" style="color:var(--good)">-65%</div><div class="d">vs flujo email</div></div>
+        <div class="mock-kpi"><label>Niveles</label><div class="v">4</div><div class="d">Sup · PMO · Adm · Ger</div></div>
+        <div class="mock-kpi"><label>Trazabilidad</label><div class="v">100%</div><div class="d">log automático</div></div>
+        <div class="mock-kpi"><label>SLA</label><div class="v">48h</div><div class="d">end-to-end</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--tx-3);font-weight:700;letter-spacing:.08em;margin-bottom:10px;text-transform:uppercase">Flujo de aprobación</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:center;margin-bottom:14px">
+        ${[
+          ['SUPERVISOR','Recibe + valida','good'],
+          ['→','',''],
+          ['PMO','Verifica metrado','good'],
+          ['→','',''],
+          ['ADMIN / GER','Aprueba pago','warn']
+        ].map(s=>s[2]?`<div style="background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center"><div style="font-size:9.5px;color:var(--tx-3);font-weight:700;letter-spacing:.14em">${s[0]}</div><div style="font-family:'Manrope';font-size:13px;color:var(--navy);font-weight:700;margin-top:4px">${s[1]}</div><div style="margin-top:6px;height:3px;background:${s[2]==='good'?'var(--good)':'var(--warn)'};border-radius:99px"></div></div>`:`<div style="text-align:center;font-size:20px;color:var(--teal-d);font-weight:700">${s[0]}</div>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="background:rgba(62,203,176,.05);border:1px solid rgba(62,203,176,.15);border-radius:12px;padding:14px">
+          <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-d);font-weight:700;margin-bottom:6px">VALOR · OP</div>
+          <div style="font-size:12.5px;color:var(--ink-2);line-height:1.5">Reduce el ciclo de pago a proveedores. Supervisores liberados del seguimiento manual de facturas.</div>
+        </div>
+        <div style="background:rgba(15,30,53,.03);border:1px solid var(--line);border-radius:12px;padding:14px">
+          <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin-bottom:6px">PRÓXIMO</div>
+          <div style="font-size:12.5px;color:var(--ink-2);line-height:1.5">Demo con Gerencia esta semana · Lanzamiento productivo junio · Onboarding 21 supervisores.</div>
+        </div>
+      </div>
+      <div style="font-size:10.5px;color:var(--tx-3);margin-top:14px;font-style:italic">Vista preliminar — mockup conceptual. Plataforma diseñada por Thalia · OP.</div>`;
+  }
+  if(t.render==='bitacora'){
+    return `
+      <div class="mock-h"><h5>Bitácora Digital · Dashboard</h5><span class="kpi-flag dev">EN DESARROLLO</span></div>
+      <div class="mock-kpis">
+        <div class="mock-kpi"><label>Bitácoras</label><div class="v">33</div><div class="d">físicas · 100% portafolio</div></div>
+        <div class="mock-kpi"><label>Digitalizadas</label><div class="v" style="color:var(--warn)">0</div><div class="d">arranca Q3</div></div>
+        <div class="mock-kpi"><label>Búsqueda</label><div class="v">—</div><div class="d">por proyecto · fecha</div></div>
+        <div class="mock-kpi"><label>Respaldo</label><div class="v">Legal</div><div class="d">auditoría + cliente</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,.6);border:1px dashed var(--line-2);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px">
+        <div style="font-size:42px;color:var(--tx-4);margin-bottom:10px">📓</div>
+        <div style="font-family:'Manrope';font-size:16px;color:var(--navy);font-weight:700;margin-bottom:6px">Centralizar las bitácoras físicas en un dashboard único</div>
+        <div style="font-size:12px;color:var(--tx-3);line-height:1.5;max-width:460px;margin:0 auto">Consulta inmediata por proyecto · búsqueda full-text · respaldo legal digital · integración SharePoint.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);font-weight:700">Q3 · DISEÑO</div><div style="font-family:'Manrope';font-size:13px;color:var(--navy);font-weight:700;margin-top:4px">Arquitectura + UI</div></div>
+        <div style="background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);font-weight:700">Q3 · PILOTO</div><div style="font-family:'Manrope';font-size:13px;color:var(--navy);font-weight:700;margin-top:4px">3 proyectos piloto</div></div>
+        <div style="background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);font-weight:700">Q4 · ROLLOUT</div><div style="font-family:'Manrope';font-size:13px;color:var(--navy);font-weight:700;margin-top:4px">100% portafolio</div></div>
+      </div>`;
   }
   if(t.render==='kpi06'){
     return `

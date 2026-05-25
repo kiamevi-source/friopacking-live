@@ -34,24 +34,15 @@
     #pmo-bar-ops-btn, #pmo-bell-btn,
     .pmo-sticky-top, .pmo-top-bar { display: none !important; }
 
-    /* ─── KPIs globales y semáforo: ocultos por defecto ─── */
-    .kpis, #kpis,
-    .semaforo, #semaforo, #semaforo-card,
-    .v15-kpi-wrap, .v15-kpi-grid, .v15-kpi-hero, .v15-kpi-sec,
-    .v15-sem-wrap, .v15-sem-bar, .v15-sem-legend { display: none !important; }
-
-    /* ─── EXCEPCIÓN: en Dashboard Gerencial, mostrar los KPIs globales ─── */
-    body[data-pmo-view="gerencial"] .kpis,
-    body[data-pmo-view="gerencial"] #kpis { display: block !important; }
-    body[data-pmo-view="gerencial"] .v15-kpi-wrap { display: block !important; }
-    body[data-pmo-view="gerencial"] .v15-kpi-grid { display: grid !important; }
-    body[data-pmo-view="gerencial"] .v15-kpi-hero,
-    body[data-pmo-view="gerencial"] .v15-kpi-sec { display: flex !important; }
-    body[data-pmo-view="gerencial"] .semaforo,
-    body[data-pmo-view="gerencial"] #semaforo-card,
-    body[data-pmo-view="gerencial"] .v15-sem-wrap { display: block !important; }
-    body[data-pmo-view="gerencial"] .v15-sem-bar { display: flex !important; }
-    body[data-pmo-view="gerencial"] .v15-sem-legend { display: flex !important; }
+    /* ─── KPIs globales y semáforo: ocultos en TODAS las vistas EXCEPTO gerencial ─── */
+    /* Usamos :not() para no tocar el display en gerencial — así conserva su layout original */
+    body:not([data-pmo-view="gerencial"]) .kpis,
+    body:not([data-pmo-view="gerencial"]) #kpis,
+    body:not([data-pmo-view="gerencial"]) .semaforo,
+    body:not([data-pmo-view="gerencial"]) #semaforo,
+    body:not([data-pmo-view="gerencial"]) #semaforo-card,
+    body:not([data-pmo-view="gerencial"]) .v15-kpi-wrap,
+    body:not([data-pmo-view="gerencial"]) .v15-sem-wrap { display: none !important; }
 
     body { padding-top: 0 !important; margin: 0 !important; }
     body > *:first-child:not(script) { margin-top: 0 !important; }

@@ -13,8 +13,30 @@
   height: 100vh;
   border-right: 1px solid rgba(255,255,255,.04);
   z-index: 30;
-  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  transition: width .25s cubic-bezier(.4,0,.2,1),
+              padding .25s cubic-bezier(.4,0,.2,1),
+              transform .3s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
 }
+
+/* ─── Sidebar collapsed (icon-only mode) ─── */
+.sidebar.collapsed { width: 68px; padding: 24px 8px; }
+.sidebar.collapsed .sidebar-logo { gap: 0; padding: 8px 0 4px; }
+.sidebar.collapsed .sidebar-logo img { height: 44px; }
+.sidebar.collapsed .sidebar-logo-text { display: none; }
+.sidebar.collapsed .nav-item {
+  padding: 11px 0;
+  justify-content: center;
+}
+.sidebar.collapsed .nav-item span { display: none; }
+.sidebar.collapsed .nav-item.active::before { display: none; }
+.sidebar.collapsed .nav-item.active {
+  background: rgba(62,203,176,.18);
+}
+.sidebar.collapsed .user-card { justify-content: center; padding: 14px 0; }
+.sidebar.collapsed .user-card > .flex-1,
+.sidebar.collapsed .user-card > i { display: none; }
+.sidebar.collapsed .user-avatar { margin: 0 auto; }
 .sidebar-logo {
   display: flex;
   flex-direction: column;

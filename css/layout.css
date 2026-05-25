@@ -293,12 +293,17 @@
 
 /* ═════════════════ RESPONSIVE ═════════════════ */
 
-/* Widescreen (≥1600px) — más aire, números más grandes */
+/* Widescreen (≥1600px) — usa todo el ancho disponible */
 @media (min-width: 1600px) {
-  .main { padding: 36px 48px 48px; max-width: 1700px; margin: 0 auto; }
-  .title-h1 { font-size: 48px; }
-  .kpi-num  { font-size: 34px; }
-  .kpi-icon { width: 60px; height: 60px; }
+  .main { padding: 28px 36px 40px; }
+  .title-h1 { font-size: 46px; }
+  .kpi-num  { font-size: 32px; }
+  .kpi-icon { width: 58px; height: 58px; }
+}
+
+/* Ultra-wide (≥2200px) — un poco más de aire pero sin desperdiciar */
+@media (min-width: 2200px) {
+  .main { padding: 32px 48px 48px; }
 }
 
 /* Laptop estándar (1280-1600) */

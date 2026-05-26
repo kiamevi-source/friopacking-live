@@ -160,11 +160,14 @@
       return;
     }
 
+    // Resolver alias (ej. "proyectos" → "datos")
+    const legacyView = HASH_ALIAS[name] || name;
+
     // Cualquier otra vista: mostrar iframe, ocultar home
     homeEl.style.display  = 'none';
     vistaEl.style.display = '';
     updateActive(name);
-    ensureIframeLoaded(() => gotoLegacyView(name));
+    ensureIframeLoaded(() => gotoLegacyView(legacyView));
   }
 
   window.showView = showView;

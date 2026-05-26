@@ -14502,12 +14502,28 @@ W._v5parse=function(file,onDone){
       if(hdrIdx<0&&String(r[1]||'').toLowerCase().indexOf('estado')>=0&&String(r[2]||'').toLowerCase().indexOf('supervisor')>=0)hdrIdx=i;
     });
     if(hdrIdx<0)hdrIdx=5; /* fallback: row index 5 (row 6) */
+
+    /* Header-aware column detection — sobrevive cambios de orden/nombre de columnas */
+    var hdrRow = rsRows[hdrIdx] || [];
+    var col = {estado:1, sup:2, cli:3, presup:4, valAcum:5, vm:6}; /* defaults */
+    hdrRow.forEach(function(cell, i){
+      var k = String(cell||'').toLowerCase().trim();
+      if (!k) return;
+      if (k.indexOf('estado') >= 0) col.estado = i;
+      else if (k.indexOf('supervisor') >= 0) col.sup = i;
+      else if (k.indexOf('cliente') >= 0) col.cli = i;
+      else if (k.indexOf('presup') >= 0) col.presup = i;
+      else if (k.indexOf('acum') >= 0 || (k.indexOf('valoriz') >= 0 && k.indexOf('acum') >= 0)) col.valAcum = i;
+      else if (k.indexOf('meta') >= 0 || (k.indexOf('valoriz') >= 0 && k.indexOf('acum') < 0)) col.vm = i;
+    });
+    console.log('[VMayo Import] columnas detectadas:', col, '· headers:', hdrRow);
+
     var newVR=[];
     for(var ri=hdrIdx+1;ri<rsRows.length;ri++){
       var row=rsRows[ri];
-      var rawE=String(row[1]||'').trim();
-      var sup=String(row[2]||'').trim();
-      var cli=String(row[3]||'').trim();
+      var rawE=String(row[col.estado]||'').trim();
+      var sup=String(row[col.sup]||'').trim();
+      var cli=String(row[col.cli]||'').trim();
       if(!cli||!rawE)continue;
       /* normalize estado — siempre incluir, com guarda el estado original exacto */
       var estado;
@@ -14516,9 +14532,9 @@ W._v5parse=function(file,onDone){
       else estado='Pendiente'; /* "Pendiente acta", "Solicitando aprobación", "Inform", etc. → bucket Pendiente */
       /* saltar solo filas de totales */
       if(/total general/i.test(rawE))continue;
-      var presup=parseFloat(row[4])||0;
-      var valAcum=parseFloat(row[5])||0;
-      var vm=parseFloat(row[6])||0;
+      var presup=parseFloat(String(row[col.presup]||'').replace(/[^\d.\-]/g,''))||0;
+      var valAcum=parseFloat(String(row[col.valAcum]||'').replace(/[^\d.\-]/g,''))||0;
+      var vm=parseFloat(String(row[col.vm]||'').replace(/[^\d.\-]/g,''))||0;
       newVR.push({e:estado,s:sup,c:cli,presup:presup,valAcum:valAcum,vm:vm,com:rawE});
     }
 

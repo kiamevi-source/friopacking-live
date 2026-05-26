@@ -118,6 +118,18 @@
     }, 500);
   }
 
+  // ── Vistas que tienen versión "Premium" cargada con delay (setTimeout 2.5s+) ──
+  // Para estas, esperamos a que el override premium esté registrado antes de re-renderizar
+  const PREMIUM_FN = {
+    valorizacion:  'renderValorizacionPremium',
+    equipos:       'renderEquiposPremium',
+    supervisores:  'renderSupervisoresPremium',
+    contratistas:  'renderContratistasEvalPremium',
+    reportes:      'renderReportesCOC',
+    briefing:      'renderBriefingPremium',
+    pendientes:    'renderPendientesPremium',
+  };
+
   // ── Cambiar a una vista específica ──
   function gotoLegacyView(name) {
     try {
@@ -128,13 +140,39 @@
 
       if (win && typeof win.showView === 'function') {
         win.showView(name);
+        // Si la vista tiene versión Premium con carga diferida, esperar y re-renderizar
+        if (PREMIUM_FN[name]) waitForPremiumAndRecall(name);
       } else {
-        // Fallback: cambiar el hash del iframe
         win.location.hash = '#' + name;
       }
     } catch (e) {
       console.warn('[router-views] gotoLegacyView falló:', e);
     }
+  }
+
+  // ── Polling: espera a que el override premium esté registrado, luego re-renderiza ──
+  // Resuelve el problema de "tengo que refrescar para ver la versión nueva"
+  function waitForPremiumAndRecall(name) {
+    const win = iframe.contentWindow;
+    if (!win) return;
+    const expectedFnName = PREMIUM_FN[name];
+    if (!expectedFnName) return;
+
+    let tries = 0;
+    const maxTries = 25; // 5 segundos max (200ms * 25)
+    const poll = setInterval(() => {
+      tries++;
+      try {
+        const premiumFn = win[expectedFnName];
+        const registered = win.VIEW_RENDERERS && win.VIEW_RENDERERS[name];
+        // Lista para re-renderizar: la función premium existe Y es la registrada
+        if (premiumFn && registered === premiumFn) {
+          clearInterval(poll);
+          try { win.showView(name); } catch (e) { /* noop */ }
+        }
+      } catch (e) { /* same-origin OK */ }
+      if (tries >= maxTries) clearInterval(poll);
+    }, 200);
   }
 
   // ── Actualizar estado activo en sidebar y tabs ──

@@ -77,6 +77,7 @@
   iframe.addEventListener('load', () => {
     iframeReady = true;
     injectChromeHide();
+    disableLegacyAutoNav();
     if (pendingView) {
       const fn = pendingView;
       pendingView = null;
@@ -84,6 +85,29 @@
       setTimeout(fn, 200);
     }
   });
+
+  // ── Neutralizar los pop-ups proactivos del legacy que pueden cambiar de vista ──
+  // El legacy tiene un sistema "ProactiveAI" que cada 8 minutos analiza datos y
+  // muestra notificaciones con botones "Ver valorización" etc. Si el usuario hace
+  // click sin querer, la vista cambia. Lo desactivamos: el nuevo shell ya tiene
+  // sus propias alertas de cumplimiento en Home.
+  function disableLegacyAutoNav() {
+    const win = iframe.contentWindow;
+    if (!win) return;
+    // Reintentar varias veces hasta que ProactiveAI exista (el legacy lo crea con delay)
+    let tries = 0;
+    const t = setInterval(() => {
+      tries++;
+      try {
+        if (win.ProactiveAI) {
+          win.ProactiveAI.analyze = function () {};
+          win.ProactiveAI._show = function () {};
+          clearInterval(t);
+        }
+      } catch (e) { /* same-origin OK */ }
+      if (tries > 20) clearInterval(t); // 10s max
+    }, 500);
+  }
 
   // ── Cambiar a una vista específica ──
   function gotoLegacyView(name) {

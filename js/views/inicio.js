@@ -19,6 +19,11 @@ window.loadDashboard = async function () {
     if (e1) throw e1;
     if (!projs) throw new Error('No data');
 
+    // Subset: solo proyectos "En progreso" (misma lógica que legacy.activeP())
+    const enProgreso = projs.filter(
+      (p) => (p.estado || '').trim().toLowerCase() === 'en progreso'
+    );
+
     // Reports recientes — la tabla `reportes` se enlaza por `nombre_proyecto` (no proyecto_id)
     const { data: reps, error: e2 } = await window.sb
       .from('reportes')
@@ -30,8 +35,8 @@ window.loadDashboard = async function () {
       (reps || []).map((r) => (r.nombre_proyecto || '').trim().toUpperCase()).filter(Boolean)
     );
 
-    // KPI 1 — Sin reporte
-    const sinReporte = projs.filter(
+    // KPI 1 — Sin reporte (solo proyectos en progreso, no todos los activos)
+    const sinReporte = enProgreso.filter(
       (p) => !reportedSet.has((p.nombre || '').trim().toUpperCase())
     ).length;
     const elSin = document.getElementById('kpi-sin');

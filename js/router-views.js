@@ -12,6 +12,15 @@
   const HOME_KEY = 'inicio';
   const LEGACY_URL = 'index.legacy.html';
 
+  // ── Alias de hash → nombre de vista real en el legacy ──
+  // (el legacy tiene algunas vistas con renderers rotos o con nombres distintos)
+  const HASH_ALIAS = {
+    'proyectos': 'datos',   // #proyectos del chip apunta a #datos (donde sí se renderiza la lista)
+    'clientes':  'datos',
+    'hitos':     'briefing',
+    'lecciones': 'briefing',
+  };
+
   const homeEl  = document.getElementById('view-home');
   const vistaEl = document.getElementById('view-vista');
   const iframe  = document.getElementById('vista-frame');

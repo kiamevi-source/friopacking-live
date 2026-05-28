@@ -9161,35 +9161,41 @@ function renderEquiposPremium(){
 function _eqParseRows(raw){
   // Find header row (contains "Documento" or "EMPRESA")
   let hdrIdx=-1;
-  for(let i=0;i<Math.min(raw.length,10);i++){
+  for(let i=0;i<Math.min(raw.length,15);i++){
     const joined=(raw[i]||[]).join('|').toLowerCase();
     if(joined.includes('documento')||joined.includes('empresa')){hdrIdx=i;break;}
   }
   if(hdrIdx<0)return[];
   const hdr=raw[hdrIdx].map(c=>(c||'').trim().toLowerCase());
+  console.log('[import] header row idx=',hdrIdx,'· headers:',hdr);
+  // Matchers más flexibles — usan exacto, startsWith o includes según el caso.
+  // Orden importa: el más específico primero (p.ej. "fecha entrega" antes que "fecha").
   const col=name=>{
-    const patterns={
-      'doc':['documento'],
-      'fecha':['fecha ','fecha\t'],
-      'proveedor':['proveedor'],
-      'proyecto':['proyecto'],
-      'tipo':['tipo producto','tipo_producto'],
-      'origen':['origen'],
-      'f_entrega':['fecha entrega ','fecha entrega\t','fecha_entrega'],
-      'f_real':['entrega real','fecha de entrega real'],
-      'status_orig':['status de la entrega'],
-      'etd':['fecha etd','etd'],
-      'eta':['fecha de eta','eta'],
-      'status_dest':['status final','status_final'],
-      'modalidad':['modalidad'],
-      'estado':['estado'],
-      'dias':['dias por entregar','días por entregar'],
-      'ref':['ref.orden','ref orden','ref.'],
+    const matchers={
+      doc:         h=>h==='documento'||h.startsWith('documento'),
+      // "fecha" SOLO el campo simple (no "fecha entrega" ni "fecha de pago")
+      fecha:       h=>h==='fecha'||h==='fecha doc'||h==='fecha_doc',
+      proveedor:   h=>h.startsWith('proveedor'),
+      proyecto:    h=>h==='proyecto'||h==='cliente'||h==='pry numero',
+      cliente:     h=>h==='pry numero'||h==='cliente'||h==='cliente final',
+      cod_proyecto:h=>h==='columna1'||h==='cod_proyecto'||h==='pry_codigo'||h.startsWith('a_pry'),
+      tipo:        h=>h.includes('tipo producto')||h.includes('tipo_producto')||h==='tipo',
+      origen:      h=>h==='origen'||h.startsWith('origen'),
+      // Fecha Entrega — sin requerir trailing space
+      f_entrega:   h=>h.includes('fecha entrega')||h.includes('fecha_entrega')||h==='eta',
+      f_real:      h=>h.includes('entrega real')||h.includes('fecha de entrega real'),
+      status_orig: h=>h.includes('status de la entrega')||h.includes('status_orig'),
+      etd:         h=>h==='fecha etd'||h==='etd'||h.includes('fecha etd'),
+      eta:         h=>h==='fecha de eta'||h==='eta'||h.includes('fecha de eta'),
+      status_dest: h=>h.includes('status final')||h.includes('status_final')||h.includes('status de la entrega'),
+      modalidad:   h=>h.includes('modalidad'),
+      estado:      h=>h==='estado',
+      dias:        h=>h.includes('dias por entregar')||h.includes('días por entregar'),
+      ref:         h=>h.startsWith('ref.orden')||h.startsWith('ref orden')||h==='ref.'||h==='referencia',
     };
-    const alts=patterns[name]||[name];
-    for(const h of hdr){
-      for(const a of alts){if(h.startsWith(a.toLowerCase()))return hdr.indexOf(h);}
-    }
+    const m=matchers[name];
+    if(!m)return -1;
+    for(let i=0;i<hdr.length;i++){if(m(hdr[i]))return i;}
     return -1;
   };
   const get=(row,name)=>(row[col(name)]||'').toString().trim();

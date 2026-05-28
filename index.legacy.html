@@ -8961,7 +8961,25 @@ function renderEquiposPremium(){
           const ab=await file.arrayBuffer();
           const wb=XLSX.read(ab,{type:'array'});
           console.log('[import] (Excel) hojas detectadas:',wb.SheetNames);
-          const ws=wb.Sheets[wb.SheetNames[0]];
+          // Smart sheet pick: prefer "NISIRA FP" / "NISIRA", luego cualquier hoja que tenga
+          // "Documento" en sus primeras filas (i.e. la hoja con data real).
+          // Fallback: primera hoja.
+          let sheetName=null;
+          // 1) Preferir "NISIRA" exacto o parcial (case-insensitive)
+          sheetName=wb.SheetNames.find(n=>/nisira/i.test(n));
+          // 2) Buscar la hoja que contenga "Documento" en sus primeras 10 filas
+          if(!sheetName){
+            for(const n of wb.SheetNames){
+              const ws=wb.Sheets[n];
+              const sample=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,range:0});
+              const headSample=sample.slice(0,10).map(r=>(r||[]).join('|').toLowerCase()).join('\n');
+              if(headSample.includes('documento')||headSample.includes('empresa')){sheetName=n;break;}
+            }
+          }
+          // 3) Fallback: primera hoja
+          if(!sheetName)sheetName=wb.SheetNames[0];
+          console.log('[import] hoja elegida:',sheetName);
+          const ws=wb.Sheets[sheetName];
           raw=XLSX.utils.sheet_to_json(ws,{header:1,raw:false});
         }
       } else if(fname.match(/\.csv$/i)||ftype.includes('csv')){

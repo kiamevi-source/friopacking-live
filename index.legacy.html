@@ -9029,23 +9029,29 @@ function renderEquiposPremium(){
         console.log('[import] primeras 3 filas:',raw.slice(0,3));
         parsed=_eqParseRows(raw);
         console.log('[import] tras _eqParseRows:',parsed?parsed.length:'null','registros válidos');
-        if((!parsed||!parsed.length)&&raw.length){
-          const cands=raw.slice(0,Math.min(10,raw.length)).map((r,i)=>`fila ${i}: ${(r||[]).slice(0,8).join(' | ')}`);
-          console.warn('[import] no se detectó header NISIRA. Cabeceras candidatas:\n'+cands.join('\n'));
-        }
-        /* DEBUG: muestra en pantalla qué campos pobló para el primer registro */
+
+        /* DEBUG: SIEMPRE mostrar diagnóstico (sirva o no), con primeras 8 filas crudas */
+        const rawSample=(raw||[]).slice(0,8).map((r,i)=>{
+          const cells=(r||[]).slice(0,12).map(c=>String(c||'').slice(0,30));
+          return `fila ${i}: ${cells.join(' | ')}`;
+        }).join('\n');
+
+        let msg;
         if(parsed&&parsed.length){
           const f=parsed[0];
           const filled=Object.entries(f).filter(([k,v])=>v).map(([k,v])=>`${k}: ${v}`);
           const empty=Object.entries(f).filter(([k,v])=>!v).map(([k])=>k);
-          // Incluir las primeras filas crudas para diagnóstico
-          const rawSample=(raw||[]).slice(0,5).map((r,i)=>`fila ${i}: ${(r||[]).slice(0,10).join(' | ')}`).join('\n');
-          const msg=`Diagnóstico import (1er registro de ${parsed.length}):\n\n`+
-            `✅ POBLADOS (${filled.length}):\n${filled.join('\n')}\n\n`+
-            `❌ VACÍOS (${empty.length}):\n${empty.join(', ')}\n\n`+
-            `── Primeras 5 filas crudas ──\n${rawSample}`;
-          setTimeout(()=>{try{alert(msg);}catch(_){}},800);
+          msg=`✅ Parser OK — ${parsed.length} registros\n\n`+
+            `POBLADOS (${filled.length}):\n${filled.join('\n')}\n\n`+
+            `VACÍOS (${empty.length}):\n${empty.join(', ')}\n\n`+
+            `── Primeras 8 filas crudas ──\n${rawSample}`;
+        } else {
+          msg=`❌ Parser NO encontró header válido\n\n`+
+            `Total filas crudas: ${raw.length}\n`+
+            `Mejor score (necesita ≥2): ${parsed&&parsed.__bestScore!=null?parsed.__bestScore:'?'}\n\n`+
+            `── Primeras 8 filas crudas (copialas y mandámelas) ──\n${rawSample}`;
         }
+        setTimeout(()=>{try{alert(msg);}catch(_){}},500);
       }
     }catch(e){console.error('[import] error:',e);if(typeof showToast==='function')showToast('Error al leer archivo: '+(e.message||e),'alert',5000);}
     setStep('read','done');setProgress(35);

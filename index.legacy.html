@@ -9033,6 +9033,18 @@ function renderEquiposPremium(){
           const cands=raw.slice(0,Math.min(10,raw.length)).map((r,i)=>`fila ${i}: ${(r||[]).slice(0,8).join(' | ')}`);
           console.warn('[import] no se detectó header NISIRA. Cabeceras candidatas:\n'+cands.join('\n'));
         }
+        /* DEBUG: muestra en pantalla qué campos pobló para el primer registro */
+        if(parsed&&parsed.length){
+          const f=parsed[0];
+          const filled=Object.entries(f).filter(([k,v])=>v).map(([k,v])=>`${k}: ${v}`);
+          const empty=Object.entries(f).filter(([k,v])=>!v).map(([k])=>k);
+          const msg=`Diagnóstico import (1er registro de ${parsed.length}):\n\n`+
+            `✅ POBLADOS (${filled.length}):\n${filled.join('\n')}\n\n`+
+            `❌ VACÍOS (${empty.length}):\n${empty.join(', ')}\n\n`+
+            `Si faltan campos esperados, copia este texto y mandámelo.`;
+          /* Mostrar en alert (intrusivo pero claro) */
+          setTimeout(()=>{try{alert(msg);}catch(_){}},800);
+        }
       }
     }catch(e){console.error('[import] error:',e);if(typeof showToast==='function')showToast('Error al leer archivo: '+(e.message||e),'alert',5000);}
     setStep('read','done');setProgress(35);

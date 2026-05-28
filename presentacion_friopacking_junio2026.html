@@ -843,20 +843,21 @@ const KPIS = [
     id:'KPI 03', code:'k3', name:'Desviación de Metrado',
     owner:'BV+KM', ownerFull:'Benjamin Viera + Kiara Medina',
     meta:'≥ 80% en ±5%', metaPct:80, unit:'%', flag:'new',
-    real:64.3, status:'warn',
+    real:62.2, status:'warn',
     perspective:'pro',
     descripcion:'Porcentaje de especialidades de obra cuya desviación entre metrado planificado y ejecutado se mantiene dentro de ±5%. Mide el control presupuestal de ejecución por especialidad.',
-    formula:'Especialidades con |desv| ≤ 5% ÷ Total especialidades medidas. Universo: 171 especialidades en 15 proyectos con metrado base cargado.',
+    formula:'Especialidades con |desv| ≤ 5% ÷ Total especialidades medidas. Universo: 180 especialidades en 16 proyectos con metrado base cargado.',
     fuente:'Plantillas de metrado por proyecto · enviadas por supervisores · mayo 2026.',
-    spark:[null,null,null,null,64,null,null],
+    spark:[null,null,null,null,62,null,null],
     metrados:{
-      cobertura:{total:17, conBase:15, pendientes:['Talsa Puerto Morin','Santa Sofía'], enCierre:3, coberturaPct:88.2},
-      portafolio:{nEsp:171, onTarget:110, fueraTarget:61, onTargetPct:64.3, avgCumplPlan:66.9, avgCumplReal:78.9},
+      cobertura:{total:17, conBase:16, pendientes:['Santa Sofía'], enCierre:3, coberturaPct:94.1},
+      portafolio:{nEsp:180, onTarget:112, fueraTarget:68, onTargetPct:62.2, avgCumplPlan:66.5, avgCumplReal:80.3},
       proyectos:[
-        {nombre:'BOMAREA',          nEsp:10, avgCp:20.1, avgCr:39.1, onTgt:6,  desvAvg:19.1, sinAv:4, completos:1,  worst:'Lonas',                       worstDesv:75.0, status:'bad'},
-        {nombre:'BERRY HARVEST',    nEsp:26, avgCp:38.8, avgCr:67.9, onTgt:12, desvAvg:29.4, sinAv:7, completos:15, worst:'Silicón y limpieza',         worstDesv:100,  status:'bad'},
-        {nombre:'VIVEROS EL TAMBO', nEsp:10, avgCp:46.7, avgCr:70.0, onTgt:7,  desvAvg:23.3, sinAv:3, completos:5,  worst:'Montaje UCs (sobre-ejec.)',   worstDesv:100,  status:'bad'},
-        {nombre:'TAL SA',           nEsp:11, avgCp:62.4, avgCr:60.2, onTgt:5,  desvAvg:11.4, sinAv:3, completos:2,  worst:'Aislamiento tuberías Glicol', worstDesv:40.0, status:'warn'},
+        {nombre:'BOMAREA',            nEsp:10, avgCp:20.1, avgCr:39.1,  onTgt:6,  desvAvg:19.1, sinAv:4, completos:1,  worst:'Lonas',                       worstDesv:75.0, status:'bad'},
+        {nombre:'BERRY HARVEST',      nEsp:26, avgCp:38.8, avgCr:67.9,  onTgt:12, desvAvg:29.4, sinAv:7, completos:15, worst:'Silicón y limpieza',         worstDesv:100,  status:'bad'},
+        {nombre:'VIVEROS EL TAMBO',   nEsp:9,  avgCp:49.7, avgCr:77.8,  onTgt:5,  desvAvg:28.1, sinAv:2, completos:7,  worst:'Montaje puertas (sobre-ejec.)',worstDesv:100, status:'bad'},
+        {nombre:'TALSA PUERTO MORIN', nEsp:10, avgCp:60.0, avgCr:100,   onTgt:4,  desvAvg:40.0, sinAv:0, completos:10, worst:'Lonas (ventanas, sobre-ejec.)',worstDesv:100,status:'warn'},
+        {nombre:'TAL SA',             nEsp:11, avgCp:62.4, avgCr:60.2,  onTgt:5,  desvAvg:11.4, sinAv:3, completos:2,  worst:'Aislamiento tuberías Glicol', worstDesv:40.0, status:'warn'},
         {nombre:'QPACK',            nEsp:13, avgCp:63.2, avgCr:81.2, onTgt:3,  desvAvg:18.0, sinAv:0, completos:4,  worst:'Montaje paquetes Glicol',     worstDesv:40.0, status:'warn'},
         {nombre:'VIRU',             nEsp:18, avgCp:65.0, avgCr:72.2, onTgt:13, desvAvg:7.2,  sinAv:4, completos:10, worst:'Montaje rampas',              worstDesv:50.0, status:'warn'},
         {nombre:'REITER',           nEsp:9,  avgCp:69.4, avgCr:71.1, onTgt:6,  desvAvg:1.7,  sinAv:1, completos:2,  worst:'Acabados Paneles',            worstDesv:5.0,  status:'warn'},
@@ -871,24 +872,24 @@ const KPIS = [
       ]
     },
     detalle:{
-      lectura:'<strong style="color:var(--navy)">Cobertura</strong> 15/17 con metrado base (88%) &nbsp;·&nbsp; <strong style="color:var(--navy)">Cumplimiento</strong> 64% en ±5%<br><strong style="color:var(--warn)">En cierre</strong> FRUSAN · VANGUARD · DELICE — no requieren metrado, se gestionan por valorización (KPI 02)<br><strong style="color:var(--bad)">Críticos</strong> Bomarea · Berry Harvest · Viveros &nbsp;·&nbsp; <strong style="color:var(--good)">Modelo</strong> Smartpacking · TA Export<br><strong style="color:var(--teal-d)">Insight</strong> 3 de 4 atrasados de KPI 01 son físicos &nbsp;·&nbsp; TA Export es administrativo (100% metrado, SPI 0.88)',
+      lectura:'<strong style="color:var(--navy)">Cobertura</strong> 16/17 con metrado base (94%) &nbsp;·&nbsp; <strong style="color:var(--navy)">Cumplimiento</strong> 62% en ±5%<br><strong style="color:var(--warn)">En cierre</strong> FRUSAN · VANGUARD · DELICE — no requieren metrado, se gestionan por valorización (KPI 02)<br><strong style="color:var(--bad)">Críticos</strong> Bomarea · Berry Harvest · Viveros &nbsp;·&nbsp; <strong style="color:var(--good)">Modelo</strong> Smartpacking · TA Export<br><strong style="color:var(--teal-d)">Insight</strong> 3 de 4 atrasados de KPI 01 son físicos &nbsp;·&nbsp; TA Export es administrativo (100% metrado, SPI 0.88)',
       causa:[
         'BOMAREA (20%) y BERRY HARVEST (39%) concentran el atraso físico — coinciden con SPI bajo del KPI 01.',
-        'VIVEROS EL TAMBO (47%) presenta patrón inverso: sobre-ejecución en 2 especialidades (UCs y puertas) no planificadas — riesgo de re-trabajo o cambio de alcance no formalizado.',
+        'VIVEROS EL TAMBO (50%) y TALSA PUERTO MORIN (60%) presentan patrón de sobre-ejecución: especialidades ejecutadas sin estar planificadas — cambios de alcance no formalizados.',
         'QPACK con 10 de 13 especialidades fuera de ±5% — dispersión alta, no concentración: requiere foco por especialidad.',
-        '2 proyectos pendientes de cargar metrado base (Talsa PM, Santa Sofía) bloquean la cobertura 100%.',
+        'Solo Santa Sofía pendiente de cargar metrado base — bloquea cobertura 100%.',
         'Criterios de medición sin estandarizar entre supervisores — algunos reportan acumulado del contrato, otros del mes en curso.'
       ],
       acciones:[
-        'Cerrar metrado base de los 2 pendientes (Talsa Puerto Morin, Santa Sofía) antes del 10-Jun · BV + supervisores.',
-        'Workshop de criterios de medición con los 15 supervisores que ya enviaron — estandarizar antes del 30-Jun.',
+        'Cerrar metrado base de Santa Sofía antes del 10-Jun · BV + supervisor.',
+        'Workshop de criterios de medición con los 16 supervisores que ya enviaron — estandarizar antes del 30-Jun.',
         'Review especializado quincenal con Gerencia para BOMAREA, BERRY HARVEST y VIVEROS hasta normalizar avance.',
-        'VIVEROS: validar si la sobre-ejecución es cambio de alcance pagable o re-trabajo no facturable.',
+        'Auditoría de cambios de alcance en VIVEROS y TALSA PUERTO MORIN: validar si las especialidades sobre-ejecutadas son cambios pagables o re-trabajo no facturable.',
         'QPACK: ranking por impacto valorizado de las 10 especialidades atrasadas, priorizar las 3 de mayor impacto.'
       ],
       riesgos:[
         'Si BOMAREA y BERRY HARVEST no recuperan avance en junio, el portafolio cae bajo 60% on-target.',
-        'Sobre-ejecución en VIVEROS sin orden de cambio formal genera costo no recuperable.',
+        'Sobre-ejecución sin orden de cambio formal en VIVEROS y TALSA PUERTO MORIN genera costo no recuperable — afecta KPI 06 y margen.',
         'Falta de estandarización podría invalidar la comparabilidad entre proyectos en la lectura de julio.'
       ]
     }
@@ -1021,11 +1022,11 @@ const SMART_PLAN = [
   {
     rank:'03', kpi:'KPI 03 · Metrado', color:'#d68a17',
     title:'Sistema de medición de metrados',
-    goal:'Cerrar metrado base en los 2 pendientes (Talsa Puerto Morin · Santa Sofía) al 10-Jun + workshop estandarización con los 15 supervisores + review especializado Bomarea/Berry Harvest/Viveros hasta normalizar.',
+    goal:'Cerrar metrado base de Santa Sofía al 10-Jun + workshop estandarización con los 16 supervisores + review especializado Bomarea/Berry Harvest/Viveros + auditoría de cambios de alcance en Viveros y Talsa Puerto Morin.',
     attrs:['SISTEMA','CIERRE 10-JUN','WORKSHOP','REVIEW QUINCENAL'],
     who:'BV', due:'10-Jun', kpiRef:'KPI 03',
-    baseline:'64% on-target · 15/17 con base',
-    target:'≥ 80% on-target ±5% al cierre Q3 · 17/17 cobertura'
+    baseline:'62% en meta · 16/17 con base',
+    target:'≥ 80% en meta ±5% al cierre Q3 · 17/17 cobertura'
   },
   {
     rank:'04', kpi:'KPI 04 · Encuesta', color:'#16a37a',
@@ -1079,8 +1080,8 @@ const BSC = {
     label:'PROCESOS INTERNOS', color:'#3ECBB0',
     pregunta:'¿Cómo controlamos la ejecución física y presupuestal?',
     kpis:['KPI 02','KPI 03'],
-    contexto:'KPI 02 (Backlog abril) en 60.7% sobre lo proyectado. KPI 03 (Metrado) con primera lectura formal: 64% de especialidades on-target ±5% en 15 de 17 proyectos.',
-    lectura:'Backlog 60.7% bajo meta — variación -39.3% (-USD 1.17M). Metrado 64% on-target — Bomarea (20%), Berry Harvest (39%) y Viveros (47%, sobre-ejec) críticos. 3 de los 4 atrasados de KPI 01 confirman atraso físico.',
+    contexto:'KPI 02 (Backlog abril) en 60.7% sobre lo proyectado. KPI 03 (Metrado) con primera lectura formal: 62% de especialidades en meta ±5% en 16 de 17 proyectos.',
+    lectura:'Backlog 60.7% bajo meta — variación -39.3% (-USD 1.17M). Metrado 62% en meta — Bomarea (20%), Berry Harvest (39%) y Viveros (50%) críticos. 3 de los 4 atrasados de KPI 01 confirman atraso físico.',
     accion:'Cerrar los 16 proyectos en USD 0 antes del 10-Jun · workshop estandarización metrados con los 14 supervisores · review especializado Bomarea + Berry Harvest hasta normalizar avance >60%.',
     semaforo:'bad'
   },

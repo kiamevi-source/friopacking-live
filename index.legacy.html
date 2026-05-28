@@ -9038,11 +9038,12 @@ function renderEquiposPremium(){
           const f=parsed[0];
           const filled=Object.entries(f).filter(([k,v])=>v).map(([k,v])=>`${k}: ${v}`);
           const empty=Object.entries(f).filter(([k,v])=>!v).map(([k])=>k);
+          // Incluir las primeras filas crudas para diagnóstico
+          const rawSample=(raw||[]).slice(0,5).map((r,i)=>`fila ${i}: ${(r||[]).slice(0,10).join(' | ')}`).join('\n');
           const msg=`Diagnóstico import (1er registro de ${parsed.length}):\n\n`+
             `✅ POBLADOS (${filled.length}):\n${filled.join('\n')}\n\n`+
             `❌ VACÍOS (${empty.length}):\n${empty.join(', ')}\n\n`+
-            `Si faltan campos esperados, copia este texto y mandámelo.`;
-          /* Mostrar en alert (intrusivo pero claro) */
+            `── Primeras 5 filas crudas ──\n${rawSample}`;
           setTimeout(()=>{try{alert(msg);}catch(_){}},800);
         }
       }

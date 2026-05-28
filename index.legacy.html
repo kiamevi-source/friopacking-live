@@ -9171,15 +9171,26 @@ function renderEquiposPremium(){
 }
 
 function _eqParseRows(raw){
-  // Find header row (contains "Documento" or "EMPRESA")
+  // Find header row by SCORE — la fila con más nombres de columna conocidos gana.
+  // Esto resuelve el caso donde hay una fila de título previa con la palabra "documento"
+  // (que antes hacía match falso y se elegía como header).
+  const expected=['documento','fecha','proveedor','proyecto','tipo','origen',
+                  'entrega','status','etd','eta','modalidad','dias','pry','columna1'];
   let hdrIdx=-1;
-  for(let i=0;i<Math.min(raw.length,15);i++){
-    const joined=(raw[i]||[]).join('|').toLowerCase();
-    if(joined.includes('documento')||joined.includes('empresa')){hdrIdx=i;break;}
+  let bestScore=0;
+  for(let i=0;i<Math.min(raw.length,25);i++){
+    const cells=(raw[i]||[]).map(c=>(c||'').toString().trim().toLowerCase()).filter(Boolean);
+    if(!cells.length)continue;
+    // Cuenta cuántas expected aparecen como prefijo en alguna celda
+    const score=expected.filter(e=>cells.some(c=>c.startsWith(e)||c===e)).length;
+    if(score>bestScore){bestScore=score;hdrIdx=i;}
   }
-  if(hdrIdx<0)return[];
+  if(hdrIdx<0||bestScore<3){
+    console.warn('[import] no se detectó header confiable (mejor score:',bestScore,'). Primeras 5 filas:',raw.slice(0,5));
+    return[];
+  }
   const hdr=raw[hdrIdx].map(c=>(c||'').trim().toLowerCase());
-  console.log('[import] header row idx=',hdrIdx,'· headers:',hdr);
+  console.log('[import] header row idx=',hdrIdx,'· score:',bestScore,'· headers:',hdr);
   // Matchers más flexibles — usan exacto, startsWith o includes según el caso.
   // Orden importa: el más específico primero (p.ej. "fecha entrega" antes que "fecha").
   const col=name=>{

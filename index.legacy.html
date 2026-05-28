@@ -9186,9 +9186,11 @@ function _eqParseRows(raw){
     const score=expected.filter(e=>cells.some(c=>c.startsWith(e)||c===e)).length;
     if(score>bestScore){bestScore=score;hdrIdx=i;}
   }
-  if(hdrIdx<0||bestScore<3){
+  if(hdrIdx<0||bestScore<2){
     console.warn('[import] no se detectó header confiable (mejor score:',bestScore,'). Primeras 5 filas:',raw.slice(0,5));
-    return[];
+    // Devolver array vacío pero anotado para que el caller pueda mostrar diagnóstico
+    const empty=[];empty.__noHeader=true;empty.__bestScore=bestScore;
+    return empty;
   }
   const hdr=raw[hdrIdx].map(c=>(c||'').trim().toLowerCase());
   console.log('[import] header row idx=',hdrIdx,'· score:',bestScore,'· headers:',hdr);

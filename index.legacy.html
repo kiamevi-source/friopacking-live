@@ -9038,10 +9038,23 @@ function renderEquiposPremium(){
 
         let msg;
         if(parsed&&parsed.length){
-          const f=parsed[0];
+          // Buscar el primer registro con proyecto NO vacío (saltar anulados)
+          const f=parsed.find(r=>r.proyecto&&r.proyecto.trim())||parsed[0];
+          const idx=parsed.indexOf(f);
           const filled=Object.entries(f).filter(([k,v])=>v).map(([k,v])=>`${k}: ${v}`);
           const empty=Object.entries(f).filter(([k,v])=>!v).map(([k])=>k);
-          msg=`✅ Parser OK — ${parsed.length} registros\n\n`+
+          // Conteo de registros con proyecto y campos clave
+          const conProyecto=parsed.filter(r=>r.proyecto&&r.proyecto.trim()).length;
+          const conTipo=parsed.filter(r=>r.tipo&&r.tipo.trim()).length;
+          const conOrigen=parsed.filter(r=>r.origen&&r.origen.trim()).length;
+          const conEta=parsed.filter(r=>r.eta&&r.eta.trim()).length;
+          msg=`✅ Parser OK — ${parsed.length} registros totales\n\n`+
+            `Cobertura por campo clave:\n`+
+            `· proyecto: ${conProyecto}/${parsed.length}\n`+
+            `· tipo:     ${conTipo}/${parsed.length}\n`+
+            `· origen:   ${conOrigen}/${parsed.length}\n`+
+            `· eta:      ${conEta}/${parsed.length}\n\n`+
+            `── Registro #${idx} (1er con proyecto) ──\n`+
             `POBLADOS (${filled.length}):\n${filled.join('\n')}\n\n`+
             `VACÍOS (${empty.length}):\n${empty.join(', ')}\n\n`+
             `── Primeras 8 filas crudas ──\n${rawSample}`;

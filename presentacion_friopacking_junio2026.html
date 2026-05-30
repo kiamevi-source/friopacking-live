@@ -1659,28 +1659,8 @@ function openKpiDrawer(code){
       <div class="ovr-tile"><label>Fuera de meta</label><div class="v" style="color:var(--bad)">${port.fueraTarget}</div><div class="d">${(100-port.onTargetPct).toFixed(0)}% · ponderado por scope real</div></div>
     </div>
 
-    <!-- Estado portafolio + Pendientes -->
-    <div class="ovr-grid equal" style="margin-bottom:24px">
-      <div class="ovr-block">
-        <h3>Estado del levantamiento</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(62,203,176,.06);border:1px solid rgba(62,203,176,.18);border-radius:14px;padding:16px">
-            <div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-d);font-weight:700">CON METRADO BASE</div>
-            <div style="font-family:'Manrope';font-size:38px;color:var(--navy);font-weight:800;line-height:1;margin-top:6px;letter-spacing:-.025em">${cov.conBase}<span style="font-size:14px;color:var(--tx-3);margin-left:6px">/ ${cov.total}</span></div>
-            <div style="font-size:11px;color:var(--tx-3);margin-top:6px;font-weight:500">${cov.coberturaPct.toFixed(0)}% de proyectos en progreso</div>
-          </div>
-          <div style="background:rgba(214,138,23,.08);border:1px solid rgba(214,138,23,.22);border-radius:14px;padding:16px">
-            <div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--warn);font-weight:700">PENDIENTES</div>
-            <div style="font-family:'Manrope';font-size:38px;color:var(--navy);font-weight:800;line-height:1;margin-top:6px;letter-spacing:-.025em">${cov.pendientes.length}</div>
-            <div style="font-size:11px;color:var(--tx-3);margin-top:6px;font-weight:500">${cov.pendientes.join(' · ')}</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11px">
-          <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:7px;background:rgba(62,203,176,.08);color:var(--teal-d);font-weight:700;border:1px solid rgba(62,203,176,.2)"><span style="font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-d)">PUESTA EN MARCHA</span> FRUSAN</span>
-          <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:7px;background:rgba(62,203,176,.08);color:var(--teal-d);font-weight:700;border:1px solid rgba(62,203,176,.2)"><span style="font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-d)">PUESTA EN MARCHA</span> VANGUARD</span>
-          <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:7px;background:rgba(214,138,23,.08);color:var(--warn);font-weight:700;border:1px solid rgba(214,138,23,.22)"><span style="font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--warn)">CIERRE</span> DELICE</span>
-        </div>
-      </div>
+    <!-- Insights cruzados con KPI 01 -->
+    <div style="margin-bottom:24px">
       <div class="ovr-block">
         <h3>Insights cruzados con KPI 01</h3>
         <div class="insight-row">
